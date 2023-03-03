@@ -155,6 +155,7 @@ func init() {
 		"Func":                reflect.ValueOf((*ns.Func)(nil)),
 		"Game":                reflect.ValueOf((*ns.Game)(nil)),
 		"HalberdLevel":        reflect.ValueOf((*ns.HalberdLevel)(nil)),
+		"Handle":              reflect.ValueOf((*ns.Handle)(nil)),
 		"Implementation":      reflect.ValueOf((*ns.Implementation)(nil)),
 		"Obj":                 reflect.ValueOf((*ns.Obj)(nil)),
 		"ObjGroup":            reflect.ValueOf((*ns.ObjGroup)(nil)),
@@ -178,6 +179,7 @@ func init() {
 		// interface wrapper definitions
 		"_Func":                reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Func)(nil)),
 		"_Game":                reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Game)(nil)),
+		"_Handle":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Handle)(nil)),
 		"_Implementation":      reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Implementation)(nil)),
 		"_Obj":                 reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Obj)(nil)),
 		"_ObjGroup":            reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjGroup)(nil)),
@@ -290,6 +292,16 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WaypointByID(id string) s
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WaypointGroupByID(id string) *script.WaypointGroup {
 	return W.WWaypointGroupByID(id)
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_Handle is an interface wrapper for Handle type
+type _github_com_noxworld_dev_noxscript_ns_v4_Handle struct {
+	IValue    interface{}
+	WScriptID func() int
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Handle) ScriptID() int {
+	return W.WScriptID()
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Implementation is an interface wrapper for Implementation type
@@ -695,6 +707,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WResumeLevel       func(percent float32)
 	WRetreatLevel      func(percent float32)
 	WReturn            func()
+	WScriptID          func() int
 	WSetOwner          func(owner ns.Obj)
 	WSetOwners         func(owners ns.ObjGroup)
 	WSetPos            func(p types.Pointf)
@@ -894,6 +907,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) RetreatLevel(percent float
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Return() {
 	W.WReturn()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetOwner(owner ns.Obj) {
 	W.WSetOwner(owner)
 }
@@ -956,6 +972,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup struct {
 	WRaiseZombie      func()
 	WResumeLevel      func(percent float32)
 	WRetreatLevel     func(percent float32)
+	WScriptID         func() int
 	WSetOwner         func(owner ns.Obj)
 	WSetOwners        func(owners ns.ObjGroup)
 	WSetRoamFlag      func(flags int)
@@ -1040,6 +1057,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) ResumeLevel(percent f
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) RetreatLevel(percent float32) {
 	W.WRetreatLevel(percent)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) SetOwner(owner ns.Obj) {
 	W.WSetOwner(owner)
 }
@@ -1066,20 +1086,28 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) ZombieStayDown() {
 type _github_com_noxworld_dev_noxscript_ns_v4_ObjGroupHandle struct {
 	IValue            interface{}
 	WObjGroupScriptID func() int
+	WScriptID         func() int
 }
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroupHandle) ObjGroupScriptID() int {
 	return W.WObjGroupScriptID()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroupHandle) ScriptID() int {
+	return W.WScriptID()
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_ObjHandle is an interface wrapper for ObjHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_ObjHandle struct {
 	IValue       interface{}
 	WObjScriptID func() int
+	WScriptID    func() int
 }
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjHandle) ObjScriptID() int {
 	return W.WObjScriptID()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjHandle) ScriptID() int {
+	return W.WScriptID()
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Positioner is an interface wrapper for Positioner type
@@ -1096,11 +1124,15 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Positioner) Pos() types.Pointf 
 type _github_com_noxworld_dev_noxscript_ns_v4_Timer struct {
 	IValue         interface{}
 	WCancel        func() bool
+	WScriptID      func() int
 	WTimerScriptID func() int
 }
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Timer) Cancel() bool {
 	return W.WCancel()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Timer) ScriptID() int {
+	return W.WScriptID()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Timer) TimerScriptID() int {
 	return W.WTimerScriptID()
@@ -1109,9 +1141,13 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Timer) TimerScriptID() int {
 // _github_com_noxworld_dev_noxscript_ns_v4_TimerHandle is an interface wrapper for TimerHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_TimerHandle struct {
 	IValue         interface{}
+	WScriptID      func() int
 	WTimerScriptID func() int
 }
 
+func (W _github_com_noxworld_dev_noxscript_ns_v4_TimerHandle) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_TimerHandle) TimerScriptID() int {
 	return W.WTimerScriptID()
 }
@@ -1119,9 +1155,13 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_TimerHandle) TimerScriptID() in
 // _github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle is an interface wrapper for WallGroupHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle struct {
 	IValue             interface{}
+	WScriptID          func() int
 	WWallGroupScriptID func() int
 }
 
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle) WallGroupScriptID() int {
 	return W.WWallGroupScriptID()
 }
@@ -1132,6 +1172,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj struct {
 	WDestroy           func()
 	WEachWall          func(recursive bool, fnc func(obj ns.WallObj) bool)
 	WEnable            func(enable bool)
+	WScriptID          func() int
 	WToggle            func() bool
 	WWallGroupScriptID func() int
 }
@@ -1145,6 +1186,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) EachWall(recursiv
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) Enable(enable bool) {
 	W.WEnable(enable)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) Toggle() bool {
 	return W.WToggle()
 }
@@ -1155,9 +1199,13 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) WallGroupScriptID
 // _github_com_noxworld_dev_noxscript_ns_v4_WallHandle is an interface wrapper for WallHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_WallHandle struct {
 	IValue        interface{}
+	WScriptID     func() int
 	WWallScriptID func() int
 }
 
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallHandle) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallHandle) WallScriptID() int {
 	return W.WWallScriptID()
 }
@@ -1168,6 +1216,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WallObj struct {
 	WDestroy      func()
 	WEnable       func(enable bool)
 	WIsEnabled    func() bool
+	WScriptID     func() int
 	WToggle       func() bool
 	WWallScriptID func() int
 }
@@ -1181,6 +1230,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Enable(enable bool) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) IsEnabled() bool {
 	return W.WIsEnabled()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Toggle() bool {
 	return W.WToggle()
 }
@@ -1191,9 +1243,13 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) WallScriptID() int {
 // _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupHandle is an interface wrapper for WaypointGroupHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupHandle struct {
 	IValue                 interface{}
+	WScriptID              func() int
 	WWaypointGroupScriptID func() int
 }
 
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupHandle) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupHandle) WaypointGroupScriptID() int {
 	return W.WWaypointGroupScriptID()
 }
@@ -1203,6 +1259,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj struct {
 	IValue                 interface{}
 	WEachWaypoint          func(recursive bool, fnc func(obj ns.WaypointObj) bool)
 	WEnable                func(enable bool)
+	WScriptID              func() int
 	WToggle                func() bool
 	WWaypointGroupScriptID func() int
 }
@@ -1212,6 +1269,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) EachWaypoint(
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) Enable(enable bool) {
 	W.WEnable(enable)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) ScriptID() int {
+	return W.WScriptID()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) Toggle() bool {
 	return W.WToggle()
@@ -1223,9 +1283,13 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) WaypointGroup
 // _github_com_noxworld_dev_noxscript_ns_v4_WaypointHandle is an interface wrapper for WaypointHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_WaypointHandle struct {
 	IValue            interface{}
+	WScriptID         func() int
 	WWaypointScriptID func() int
 }
 
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointHandle) ScriptID() int {
+	return W.WScriptID()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointHandle) WaypointScriptID() int {
 	return W.WWaypointScriptID()
 }
@@ -1236,6 +1300,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj struct {
 	WEnable           func(enable bool)
 	WIsEnabled        func() bool
 	WPos              func() types.Pointf
+	WScriptID         func() int
 	WSetPos           func(p types.Pointf)
 	WToggle           func() bool
 	WWaypointScriptID func() int
@@ -1249,6 +1314,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) IsEnabled() bool {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) Pos() types.Pointf {
 	return W.WPos()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) ScriptID() int {
+	return W.WScriptID()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) SetPos(p types.Pointf) {
 	W.WSetPos(p)
