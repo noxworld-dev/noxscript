@@ -4,11 +4,19 @@ import ns4 "github.com/noxworld-dev/noxscript/ns/v4"
 
 type WallID int
 
+func (id WallID) ScriptID() int {
+	return int(id)
+}
+
 func (id WallID) WallScriptID() int {
 	return int(id)
 }
 
 type WallGroupID int
+
+func (id WallGroupID) ScriptID() int {
+	return int(id)
+}
 
 func (id WallGroupID) WallGroupScriptID() int {
 	return int(id)

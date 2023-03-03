@@ -22,11 +22,19 @@ const OTHER = ObjectID(-1)
 
 type ObjectID int
 
+func (id ObjectID) ScriptID() int {
+	return int(id)
+}
+
 func (id ObjectID) ObjScriptID() int {
 	return int(id)
 }
 
 type ObjectGroupID int
+
+func (id ObjectGroupID) ScriptID() int {
+	return int(id)
+}
 
 func (id ObjectGroupID) ObjGroupScriptID() int {
 	return int(id)

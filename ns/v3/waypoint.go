@@ -4,11 +4,19 @@ import ns4 "github.com/noxworld-dev/noxscript/ns/v4"
 
 type WaypointID int
 
+func (id WaypointID) ScriptID() int {
+	return int(id)
+}
+
 func (id WaypointID) WaypointScriptID() int {
 	return int(id)
 }
 
 type WaypointGroupID int
+
+func (id WaypointGroupID) ScriptID() int {
+	return int(id)
+}
 
 func (id WaypointGroupID) WaypointGroupScriptID() int {
 	return int(id)

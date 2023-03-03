@@ -7,8 +7,8 @@ github.com/noxworld-dev/noxcrypt v0.0.0-20220809211245-2c69b67c4ae9 h1:VQTULCEWC
 github.com/noxworld-dev/noxcrypt v0.0.0-20220809211245-2c69b67c4ae9/go.mod h1:LJpDABUOIGsHXO72pLYJgPpJQ9046Nn6Kqy/kN+xi0I=
 github.com/noxworld-dev/noxscript/ns v1.0.0 h1:oriTabFqGKmrZpKPcXUWjTYyUfJsFzz9Wo6owOGwe0Q=
 github.com/noxworld-dev/noxscript/ns v1.0.0/go.mod h1:DobGfGPUycvh7D6hB5mW5gbL1QiRsw7QQiVPJz4wYZ0=
-github.com/noxworld-dev/noxscript/ns/v4 v4.0.0 h1:UfN08n33KMQK4gW/QKt+dxfmxC4S7iphleXWzoB5wgg=
-github.com/noxworld-dev/noxscript/ns/v4 v4.0.0/go.mod h1:mth+WguInjfmvweoIdQwFfueSBGVPtGpbb+PfeD3CVc=
+github.com/noxworld-dev/noxscript/ns/v4 v4.1.0 h1:JfwB4QMHGwBw+U+h4i8lXzmmgqXoFNEnbVXJFCmAv7Q=
+github.com/noxworld-dev/noxscript/ns/v4 v4.1.0/go.mod h1:mth+WguInjfmvweoIdQwFfueSBGVPtGpbb+PfeD3CVc=
 github.com/noxworld-dev/opennox-lib v0.0.0-20221231150548-07fe5c19848c h1:tqr136/p8uHwDJZu6MxAh5rYC5+d3LfKrco6uRIqhUE=
 github.com/noxworld-dev/opennox-lib v0.0.0-20221231150548-07fe5c19848c/go.mod h1:TJuQIqsIaAFumYNVY4759J3XVuFzC3cyE0XcQuN6+uI=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

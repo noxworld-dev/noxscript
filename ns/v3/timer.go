@@ -15,6 +15,10 @@ func timeSeconds(sec float32) script.Duration {
 
 type TimerID int
 
+func (id TimerID) ScriptID() int {
+	return int(id)
+}
+
 func (id TimerID) TimerScriptID() int {
 	return int(id)
 }
