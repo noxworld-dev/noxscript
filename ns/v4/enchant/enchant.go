@@ -1,0 +1,38 @@
+package enchant
+
+type Enchant string
+
+const (
+	INVISIBLE                = "ENCHANT_INVISIBLE"
+	MOONGLOW                 = "ENCHANT_MOONGLOW"
+	BLINDED                  = "ENCHANT_BLINDED"
+	CONFUSED                 = "ENCHANT_CONFUSED"
+	SLOWED                   = "ENCHANT_SLOWED"
+	HELD                     = "ENCHANT_HELD"
+	DETECTING                = "ENCHANT_DETECTING"
+	ETHEREAL                 = "ENCHANT_ETHEREAL"
+	RUN                      = "ENCHANT_RUN"
+	HASTED                   = "ENCHANT_HASTED"
+	VILLAIN                  = "ENCHANT_VILLAIN"
+	AFRAID                   = "ENCHANT_AFRAID"
+	BURNING                  = "ENCHANT_BURNING"
+	VAMPIRISM                = "ENCHANT_VAMPIRISM"
+	ANCHORED                 = "ENCHANT_ANCHORED"
+	LIGHT                    = "ENCHANT_LIGHT"
+	DEATH                    = "ENCHANT_DEATH"
+	PROTECT_FROM_FIRE        = "ENCHANT_PROTECT_FROM_FIRE"
+	PROTECT_FROM_POISON      = "ENCHANT_PROTECT_FROM_POISON"
+	PROTECT_FROM_MAGIC       = "ENCHANT_PROTECT_FROM_MAGIC"
+	PROTECT_FROM_ELECTRICITY = "ENCHANT_PROTECT_FROM_ELECTRICITY"
+	INFRAVISION              = "ENCHANT_INFRAVISION"
+	SHOCK                    = "ENCHANT_SHOCK"
+	INVULNERABLE             = "ENCHANT_INVULNERABLE"
+	TELEKINESIS              = "ENCHANT_TELEKINESIS"
+	FREEZE                   = "ENCHANT_FREEZE"
+	SHIELD                   = "ENCHANT_SHIELD"
+	REFLECTIVE_SHIELD        = "ENCHANT_REFLECTIVE_SHIELD"
+	CHARMING                 = "ENCHANT_CHARMING"
+	ANTI_MAGIC               = "ENCHANT_ANTI_MAGIC"
+	CROWN                    = "ENCHANT_CROWN"
+	SNEAK                    = "ENCHANT_SNEAK"
+)
