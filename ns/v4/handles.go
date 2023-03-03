@@ -1,6 +1,12 @@
 package ns
 
+type Handle interface {
+	// ScriptID returns internal script ID for the object.
+	ScriptID() int
+}
+
 type TimerHandle interface {
+	Handle
 	// TimerScriptID returns internal script ID for the timer.
 	TimerScriptID() int
 }
@@ -17,6 +23,7 @@ func AsTimer(h TimerHandle) Timer {
 }
 
 type ObjHandle interface {
+	Handle
 	// ObjScriptID returns internal script ID for the object.
 	ObjScriptID() int
 }
@@ -33,6 +40,7 @@ func AsObj(h ObjHandle) Obj {
 }
 
 type ObjGroupHandle interface {
+	Handle
 	// ObjGroupScriptID returns internal script ID for the object group.
 	ObjGroupScriptID() int
 }
@@ -49,6 +57,7 @@ func AsObjGroup(h ObjGroupHandle) ObjGroup {
 }
 
 type WallHandle interface {
+	Handle
 	// WallScriptID returns internal script ID for the wall.
 	WallScriptID() int
 }
@@ -65,6 +74,7 @@ func AsWall(h WallHandle) WallObj {
 }
 
 type WallGroupHandle interface {
+	Handle
 	// WallGroupScriptID returns internal script ID for the wall group.
 	WallGroupScriptID() int
 }
@@ -81,6 +91,7 @@ func AsWallGroup(h WallGroupHandle) WallGroupObj {
 }
 
 type WaypointHandle interface {
+	Handle
 	// WaypointScriptID returns internal script ID for the waypoint.
 	WaypointScriptID() int
 }
@@ -97,6 +108,7 @@ func AsWaypoint(h WaypointHandle) WaypointObj {
 }
 
 type WaypointGroupHandle interface {
+	Handle
 	// WaypointGroupScriptID returns internal script ID for the waypoint.
 	WaypointGroupScriptID() int
 }
