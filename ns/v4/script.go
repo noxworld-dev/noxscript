@@ -1,6 +1,3 @@
-// Package ns implements NoxScript 4.
-//
-// Ii is based on NoxScript 3 but provides a more Go-friendly object-oriented API.
 package ns
 
 import (

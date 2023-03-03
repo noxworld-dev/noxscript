@@ -1,9 +1,3 @@
-// Package ns exposes NoxScript API used in maps.
-//
-// This package is for documentation and type-checking only, all functions do nothing.
-//
-// Names of functions are synchronized with the latest NoxScript implementation:
-// https://noxtools.github.io/noxscript/.
 package ns
 
 import (
@@ -12,6 +6,7 @@ import (
 	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
 )
 
+// Source:
 // https://github.com/NoxTools/noxscript/blob/master/builtins.h
 
 type Func = any
@@ -35,6 +30,8 @@ func StopScript(value any) {
 //
 // This will convert an integer to a string, and add the to string the string
 // table temporarily.
+//
+// Deprecated: use strconv.Itoa.
 func IntToString(number int) string {
 	return strconv.Itoa(number)
 }
@@ -43,6 +40,8 @@ func IntToString(number int) string {
 //
 // This will convert a float to a string, and add the to string the string
 // table temporarily.
+//
+// Deprecated: use strconv.FormatFloat.
 func FloatToString(number float32) string {
 	return strconv.FormatFloat(float64(number), 'g', -1, 32)
 }
