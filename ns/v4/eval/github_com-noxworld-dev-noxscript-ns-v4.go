@@ -720,7 +720,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WChangeScore       func(score int)
 	WChat              func(message string)
 	WChatStr           func(message string)
-	WChatStrTimer      func(message string)
+	WChatStrTimer      func(message string, dt script.Duration)
 	WChatTimer         func(message string, dt script.Duration)
 	WClass             func() object.Class
 	WCreateMover       func(wp ns.WaypointObj, speed float32) ns.Obj
@@ -826,8 +826,8 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Chat(message string) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStr(message string) {
 	W.WChatStr(message)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStrTimer(message string) {
-	W.WChatStrTimer(message)
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStrTimer(message string, dt script.Duration) {
+	W.WChatStrTimer(message, dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatTimer(message string, dt script.Duration) {
 	W.WChatTimer(message, dt)

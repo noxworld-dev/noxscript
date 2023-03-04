@@ -426,7 +426,7 @@ type Obj interface {
 
 	// ChatStrTimer displays a string in a speech bubble for a given duration (in seconds or frames).
 	// It does not localize the string.
-	ChatStrTimer(message string)
+	ChatStrTimer(message string, dt script.Duration)
 
 	// DestroyChat destroys object's speech bubble.
 	DestroyChat()
