@@ -1,6 +1,10 @@
 package eud
 
-import ns3 "github.com/noxworld-dev/noxscript/ns/v3"
+import (
+	ns3 "github.com/noxworld-dev/noxscript/ns/v3"
+	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
+	"github.com/noxworld-dev/opennox-lib/script"
+)
 
 func CheckGameRusLanguage() bool {
 	panic("not implemented")
@@ -10,14 +14,18 @@ func CheckGameKorLanguage() bool {
 	panic("not implemented")
 }
 
-func UniPrint(sUnit ns3.ObjectID, sMsg string) {
-	panic("not implemented")
+// UniPrint displays a string on the screen of the player. It does not localize the string.
+func UniPrint(unit ns3.ObjectID, msg string) {
+	ns4.AsObj(unit).Player().PrintStr(msg)
 }
 
-func UniChatMessage(sUnit ns3.ObjectID, sMsg string, duration int) {
-	panic("not implemented")
+// UniChatMessage displays a string in a speech bubble for a given duration (in frames).
+// It does not localize the string.
+func UniChatMessage(unit ns3.ObjectID, msg string, duration int) {
+	ns4.AsObj(unit).ChatStrTimer(msg, script.Frames(duration))
 }
 
-func UniPrintToAll(sMsg string) {
-	panic("not implemented")
+// UniPrintToAll displays a string to everyone. It does not localize the string.
+func UniPrintToAll(msg string) {
+	ns4.PrintStrToAll(msg)
 }

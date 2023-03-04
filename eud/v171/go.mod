@@ -3,9 +3,9 @@ module github.com/noxworld-dev/noxscript/eud/v171
 go 1.19
 
 require (
-	github.com/noxworld-dev/noxscript/ns/v3 v3.1.3
-	github.com/noxworld-dev/noxscript/ns/v4 v4.1.3
-	github.com/noxworld-dev/opennox-lib v0.0.0-20221231150548-07fe5c19848c
+	github.com/noxworld-dev/noxscript/ns/v3 v3.1.4
+	github.com/noxworld-dev/noxscript/ns/v4 v4.2.1
+	github.com/noxworld-dev/opennox-lib v0.0.0-20230304151458-840736e242c3
 )
 
 require (
