@@ -2,12 +2,20 @@ package ns
 
 import "github.com/noxworld-dev/noxscript/ns/v4/audio"
 
-// SetShopkeeperText sets shopkeeper text.
+// SetShopkeeperText sets localized shopkeeper text.
 func SetShopkeeperText(obj Obj, text StringID) {
 	if impl == nil {
 		return
 	}
 	impl.SetShopkeeperText(obj, text)
+}
+
+// SetShopkeeperTextStr sets shopkeeper text. It does not localize the string.
+func SetShopkeeperTextStr(obj Obj, text string) {
+	if impl == nil {
+		return
+	}
+	impl.SetShopkeeperTextStr(obj, text)
 }
 
 type DialogType string
@@ -62,6 +70,21 @@ func TellStory(audio audio.Name, story StringID) {
 		return
 	}
 	impl.TellStory(audio, story)
+}
+
+// TellStoryStr causes the telling of a story. It does not localize the string.
+//
+// This will cause a story to be told. It relies on Self and Other to be
+// particular values, which limits this to being used in the SetDialog callbacks.
+//
+// Example:
+//
+//	TellStoryStr(audio.SwordsmanHurt, "Hello there!")
+func TellStoryStr(audio audio.Name, story string) {
+	if impl == nil {
+		return
+	}
+	impl.TellStoryStr(audio, story)
 }
 
 // StartDialog starts a conversation between two objects.

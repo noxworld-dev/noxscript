@@ -82,3 +82,33 @@ func JournalDelete(obj Obj, message StringID) {
 	}
 	impl.JournalDelete(obj, message)
 }
+
+// JournalEntryStr adds entry to player's journal. It does not localize the string.
+//
+// If the player object is nil, then it will add the journal entry to all players.
+func JournalEntryStr(obj Obj, message string, typ EntryType) {
+	if impl == nil {
+		return
+	}
+	impl.JournalEntryStr(obj, message, typ)
+}
+
+// JournalEditStr edits entry in player's journal. It does not localize the string.
+//
+// If the player object is nil, then it will edit the journal entry for all players.
+func JournalEditStr(obj Obj, message string, typ EntryType) {
+	if impl == nil {
+		return
+	}
+	impl.JournalEditStr(obj, message, typ)
+}
+
+// JournalDeleteStr deletes entry from player's journal. It does not localize the string.
+//
+// If the player object is nil, then it will delete the journal entry for all players.
+func JournalDeleteStr(obj Obj, message string) {
+	if impl == nil {
+		return
+	}
+	impl.JournalDeleteStr(obj, message)
+}

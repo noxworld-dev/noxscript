@@ -2,6 +2,7 @@ package ns
 
 import (
 	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/noxworld-dev/opennox-lib/player"
 	"github.com/noxworld-dev/opennox-lib/script"
 	"github.com/noxworld-dev/opennox-lib/types"
 
@@ -51,6 +52,22 @@ const (
 	EventEndOfWaypoint   = ObjectEvent(11)
 	EventLostEnemy       = ObjectEvent(13)
 )
+
+// ObjectType looks up an object type by name.
+func ObjectType(name string) ObjType {
+	if impl == nil {
+		return nil
+	}
+	return impl.ObjectType(name)
+}
+
+// ObjectTypeByInd looks up an object type by index.
+func ObjectTypeByInd(ind int) ObjType {
+	if impl == nil {
+		return nil
+	}
+	return impl.ObjectTypeByInd(ind)
+}
 
 // CreateObject creates an object given a type and a starting location.
 //
@@ -135,8 +152,36 @@ func IsSummoned(obj Obj) bool {
 	return impl.IsSummoned(obj)
 }
 
+type ObjType interface {
+	// Name returns object type name.
+	Name() string
+
+	// Index returns an index of the type in the game's database.
+	// It can be used to quickly compare object types, or as a map key for them.
+	//
+	// It is strongly advised against comparing it with hardcoded values, since mods may add/remove object types.
+	// Use ObjectType to find object types instead.
+	Index() int
+
+	// Class returns object type class.
+	Class() object.Class
+
+	// HasClass checks whether object type has a class.
+	// It uses string values instead of enum as Class does.
+	HasClass(class class.Class) bool
+
+	// HasSubclass tests whether an object has a specific subclass.
+	// The subclass overlaps, so you should probably test for the class first (via HasClass).
+	HasSubclass(subclass subclass.SubClass) bool
+
+	// Create and object of this type.
+	Create(pos Positioner) Obj
+}
+
 type Obj interface {
 	ObjHandle
+	// Type returns object type.
+	Type() ObjType
 	// Pos returns current position of the object.
 	Pos() Pointf
 	// SetPos instantly moves object to a given position.
@@ -164,7 +209,7 @@ type Obj interface {
 	// It uses string values instead of enum as Class does.
 	HasClass(class class.Class) bool
 
-	// HasSubclass tests whether an item has a specific subclass.
+	// HasSubclass tests whether an object has a specific subclass.
 	// The subclass overlaps, so you should probably test for the class first (via HasClass).
 	HasSubclass(subclass subclass.SubClass) bool
 
@@ -185,6 +230,24 @@ type Obj interface {
 	// RestoreHealth restores object's health.
 	RestoreHealth(amount int)
 
+	// SetHealth sets current object health.
+	SetHealth(v int)
+
+	// SetMaxHealth sets maximum object health.
+	SetMaxHealth(v int)
+
+	// CurrentMana gets object's mana. Only works on players.
+	CurrentMana() int
+
+	// MaxMana gets object's maximum mana. Only works on players.
+	MaxMana() int
+
+	// SetMana sets current object mana. Only works on players.
+	SetMana(v int)
+
+	// SetMaxMana sets maximum object mana. Only works on players.
+	SetMaxMana(v int)
+
 	// GetGold gets amount of gold for player object.
 	GetGold() int
 
@@ -194,10 +257,23 @@ type Obj interface {
 	// GiveXp grants experience to a player.
 	GiveXp(xp float32)
 
+	// GetLevel gets player's level.
+	GetLevel() int
+
+	// GetClass gets player's character class.
+	GetClass() player.Class
+
+	// Player returns player associated with the object.
+	Player() Player
+
 	// GetScore gets player's score.
+	//
+	// Deprecated: use Player.GetScore.
 	GetScore() int
 
 	// ChangeScore changes player's score.
+	//
+	// Deprecated: use Player.ChangeScore.
 	ChangeScore(score int)
 
 	// HasOwner checks whether target is owned by object.
@@ -344,6 +420,14 @@ type Obj interface {
 	// If the string is not in the string database, it will instead print an error message with "MISSING:".
 	ChatTimer(message StringID, dt script.Duration)
 
+	// ChatStr displays a string in a speech bubble.
+	// It does not localize the string.
+	ChatStr(message string)
+
+	// ChatStrTimer displays a string in a speech bubble for a given duration (in seconds or frames).
+	// It does not localize the string.
+	ChatStrTimer(message string)
+
 	// DestroyChat destroys object's speech bubble.
 	DestroyChat()
 
@@ -386,6 +470,8 @@ type Obj interface {
 
 type ObjGroup interface {
 	ObjGroupHandle
+	// Name returns object group name.
+	Name() string
 	// Enable or disable the object.
 	Enable(enable bool)
 	// Toggle the object's enabled state.

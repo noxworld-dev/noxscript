@@ -1,8 +1,8 @@
-//go:build !script
-
 package ns
 
 import (
+	"context"
+
 	"github.com/noxworld-dev/opennox-lib/player"
 	"github.com/noxworld-dev/opennox-lib/script"
 
@@ -12,6 +12,24 @@ import (
 )
 
 var impl Implementation
+
+type implKey struct{}
+
+// WithRuntime stores Implementation in the context.
+func WithRuntime(ctx context.Context, g Implementation) context.Context {
+	return context.WithValue(ctx, implKey{}, g)
+}
+
+// GetRuntime loads Implementation from the context.
+func GetRuntime(ctx context.Context) Implementation {
+	if v, ok := ctx.Value(implKey{}).(Implementation); ok {
+		return v
+	}
+	if v, ok := script.GetGame(ctx).(Game); ok {
+		return v.NoxScript()
+	}
+	return impl
+}
 
 // Runtime returns implementation of all the accessible functions as an interface.
 func Runtime() Implementation {
@@ -36,6 +54,9 @@ type Implementation interface {
 	StartupScreen(which int)
 	DeathScreen(which int)
 
+	ObjectType(name string) ObjType
+	ObjectTypeByInd(ind int) ObjType
+
 	ObjectByHandle(h ObjHandle) Obj
 	Object(name string) Obj
 	ObjectGroupByHandle(h ObjGroupHandle) ObjGroup
@@ -54,9 +75,14 @@ type Implementation interface {
 	BecomePet(obj Obj)
 	BecomeEnemy(obj Obj)
 
+	HostPlayer() Player
+	Players() []Player
+
 	GetCharacterData(field int) int
 	Print(message StringID)
+	PrintStr(message string)
 	PrintToAll(message StringID)
+	PrintStrToAll(message string)
 	ClearMessages(player Obj)
 	UnBlind()
 	Blind()
@@ -69,10 +95,12 @@ type Implementation interface {
 
 	DestroyEveryChat()
 	SetShopkeeperText(obj Obj, text StringID)
+	SetShopkeeperTextStr(obj Obj, text string)
 	SetDialog(obj Obj, typ DialogType, start Func, end Func)
 	CancelDialog(obj Obj)
 	StoryPic(obj Obj, name string)
 	TellStory(audio audio.Name, story StringID)
+	TellStoryStr(audio audio.Name, story string)
 	StartDialog(obj Obj, other Obj)
 	GetAnswer(obj Obj) DialogAnswer
 
@@ -94,7 +122,11 @@ type Implementation interface {
 	JournalEntry(obj Obj, message StringID, typ EntryType)
 	JournalEdit(obj Obj, message StringID, typ EntryType)
 	JournalDelete(obj Obj, message StringID)
+	JournalEntryStr(obj Obj, message string, typ EntryType)
+	JournalEditStr(obj Obj, message string, typ EntryType)
+	JournalDeleteStr(obj Obj, message string)
 
+	Waypoints() []WaypointObj
 	WaypointByHandle(h WaypointHandle) WaypointObj
 	Waypoint(name string) WaypointObj
 	WaypointGroupByHandle(h WaypointGroupHandle) WaypointGroupObj

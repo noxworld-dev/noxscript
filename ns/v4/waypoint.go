@@ -2,6 +2,8 @@ package ns
 
 type WaypointObj interface {
 	WaypointHandle
+	// Name returns waypoint name.
+	Name() string
 	// Pos returns current position of the object.
 	Pos() Pointf
 	// SetPos instantly moves object to a given position.
@@ -17,6 +19,8 @@ type WaypointObj interface {
 
 type WaypointGroupObj interface {
 	WaypointGroupHandle
+	// Name returns waypoint group name.
+	Name() string
 	// Enable or disable the object.
 	Enable(enable bool)
 	// Toggle the object's enabled state.
@@ -27,6 +31,14 @@ type WaypointGroupObj interface {
 	// If fnc returns false, the iteration stops.
 	// If recursive is true, iteration will include items from nested groups.
 	EachWaypoint(recursive bool, fnc func(obj WaypointObj) bool)
+}
+
+// Waypoints returns a list of all waypoints.
+func Waypoints() []WaypointObj {
+	if impl == nil {
+		return nil
+	}
+	return impl.Waypoints()
 }
 
 // Waypoint looks up waypoint by name.

@@ -75,7 +75,9 @@ func init() {
 		"GetHost":              reflect.ValueOf(ns.GetHost),
 		"GetQuestStatus":       reflect.ValueOf(ns.GetQuestStatus),
 		"GetQuestStatusFloat":  reflect.ValueOf(ns.GetQuestStatusFloat),
+		"GetRuntime":           reflect.ValueOf(ns.GetRuntime),
 		"GetTrigger":           reflect.ValueOf(ns.GetTrigger),
+		"HostPlayer":           reflect.ValueOf(ns.HostPlayer),
 		"ImmediateBlind":       reflect.ValueOf(ns.ImmediateBlind),
 		"IsCaller":             reflect.ValueOf(ns.IsCaller),
 		"IsCrown":              reflect.ValueOf(ns.IsCrown),
@@ -85,8 +87,11 @@ func init() {
 		"IsTrading":            reflect.ValueOf(ns.IsTrading),
 		"IsTrigger":            reflect.ValueOf(ns.IsTrigger),
 		"JournalDelete":        reflect.ValueOf(ns.JournalDelete),
+		"JournalDeleteStr":     reflect.ValueOf(ns.JournalDeleteStr),
 		"JournalEdit":          reflect.ValueOf(ns.JournalEdit),
+		"JournalEditStr":       reflect.ValueOf(ns.JournalEditStr),
 		"JournalEntry":         reflect.ValueOf(ns.JournalEntry),
+		"JournalEntryStr":      reflect.ValueOf(ns.JournalEntryStr),
 		"MakeEnemy":            reflect.ValueOf(ns.MakeEnemy),
 		"MakeFriendly":         reflect.ValueOf(ns.MakeFriendly),
 		"Music":                reflect.ValueOf(ns.Music),
@@ -100,11 +105,16 @@ func init() {
 		"NoWallSound":          reflect.ValueOf(ns.NoWallSound),
 		"Object":               reflect.ValueOf(ns.Object),
 		"ObjectGroup":          reflect.ValueOf(ns.ObjectGroup),
+		"ObjectType":           reflect.ValueOf(ns.ObjectType),
+		"ObjectTypeByInd":      reflect.ValueOf(ns.ObjectTypeByInd),
 		"OblivionHalberd":      reflect.ValueOf(ns.OblivionHalberd),
 		"OblivionHeart":        reflect.ValueOf(ns.OblivionHeart),
 		"OblivionOrb":          reflect.ValueOf(ns.OblivionOrb),
 		"OblivionWierdling":    reflect.ValueOf(ns.OblivionWierdling),
+		"Players":              reflect.ValueOf(ns.Players),
 		"Print":                reflect.ValueOf(ns.Print),
+		"PrintStr":             reflect.ValueOf(ns.PrintStr),
+		"PrintStrToAll":        reflect.ValueOf(ns.PrintStrToAll),
 		"PrintToAll":           reflect.ValueOf(ns.PrintToAll),
 		"Ptf":                  reflect.ValueOf(ns.Ptf),
 		"Random":               reflect.ValueOf(ns.Random),
@@ -120,11 +130,13 @@ func init() {
 		"SetQuestStatusFloat":  reflect.ValueOf(ns.SetQuestStatusFloat),
 		"SetRuntime":           reflect.ValueOf(ns.SetRuntime),
 		"SetShopkeeperText":    reflect.ValueOf(ns.SetShopkeeperText),
+		"SetShopkeeperTextStr": reflect.ValueOf(ns.SetShopkeeperTextStr),
 		"StartDialog":          reflect.ValueOf(ns.StartDialog),
 		"StartupScreen":        reflect.ValueOf(ns.StartupScreen),
 		"StopScript":           reflect.ValueOf(ns.StopScript),
 		"StoryPic":             reflect.ValueOf(ns.StoryPic),
 		"TellStory":            reflect.ValueOf(ns.TellStory),
+		"TellStoryStr":         reflect.ValueOf(ns.TellStoryStr),
 		"UnBlind":              reflect.ValueOf(ns.UnBlind),
 		"Unknownb8":            reflect.ValueOf(ns.Unknownb8),
 		"Unknownb9":            reflect.ValueOf(ns.Unknownb9),
@@ -145,7 +157,9 @@ func init() {
 		"WallGroup":            reflect.ValueOf(ns.WallGroup),
 		"Waypoint":             reflect.ValueOf(ns.Waypoint),
 		"WaypointGroup":        reflect.ValueOf(ns.WaypointGroup),
+		"Waypoints":            reflect.ValueOf(ns.Waypoints),
 		"WideScreen":           reflect.ValueOf(ns.WideScreen),
+		"WithRuntime":          reflect.ValueOf(ns.WithRuntime),
 
 		// type definitions
 		"DialogAnswer":        reflect.ValueOf((*ns.DialogAnswer)(nil)),
@@ -161,7 +175,9 @@ func init() {
 		"ObjGroup":            reflect.ValueOf((*ns.ObjGroup)(nil)),
 		"ObjGroupHandle":      reflect.ValueOf((*ns.ObjGroupHandle)(nil)),
 		"ObjHandle":           reflect.ValueOf((*ns.ObjHandle)(nil)),
+		"ObjType":             reflect.ValueOf((*ns.ObjType)(nil)),
 		"ObjectEvent":         reflect.ValueOf((*ns.ObjectEvent)(nil)),
+		"Player":              reflect.ValueOf((*ns.Player)(nil)),
 		"Pointf":              reflect.ValueOf((*ns.Pointf)(nil)),
 		"Positioner":          reflect.ValueOf((*ns.Positioner)(nil)),
 		"StringID":            reflect.ValueOf((*ns.StringID)(nil)),
@@ -185,6 +201,8 @@ func init() {
 		"_ObjGroup":            reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjGroup)(nil)),
 		"_ObjGroupHandle":      reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjGroupHandle)(nil)),
 		"_ObjHandle":           reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjHandle)(nil)),
+		"_ObjType":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjType)(nil)),
+		"_Player":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Player)(nil)),
 		"_Positioner":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Positioner)(nil)),
 		"_Timer":               reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Timer)(nil)),
 		"_TimerHandle":         reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimerHandle)(nil)),
@@ -327,6 +345,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WGetQuestStatus        func(name string) int
 	WGetQuestStatusFloat   func(name string) float32
 	WGetTrigger            func() ns.Obj
+	WHostPlayer            func() ns.Player
 	WImmediateBlind        func()
 	WIsCaller              func(obj ns.Obj) bool
 	WIsCrown               func(obj ns.Obj) bool
@@ -336,8 +355,11 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WIsTrading             func() bool
 	WIsTrigger             func(obj ns.Obj) bool
 	WJournalDelete         func(obj ns.Obj, message string)
+	WJournalDeleteStr      func(obj ns.Obj, message string)
 	WJournalEdit           func(obj ns.Obj, message string, typ ns.EntryType)
+	WJournalEditStr        func(obj ns.Obj, message string, typ ns.EntryType)
 	WJournalEntry          func(obj ns.Obj, message string, typ ns.EntryType)
+	WJournalEntryStr       func(obj ns.Obj, message string, typ ns.EntryType)
 	WMakeEnemy             func(obj ns.Obj)
 	WMakeFriendly          func(obj ns.Obj)
 	WMusic                 func(music int, volume int)
@@ -350,7 +372,12 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WObjectByHandle        func(h ns.ObjHandle) ns.Obj
 	WObjectGroup           func(name string) ns.ObjGroup
 	WObjectGroupByHandle   func(h ns.ObjGroupHandle) ns.ObjGroup
+	WObjectType            func(name string) ns.ObjType
+	WObjectTypeByInd       func(ind int) ns.ObjType
+	WPlayers               func() []ns.Player
 	WPrint                 func(message string)
+	WPrintStr              func(message string)
+	WPrintStrToAll         func(message string)
 	WPrintToAll            func(message string)
 	WRandom                func(min int, max int) int
 	WRandomFloat           func(min float32, max float32) float32
@@ -360,11 +387,13 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WSetQuestStatus        func(status int, name string)
 	WSetQuestStatusFloat   func(status float32, name string)
 	WSetShopkeeperText     func(obj ns.Obj, text string)
+	WSetShopkeeperTextStr  func(obj ns.Obj, text string)
 	WStartDialog           func(obj ns.Obj, other ns.Obj)
 	WStartupScreen         func(which int)
 	WStopScript            func(value any)
 	WStoryPic              func(obj ns.Obj, name string)
 	WTellStory             func(audio audio.Name, story string)
+	WTellStoryStr          func(audio audio.Name, story string)
 	WTimerByHandle         func(h ns.TimerHandle) ns.Timer
 	WUnBlind               func()
 	WUnknownb8             func(id int) bool
@@ -389,6 +418,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WWaypointByHandle      func(h ns.WaypointHandle) ns.WaypointObj
 	WWaypointGroup         func(name string) ns.WaypointGroupObj
 	WWaypointGroupByHandle func(h ns.WaypointGroupHandle) ns.WaypointGroupObj
+	WWaypoints             func() []ns.WaypointObj
 	WWideScreen            func(enable bool)
 }
 
@@ -452,6 +482,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) GetQuestStatusF
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) GetTrigger() ns.Obj {
 	return W.WGetTrigger()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) HostPlayer() ns.Player {
+	return W.WHostPlayer()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ImmediateBlind() {
 	W.WImmediateBlind()
 }
@@ -479,11 +512,20 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) IsTrigger(obj n
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalDelete(obj ns.Obj, message string) {
 	W.WJournalDelete(obj, message)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalDeleteStr(obj ns.Obj, message string) {
+	W.WJournalDeleteStr(obj, message)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalEdit(obj ns.Obj, message string, typ ns.EntryType) {
 	W.WJournalEdit(obj, message, typ)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalEditStr(obj ns.Obj, message string, typ ns.EntryType) {
+	W.WJournalEditStr(obj, message, typ)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalEntry(obj ns.Obj, message string, typ ns.EntryType) {
 	W.WJournalEntry(obj, message, typ)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalEntryStr(obj ns.Obj, message string, typ ns.EntryType) {
+	W.WJournalEntryStr(obj, message, typ)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) MakeEnemy(obj ns.Obj) {
 	W.WMakeEnemy(obj)
@@ -521,8 +563,23 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectGroup(nam
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectGroupByHandle(h ns.ObjGroupHandle) ns.ObjGroup {
 	return W.WObjectGroupByHandle(h)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectType(name string) ns.ObjType {
+	return W.WObjectType(name)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectTypeByInd(ind int) ns.ObjType {
+	return W.WObjectTypeByInd(ind)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Players() []ns.Player {
+	return W.WPlayers()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Print(message string) {
 	W.WPrint(message)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) PrintStr(message string) {
+	W.WPrintStr(message)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) PrintStrToAll(message string) {
+	W.WPrintStrToAll(message)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) PrintToAll(message string) {
 	W.WPrintToAll(message)
@@ -551,6 +608,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) SetQuestStatusF
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) SetShopkeeperText(obj ns.Obj, text string) {
 	W.WSetShopkeeperText(obj, text)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) SetShopkeeperTextStr(obj ns.Obj, text string) {
+	W.WSetShopkeeperTextStr(obj, text)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StartDialog(obj ns.Obj, other ns.Obj) {
 	W.WStartDialog(obj, other)
 }
@@ -565,6 +625,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StoryPic(obj ns
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TellStory(audio audio.Name, story string) {
 	W.WTellStory(audio, story)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TellStoryStr(audio audio.Name, story string) {
+	W.WTellStoryStr(audio, story)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TimerByHandle(h ns.TimerHandle) ns.Timer {
 	return W.WTimerByHandle(h)
@@ -638,6 +701,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) WaypointGroup(n
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) WaypointGroupByHandle(h ns.WaypointGroupHandle) ns.WaypointGroupObj {
 	return W.WWaypointGroupByHandle(h)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Waypoints() []ns.WaypointObj {
+	return W.WWaypoints()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) WideScreen(enable bool) {
 	W.WWideScreen(enable)
 }
@@ -653,10 +719,13 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WChangeGold        func(delta int)
 	WChangeScore       func(score int)
 	WChat              func(message string)
+	WChatStr           func(message string)
+	WChatStrTimer      func(message string)
 	WChatTimer         func(message string, dt script.Duration)
 	WClass             func() object.Class
 	WCreateMover       func(wp ns.WaypointObj, speed float32) ns.Obj
 	WCurrentHealth     func() int
+	WCurrentMana       func() int
 	WDamage            func(source ns.Obj, amount int, typ damage.Type)
 	WDelete            func()
 	WDeleteAfter       func(dt script.Duration)
@@ -669,10 +738,12 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WFlee              func(target ns.Positioner, dt script.Duration)
 	WFollow            func(target ns.Positioner)
 	WFreeze            func(freeze bool)
+	WGetClass          func() player.Class
 	WGetElevatorStatus func() int
 	WGetGold           func() int
 	WGetHolder         func() ns.Obj
 	WGetLastItem       func() ns.Obj
+	WGetLevel          func() int
 	WGetPreviousItem   func() ns.Obj
 	WGetScore          func() int
 	WGiveXp            func(xp float32)
@@ -695,11 +766,13 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WLookAtObject      func(target ns.Positioner)
 	WLookWithAngle     func(angle int)
 	WMaxHealth         func() int
+	WMaxMana           func() int
 	WMove              func(wp ns.WaypointObj)
 	WObjScriptID       func() int
 	WOnEvent           func(event ns.ObjectEvent, fnc any)
 	WPause             func(dt script.Duration)
 	WPickup            func(item ns.Obj) bool
+	WPlayer            func() ns.Player
 	WPos               func() types.Pointf
 	WPushTo            func(pos ns.Positioner, force float32)
 	WRaiseZombie       func()
@@ -708,6 +781,10 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WRetreatLevel      func(percent float32)
 	WReturn            func()
 	WScriptID          func() int
+	WSetHealth         func(v int)
+	WSetMana           func(v int)
+	WSetMaxHealth      func(v int)
+	WSetMaxMana        func(v int)
 	WSetOwner          func(owner ns.Obj)
 	WSetOwners         func(owners ns.ObjGroup)
 	WSetPos            func(p types.Pointf)
@@ -715,6 +792,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WSetZ              func(z float32)
 	WToggle            func() bool
 	WTrapSpells        func(spell1 spell.Spell, spell2 spell.Spell, spell3 spell.Spell)
+	WType              func() ns.ObjType
 	WWalkTo            func(p types.Pointf)
 	WWander            func()
 	WZ                 func() float32
@@ -745,6 +823,12 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChangeScore(score int) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Chat(message string) {
 	W.WChat(message)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStr(message string) {
+	W.WChatStr(message)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStrTimer(message string) {
+	W.WChatStrTimer(message)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatTimer(message string, dt script.Duration) {
 	W.WChatTimer(message, dt)
 }
@@ -756,6 +840,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CreateMover(wp ns.Waypoint
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentHealth() int {
 	return W.WCurrentHealth()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentMana() int {
+	return W.WCurrentMana()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Damage(source ns.Obj, amount int, typ damage.Type) {
 	W.WDamage(source, amount, typ)
@@ -793,6 +880,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Follow(target ns.Positione
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Freeze(freeze bool) {
 	W.WFreeze(freeze)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) GetClass() player.Class {
+	return W.WGetClass()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) GetElevatorStatus() int {
 	return W.WGetElevatorStatus()
 }
@@ -804,6 +894,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) GetHolder() ns.Obj {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) GetLastItem() ns.Obj {
 	return W.WGetLastItem()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) GetLevel() int {
+	return W.WGetLevel()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) GetPreviousItem() ns.Obj {
 	return W.WGetPreviousItem()
@@ -871,6 +964,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) LookWithAngle(angle int) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MaxHealth() int {
 	return W.WMaxHealth()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MaxMana() int {
+	return W.WMaxMana()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Move(wp ns.WaypointObj) {
 	W.WMove(wp)
 }
@@ -885,6 +981,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Pause(dt script.Duration) 
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Pickup(item ns.Obj) bool {
 	return W.WPickup(item)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Player() ns.Player {
+	return W.WPlayer()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Pos() types.Pointf {
 	return W.WPos()
@@ -910,6 +1009,18 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Return() {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ScriptID() int {
 	return W.WScriptID()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealth(v int) {
+	W.WSetHealth(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMana(v int) {
+	W.WSetMana(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMaxHealth(v int) {
+	W.WSetMaxHealth(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMaxMana(v int) {
+	W.WSetMaxMana(v)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetOwner(owner ns.Obj) {
 	W.WSetOwner(owner)
 }
@@ -930,6 +1041,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Toggle() bool {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) TrapSpells(spell1 spell.Spell, spell2 spell.Spell, spell3 spell.Spell) {
 	W.WTrapSpells(spell1, spell2, spell3)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Type() ns.ObjType {
+	return W.WType()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) WalkTo(p types.Pointf) {
 	W.WWalkTo(p)
@@ -967,6 +1081,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup struct {
 	WIdle             func()
 	WLookAtDirection  func(dir int)
 	WMove             func(wp ns.WaypointObj)
+	WName             func() string
 	WObjGroupScriptID func() int
 	WPause            func(dt script.Duration)
 	WRaiseZombie      func()
@@ -1042,6 +1157,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) LookAtDirection(dir i
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Move(wp ns.WaypointObj) {
 	W.WMove(wp)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Name() string {
+	return W.WName()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) ObjGroupScriptID() int {
 	return W.WObjGroupScriptID()
 }
@@ -1110,6 +1228,70 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjHandle) ScriptID() int {
 	return W.WScriptID()
 }
 
+// _github_com_noxworld_dev_noxscript_ns_v4_ObjType is an interface wrapper for ObjType type
+type _github_com_noxworld_dev_noxscript_ns_v4_ObjType struct {
+	IValue       interface{}
+	WClass       func() object.Class
+	WCreate      func(pos ns.Positioner) ns.Obj
+	WHasClass    func(class class.Class) bool
+	WHasSubclass func(subclass subclass.SubClass) bool
+	WIndex       func() int
+	WName        func() string
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Class() object.Class {
+	return W.WClass()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Create(pos ns.Positioner) ns.Obj {
+	return W.WCreate(pos)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) HasClass(class class.Class) bool {
+	return W.WHasClass(class)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) HasSubclass(subclass subclass.SubClass) bool {
+	return W.WHasSubclass(subclass)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Index() int {
+	return W.WIndex()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Name() string {
+	return W.WName()
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_Player is an interface wrapper for Player type
+type _github_com_noxworld_dev_noxscript_ns_v4_Player struct {
+	IValue       interface{}
+	WBlind       func(blind bool)
+	WChangeScore func(score int)
+	WGetScore    func() int
+	WName        func() string
+	WPrint       func(message string)
+	WPrintStr    func(message string)
+	WUnit        func() ns.Obj
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Blind(blind bool) {
+	W.WBlind(blind)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) ChangeScore(score int) {
+	W.WChangeScore(score)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) GetScore() int {
+	return W.WGetScore()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Name() string {
+	return W.WName()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Print(message string) {
+	W.WPrint(message)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) PrintStr(message string) {
+	W.WPrintStr(message)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Unit() ns.Obj {
+	return W.WUnit()
+}
+
 // _github_com_noxworld_dev_noxscript_ns_v4_Positioner is an interface wrapper for Positioner type
 type _github_com_noxworld_dev_noxscript_ns_v4_Positioner struct {
 	IValue interface{}
@@ -1172,6 +1354,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj struct {
 	WDestroy           func()
 	WEachWall          func(recursive bool, fnc func(obj ns.WallObj) bool)
 	WEnable            func(enable bool)
+	WName              func() string
 	WScriptID          func() int
 	WToggle            func() bool
 	WWallGroupScriptID func() int
@@ -1185,6 +1368,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) EachWall(recursiv
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) Enable(enable bool) {
 	W.WEnable(enable)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) Name() string {
+	return W.WName()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj) ScriptID() int {
 	return W.WScriptID()
@@ -1259,6 +1445,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj struct {
 	IValue                 interface{}
 	WEachWaypoint          func(recursive bool, fnc func(obj ns.WaypointObj) bool)
 	WEnable                func(enable bool)
+	WName                  func() string
 	WScriptID              func() int
 	WToggle                func() bool
 	WWaypointGroupScriptID func() int
@@ -1269,6 +1456,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) EachWaypoint(
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) Enable(enable bool) {
 	W.WEnable(enable)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) Name() string {
+	return W.WName()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj) ScriptID() int {
 	return W.WScriptID()
@@ -1299,6 +1489,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj struct {
 	IValue            interface{}
 	WEnable           func(enable bool)
 	WIsEnabled        func() bool
+	WName             func() string
 	WPos              func() types.Pointf
 	WScriptID         func() int
 	WSetPos           func(p types.Pointf)
@@ -1311,6 +1502,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) Enable(enable bool
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) IsEnabled() bool {
 	return W.WIsEnabled()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) Name() string {
+	return W.WName()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WaypointObj) Pos() types.Pointf {
 	return W.WPos()

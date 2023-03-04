@@ -34,6 +34,8 @@ func Wall(x int, y int) WallObj {
 // WallGroupObj is a group of walls.
 type WallGroupObj interface {
 	WallGroupHandle
+	// Name returns wall group name.
+	Name() string
 	// Enable or disable the object.
 	Enable(enable bool)
 	// Toggle the object's enabled state.

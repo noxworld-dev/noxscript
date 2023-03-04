@@ -1,5 +1,5 @@
-github.com/noxworld-dev/opennox-lib v0.0.0-20221231150548-07fe5c19848c h1:tqr136/p8uHwDJZu6MxAh5rYC5+d3LfKrco6uRIqhUE=
-github.com/noxworld-dev/opennox-lib v0.0.0-20221231150548-07fe5c19848c/go.mod h1:TJuQIqsIaAFumYNVY4759J3XVuFzC3cyE0XcQuN6+uI=
+github.com/noxworld-dev/opennox-lib v0.0.0-20230304151458-840736e242c3 h1:ccO1tdFs/Vk7TnqfteMBU4ibU+1aFExnOiQqz08hC1Q=
+github.com/noxworld-dev/opennox-lib v0.0.0-20230304151458-840736e242c3/go.mod h1:8S23gxwGVAU2pMLz1FdVy/GvJwtj/mlXbrcU9zbDok4=
 golang.org/x/exp v0.0.0-20221031165847-c99f073a8326 h1:QfTh0HpN6hlw6D3vu8DAwC8pBIwikq0AI1evdm+FksE=
 golang.org/x/exp v0.0.0-20221031165847-c99f073a8326/go.mod h1:CxIveKay+FTh1D0yPZemJVgC/95VzuuOLq5Qi4xnoYc=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

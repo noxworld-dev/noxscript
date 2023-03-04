@@ -1,3 +1,5 @@
+//go:build !script
+
 package ns
 
 // SetRuntime is used by the script host to bind runtime for the script package.
