@@ -142,7 +142,6 @@ func init() {
 		"SToInt":                              reflect.ValueOf(eud.SToInt),
 		"SetMemory":                           reflect.ValueOf(eud.SetMemory),
 		"SetPlayerAction":                     reflect.ValueOf(eud.SetPlayerAction),
-		"SetUnitCallbackOnUseItem":            reflect.ValueOf(eud.SetUnitCallbackOnUseItem),
 		"SetUnitMaxHealth":                    reflect.ValueOf(eud.SetUnitMaxHealth),
 		"SpellUtilGetId":                      reflect.ValueOf(eud.SpellUtilGetId),
 		"SpellUtilGetPlayerAbilityCooldown":   reflect.ValueOf(eud.SpellUtilGetPlayerAbilityCooldown),
@@ -228,7 +227,6 @@ func init() {
 		"UniChatMessage":                      reflect.ValueOf(eud.UniChatMessage),
 		"UniPrint":                            reflect.ValueOf(eud.UniPrint),
 		"UniPrintToAll":                       reflect.ValueOf(eud.UniPrintToAll),
-		"UnitToPtr":                           reflect.ValueOf(eud.UnitToPtr),
 		"WallUtilAddBreakableWall":            reflect.ValueOf(eud.WallUtilAddBreakableWall),
 		"WallUtilCloseWallAtObjectPosition":   reflect.ValueOf(eud.WallUtilCloseWallAtObjectPosition),
 		"WallUtilCreateMagicWall":             reflect.ValueOf(eud.WallUtilCreateMagicWall),
@@ -238,16 +236,5 @@ func init() {
 		"WallUtilToggleWallAtObjectPosition":  reflect.ValueOf(eud.WallUtilToggleWallAtObjectPosition),
 		"WallUtilWallIsDestroyed":             reflect.ValueOf(eud.WallUtilWallIsDestroyed),
 		"WallUtilWallIsOpened":                reflect.ValueOf(eud.WallUtilWallIsOpened),
-
-		// type definitions
-		"Unit": reflect.ValueOf((*eud.Unit)(nil)),
-
-		// interface wrapper definitions
-		"_Unit": reflect.ValueOf((*_github_com_noxworld_dev_noxscript_eud_v171_Unit)(nil)),
 	}
-}
-
-// _github_com_noxworld_dev_noxscript_eud_v171_Unit is an interface wrapper for Unit type
-type _github_com_noxworld_dev_noxscript_eud_v171_Unit struct {
-	IValue interface{}
 }
