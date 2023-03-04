@@ -35,7 +35,7 @@ func ToStr(x int) string {
 //
 // Deprecated: use native conversion int(x).
 func FloatToInt(x float32) int {
-	var result int
+	var result int32
 	pos := x
 
 	if pos < 0.0 {
@@ -57,9 +57,9 @@ func FloatToInt(x float32) int {
 		result = 0x7fffffff
 	}
 	if x < 0.0 {
-		return -result
+		return -int(result)
 	} else {
-		return result
+		return int(result)
 	}
 }
 
@@ -67,14 +67,14 @@ func FloatToInt(x float32) int {
 //
 // Deprecated: use native conversion float32(x).
 func IntToFloat(x int) float32 {
-	var i int
-	pos := x
+	var i int32
+	pos := int32(x)
 	result := float32(0.0)
 	if pos < 0 {
 		pos = -pos
 	}
 	for i = 0; i < 32; i++ {
-		if (pos & 0x80000000) != 0 {
+		if (uint32(pos) & 0x80000000) != 0 {
 			result += 1.0
 		}
 		pos = pos << 1
