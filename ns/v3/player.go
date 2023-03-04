@@ -202,6 +202,8 @@ func ResetQuestStatus(name string) {
 // GetCharacterData gets character data.
 //
 // Get information about the loaded character. Index is in range 0-5.
+//
+// Deprecated: return data is likely useless.
 func GetCharacterData(idx int) int {
 	return ns4.GetCharacterData(idx)
 }
