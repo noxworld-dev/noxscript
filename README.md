@@ -4,8 +4,19 @@ This package provides NoxScript tooling as well as different script runtimes use
 
 ## Documentation
 
-- [NoxScript 3 (aka NS3)](https://pkg.go.dev/github.com/noxworld-dev/noxscript/ns/v3)
-- [NoxScript 4 (aka NS4)](https://pkg.go.dev/github.com/noxworld-dev/noxscript/ns/v4)
+Currently, the list of script runtimes includes:
+
+- [NoxScript 3 (aka NS3)](https://pkg.go.dev/github.com/noxworld-dev/noxscript/ns/v3) - compatible with original [NoxScript 3](https://noxtools.github.io/noxscript/)
+- [EUD v171](https://pkg.go.dev/github.com/noxworld-dev/noxscript/eud/v171) - compatible with Panic's [EUD project](https://gitlab.com/happysoft3/eud-maps-project/-/tree/master/eud_project/libs) (*work-in-progress*)
+- [NoxScript 4 (aka NS4)](https://pkg.go.dev/github.com/noxworld-dev/noxscript/ns/v4) - our new script runtime (**recommended**)
+
+For a quick guide on using NoxScript, see [quickstart](./docs/quickstart.md).
+
+Some of your questions may be answered already in [Q&A](./docs/questions-and-answers.md).
+There are [examples](./examples) available as well.
+
+If your question is not covered, please send a question [here](https://github.com/noxworld-dev/noxscript/discussions/new?category=q-a)
+or in our [Discord](https://discord.gg/HgDUeXhAyW).
 
 ## Legal
 
