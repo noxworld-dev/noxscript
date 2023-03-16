@@ -42,7 +42,7 @@ type FuncDef struct {
 	// Unused stores some unused values in script encoding.
 	// It will be written back during encoding.
 	Unused int
-	// Vars is a list of variable definitions.
+	// Vars is a list of variable definitions (args followed by locals).
 	Vars []VarDef
 	// VarsSz is a total size of memory required for all variables.
 	VarsSz int
@@ -51,7 +51,9 @@ type FuncDef struct {
 	// Rest is a trailing bytes after a Code section.
 	// It will be written back during encoding.
 	Rest []byte
-	// NamePref is prepended to all object name lookups during script runtime.
+	// NamePref is appended to all object name lookups during script runtime.
+	//
+	// TODO: rename to NameSuff
 	NamePref string
 	// PosOff is added to all position-related operations during script runtime.
 	PosOff image.Point
@@ -143,15 +145,15 @@ func ReadScript(rd io.Reader) (*Script, error) {
 		if err != nil {
 			return sc, err
 		}
-		sub := strings.SplitN(name, "%", 4)
-
 		def := FuncDef{Name: name}
-		if len(sub) == 4 {
-			// TODO: figure out how it's really used
+		if sub := strings.SplitN(name, "%", 4); len(sub) > 1 {
 			def.NamePref = "%" + sub[1]
-			x, _ := strconv.Atoi(sub[2])
-			y, _ := strconv.Atoi(sub[3])
-			def.PosOff = image.Pt(x, y)
+			if len(sub) > 2 {
+				def.PosOff.X, _ = strconv.Atoi(sub[2])
+			}
+			if len(sub) > 3 {
+				def.PosOff.X, _ = strconv.Atoi(sub[3])
+			}
 		}
 		def.Return, err = readInt()
 		if err != nil {
