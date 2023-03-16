@@ -38,7 +38,7 @@ type Game interface {
 	NoxScript() Implementation
 }
 
-// Implementation of the script runtime.
+// Implementation of the script runtime. Only used in the engine itself.
 type Implementation interface {
 	TimerByHandle(h TimerHandle) Timer
 	NewTimer(dt Duration, fnc Func, args ...any) Timer

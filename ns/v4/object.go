@@ -397,10 +397,14 @@ type Obj interface {
 	// GetHolder returns the object that contains the item in its inventory.
 	GetHolder() Obj
 
-	// Pickup cause object to pickup an item.
+	// Pickup cause object to pick up an item.
+	//
+	// Returns false if object cannot pick up the item.
 	Pickup(item Obj) bool
 
 	// Drop cause object to drop an item.
+	//
+	// Returns false if object cannot drop up the item.
 	Drop(item Obj) bool
 
 	// ZombieStayDown sets zombie to stay down.
