@@ -3,7 +3,6 @@ package eud
 import (
 	ns3 "github.com/noxworld-dev/noxscript/ns/v3"
 	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/opennox-lib/script"
 )
 
 func CheckGameRusLanguage() bool {
@@ -22,7 +21,7 @@ func UniPrint(unit ns3.ObjectID, msg string) {
 // UniChatMessage displays a string in a speech bubble for a given duration (in frames).
 // It does not localize the string.
 func UniChatMessage(unit ns3.ObjectID, msg string, duration int) {
-	ns4.AsObj(unit).ChatStrTimer(msg, script.Frames(duration))
+	ns4.AsObj(unit).ChatStrTimer(msg, ns4.Frames(duration))
 }
 
 // UniPrintToAll displays a string to everyone. It does not localize the string.
