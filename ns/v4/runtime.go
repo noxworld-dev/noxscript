@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/script"
 
 	"github.com/noxworld-dev/noxscript/ns/v4/audio"
 	"github.com/noxworld-dev/noxscript/ns/v4/effect"
@@ -25,9 +24,6 @@ func GetRuntime(ctx context.Context) Implementation {
 	if v, ok := ctx.Value(implKey{}).(Implementation); ok {
 		return v
 	}
-	if v, ok := script.GetGame(ctx).(Game); ok {
-		return v.NoxScript()
-	}
 	return impl
 }
 
@@ -36,9 +32,8 @@ func Runtime() Implementation {
 	return impl
 }
 
-// Game is an optional interface for script.Game that exposes NoxScript runtime.
+// Game is an optional interface for the engine that exposes NoxScript runtime.
 type Game interface {
-	script.Game
 	// NoxScript returns implementation of NoxScript runtime.
 	NoxScript() Implementation
 }
@@ -46,7 +41,7 @@ type Game interface {
 // Implementation of the script runtime.
 type Implementation interface {
 	TimerByHandle(h TimerHandle) Timer
-	NewTimer(dt script.Duration, fnc Func, args ...any) Timer
+	NewTimer(dt Duration, fnc Func, args ...any) Timer
 	RandomFloat(min float32, max float32) float32
 	Random(min int, max int) int
 	StopScript(value any)

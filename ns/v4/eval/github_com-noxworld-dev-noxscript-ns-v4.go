@@ -3,7 +3,6 @@
 package eval
 
 import (
-	"image"
 	"reflect"
 	"time"
 
@@ -17,7 +16,6 @@ import (
 	"github.com/noxworld-dev/noxscript/ns/v4/subclass"
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/script"
 	"github.com/noxworld-dev/opennox-lib/types"
 )
 
@@ -69,6 +67,7 @@ func init() {
 		"EventLookingForEnemy": reflect.ValueOf(ns.EventLookingForEnemy),
 		"EventLostEnemy":       reflect.ValueOf(ns.EventLostEnemy),
 		"EventRetreat":         reflect.ValueOf(ns.EventRetreat),
+		"Frames":               reflect.ValueOf(ns.Frames),
 		"GetAnswer":            reflect.ValueOf(ns.GetAnswer),
 		"GetCaller":            reflect.ValueOf(ns.GetCaller),
 		"GetCharacterData":     reflect.ValueOf(ns.GetCharacterData),
@@ -124,6 +123,7 @@ func init() {
 		"S":                    reflect.ValueOf(ns.S),
 		"SE":                   reflect.ValueOf(ns.SE),
 		"SW":                   reflect.ValueOf(ns.SW),
+		"Seconds":              reflect.ValueOf(ns.Seconds),
 		"SetDialog":            reflect.ValueOf(ns.SetDialog),
 		"SetHalberd":           reflect.ValueOf(ns.SetHalberd),
 		"SetQuestStatus":       reflect.ValueOf(ns.SetQuestStatus),
@@ -137,6 +137,7 @@ func init() {
 		"StoryPic":             reflect.ValueOf(ns.StoryPic),
 		"TellStory":            reflect.ValueOf(ns.TellStory),
 		"TellStoryStr":         reflect.ValueOf(ns.TellStoryStr),
+		"Time":                 reflect.ValueOf(ns.Time),
 		"UnBlind":              reflect.ValueOf(ns.UnBlind),
 		"Unknownb8":            reflect.ValueOf(ns.Unknownb8),
 		"Unknownb9":            reflect.ValueOf(ns.Unknownb9),
@@ -165,6 +166,7 @@ func init() {
 		"DialogAnswer":        reflect.ValueOf((*ns.DialogAnswer)(nil)),
 		"DialogType":          reflect.ValueOf((*ns.DialogType)(nil)),
 		"Direction":           reflect.ValueOf((*ns.Direction)(nil)),
+		"Duration":            reflect.ValueOf((*ns.Duration)(nil)),
 		"EntryType":           reflect.ValueOf((*ns.EntryType)(nil)),
 		"Func":                reflect.ValueOf((*ns.Func)(nil)),
 		"Game":                reflect.ValueOf((*ns.Game)(nil)),
@@ -181,6 +183,7 @@ func init() {
 		"Pointf":              reflect.ValueOf((*ns.Pointf)(nil)),
 		"Positioner":          reflect.ValueOf((*ns.Positioner)(nil)),
 		"StringID":            reflect.ValueOf((*ns.StringID)(nil)),
+		"TimeSource":          reflect.ValueOf((*ns.TimeSource)(nil)),
 		"Timer":               reflect.ValueOf((*ns.Timer)(nil)),
 		"TimerHandle":         reflect.ValueOf((*ns.TimerHandle)(nil)),
 		"WallGroupHandle":     reflect.ValueOf((*ns.WallGroupHandle)(nil)),
@@ -204,6 +207,7 @@ func init() {
 		"_ObjType":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjType)(nil)),
 		"_Player":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Player)(nil)),
 		"_Positioner":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Positioner)(nil)),
+		"_TimeSource":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimeSource)(nil)),
 		"_Timer":               reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Timer)(nil)),
 		"_TimerHandle":         reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimerHandle)(nil)),
 		"_WallGroupHandle":     reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle)(nil)),
@@ -224,92 +228,12 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Func struct {
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Game is an interface wrapper for Game type
 type _github_com_noxworld_dev_noxscript_ns_v4_Game struct {
-	IValue             interface{}
-	WAudioEffect       func(name string, pos script.Positioner)
-	WBlindPlayers      func(blind bool)
-	WCinemaPlayers     func(v bool)
-	WConsole           func(error bool) script.Printer
-	WFrame             func() int
-	WGlobal            func() script.Printer
-	WHostPlayer        func() script.Player
-	WNoxScript         func() ns.Implementation
-	WObjectByID        func(id string) script.Object
-	WObjectGroupByID   func(id string) *script.ObjectGroup
-	WObjectTypeByID    func(id string) script.ObjectType
-	WOnPlayerJoin      func(fnc func(p script.Player))
-	WOnPlayerLeave     func(fnc func(p script.Player))
-	WPlayers           func() []script.Player
-	WTime              func() time.Duration
-	WWallAt            func(pos types.Pointf) script.Wall
-	WWallAtGrid        func(pos image.Point) script.Wall
-	WWallGroupByID     func(id string) *script.WallGroup
-	WWallNear          func(pos types.Pointf) script.Wall
-	WWaypointByID      func(id string) script.Waypoint
-	WWaypointGroupByID func(id string) *script.WaypointGroup
+	IValue     interface{}
+	WNoxScript func() ns.Implementation
 }
 
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) AudioEffect(name string, pos script.Positioner) {
-	W.WAudioEffect(name, pos)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) BlindPlayers(blind bool) {
-	W.WBlindPlayers(blind)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) CinemaPlayers(v bool) {
-	W.WCinemaPlayers(v)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) Console(error bool) script.Printer {
-	return W.WConsole(error)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) Frame() int {
-	return W.WFrame()
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) Global() script.Printer {
-	return W.WGlobal()
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) HostPlayer() script.Player {
-	return W.WHostPlayer()
-}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) NoxScript() ns.Implementation {
 	return W.WNoxScript()
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) ObjectByID(id string) script.Object {
-	return W.WObjectByID(id)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) ObjectGroupByID(id string) *script.ObjectGroup {
-	return W.WObjectGroupByID(id)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) ObjectTypeByID(id string) script.ObjectType {
-	return W.WObjectTypeByID(id)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) OnPlayerJoin(fnc func(p script.Player)) {
-	W.WOnPlayerJoin(fnc)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) OnPlayerLeave(fnc func(p script.Player)) {
-	W.WOnPlayerLeave(fnc)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) Players() []script.Player {
-	return W.WPlayers()
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) Time() time.Duration {
-	return W.WTime()
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WallAt(pos types.Pointf) script.Wall {
-	return W.WWallAt(pos)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WallAtGrid(pos image.Point) script.Wall {
-	return W.WWallAtGrid(pos)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WallGroupByID(id string) *script.WallGroup {
-	return W.WWallGroupByID(id)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WallNear(pos types.Pointf) script.Wall {
-	return W.WWallNear(pos)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WaypointByID(id string) script.Waypoint {
-	return W.WWaypointByID(id)
-}
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Game) WaypointGroupByID(id string) *script.WaypointGroup {
-	return W.WWaypointGroupByID(id)
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Handle is an interface wrapper for Handle type
@@ -366,7 +290,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WMusicEvent            func()
 	WMusicPopEvent         func()
 	WMusicPushEvent        func()
-	WNewTimer              func(dt script.Duration, fnc any, args ...any) ns.Timer
+	WNewTimer              func(dt ns.Duration, fnc any, args ...any) ns.Timer
 	WNoWallSound           func(noWallSound bool)
 	WObject                func(name string) ns.Obj
 	WObjectByHandle        func(h ns.ObjHandle) ns.Obj
@@ -545,7 +469,7 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) MusicPopEvent()
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) MusicPushEvent() {
 	W.WMusicPushEvent()
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewTimer(dt script.Duration, fnc any, args ...any) ns.Timer {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewTimer(dt ns.Duration, fnc any, args ...any) ns.Timer {
 	return W.WNewTimer(dt, fnc, args...)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NoWallSound(noWallSound bool) {
@@ -720,22 +644,22 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WChangeScore       func(score int)
 	WChat              func(message string)
 	WChatStr           func(message string)
-	WChatStrTimer      func(message string, dt script.Duration)
-	WChatTimer         func(message string, dt script.Duration)
+	WChatStrTimer      func(message string, dt ns.Duration)
+	WChatTimer         func(message string, dt ns.Duration)
 	WClass             func() object.Class
 	WCreateMover       func(wp ns.WaypointObj, speed float32) ns.Obj
 	WCurrentHealth     func() int
 	WCurrentMana       func() int
 	WDamage            func(source ns.Obj, amount int, typ damage.Type)
 	WDelete            func()
-	WDeleteAfter       func(dt script.Duration)
+	WDeleteAfter       func(dt ns.Duration)
 	WDestroyChat       func()
 	WDirection         func() int
 	WDrop              func(item ns.Obj) bool
 	WEnable            func(enable bool)
-	WEnchant           func(enchant enchant.Enchant, dt script.Duration)
+	WEnchant           func(enchant enchant.Enchant, dt ns.Duration)
 	WEnchantOff        func(enchant enchant.Enchant)
-	WFlee              func(target ns.Positioner, dt script.Duration)
+	WFlee              func(target ns.Positioner, dt ns.Duration)
 	WFollow            func(target ns.Positioner)
 	WFreeze            func(freeze bool)
 	WGetClass          func() player.Class
@@ -770,7 +694,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WMove              func(wp ns.WaypointObj)
 	WObjScriptID       func() int
 	WOnEvent           func(event ns.ObjectEvent, fnc any)
-	WPause             func(dt script.Duration)
+	WPause             func(dt ns.Duration)
 	WPickup            func(item ns.Obj) bool
 	WPlayer            func() ns.Player
 	WPos               func() types.Pointf
@@ -826,10 +750,10 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Chat(message string) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStr(message string) {
 	W.WChatStr(message)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStrTimer(message string, dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatStrTimer(message string, dt ns.Duration) {
 	W.WChatStrTimer(message, dt)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatTimer(message string, dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ChatTimer(message string, dt ns.Duration) {
 	W.WChatTimer(message, dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Class() object.Class {
@@ -850,7 +774,7 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Damage(source ns.Obj, amou
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Delete() {
 	W.WDelete()
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) DeleteAfter(dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) DeleteAfter(dt ns.Duration) {
 	W.WDeleteAfter(dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) DestroyChat() {
@@ -865,13 +789,13 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Drop(item ns.Obj) bool {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Enable(enable bool) {
 	W.WEnable(enable)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Enchant(enchant enchant.Enchant, dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Enchant(enchant enchant.Enchant, dt ns.Duration) {
 	W.WEnchant(enchant, dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) EnchantOff(enchant enchant.Enchant) {
 	W.WEnchantOff(enchant)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Flee(target ns.Positioner, dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Flee(target ns.Positioner, dt ns.Duration) {
 	W.WFlee(target, dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Follow(target ns.Positioner) {
@@ -976,7 +900,7 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ObjScriptID() int {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) OnEvent(event ns.ObjectEvent, fnc any) {
 	W.WOnEvent(event, fnc)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Pause(dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Pause(dt ns.Duration) {
 	W.WPause(dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Pickup(item ns.Obj) bool {
@@ -1069,8 +993,8 @@ type _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup struct {
 	WDelete           func()
 	WEachObject       func(recursive bool, fnc func(obj ns.Obj) bool)
 	WEnable           func(enable bool)
-	WEnchant          func(enchant enchant.Enchant, dt script.Duration)
-	WFlee             func(target ns.Positioner, dt script.Duration)
+	WEnchant          func(enchant enchant.Enchant, dt ns.Duration)
+	WFlee             func(target ns.Positioner, dt ns.Duration)
 	WFollow           func(target ns.Positioner)
 	WGuard            func(p1 types.Pointf, p2 types.Pointf, distance float32)
 	WHasOwner         func(owner ns.Obj) bool
@@ -1083,7 +1007,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup struct {
 	WMove             func(wp ns.WaypointObj)
 	WName             func() string
 	WObjGroupScriptID func() int
-	WPause            func(dt script.Duration)
+	WPause            func(dt ns.Duration)
 	WRaiseZombie      func()
 	WResumeLevel      func(percent float32)
 	WRetreatLevel     func(percent float32)
@@ -1121,10 +1045,10 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) EachObject(recursive 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Enable(enable bool) {
 	W.WEnable(enable)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Enchant(enchant enchant.Enchant, dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Enchant(enchant enchant.Enchant, dt ns.Duration) {
 	W.WEnchant(enchant, dt)
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Flee(target ns.Positioner, dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Flee(target ns.Positioner, dt ns.Duration) {
 	W.WFlee(target, dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Follow(target ns.Positioner) {
@@ -1163,7 +1087,7 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Name() string {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) ObjGroupScriptID() int {
 	return W.WObjGroupScriptID()
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Pause(dt script.Duration) {
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) Pause(dt ns.Duration) {
 	W.WPause(dt)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup) RaiseZombie() {
@@ -1300,6 +1224,20 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Positioner struct {
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Positioner) Pos() types.Pointf {
 	return W.WPos()
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_TimeSource is an interface wrapper for TimeSource type
+type _github_com_noxworld_dev_noxscript_ns_v4_TimeSource struct {
+	IValue interface{}
+	WFrame func() int
+	WTime  func() time.Duration
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_TimeSource) Frame() int {
+	return W.WFrame()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_TimeSource) Time() time.Duration {
+	return W.WTime()
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Timer is an interface wrapper for Timer type

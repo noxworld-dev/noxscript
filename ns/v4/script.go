@@ -2,8 +2,6 @@ package ns
 
 import (
 	"math/rand"
-
-	"github.com/noxworld-dev/opennox-lib/script"
 )
 
 type Func = any
@@ -15,7 +13,16 @@ type Timer interface {
 }
 
 // NewTimer creates a timer that calls the given script function after a given delay.
-func NewTimer(dt script.Duration, fnc Func, args ...any) Timer {
+//
+// Example:
+//
+//	// Trigger by function reference:
+//	NewTimer(Frames(10), myCallback)
+//	// Trigger by function name (can call original NoxScript as well):
+//	NewTimer(Seconds(10), "myCallback")
+//	// Passing arguments to the callback:
+//	NewTimer(Time(3*time.Second), "myCallback", obj)
+func NewTimer(dt Duration, fnc Func, args ...any) Timer {
 	if impl == nil {
 		return nil
 	}

@@ -3,7 +3,6 @@ package ns
 import (
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/script"
 	"github.com/noxworld-dev/opennox-lib/types"
 
 	"github.com/noxworld-dev/noxscript/ns/v4/class"
@@ -299,7 +298,7 @@ type Obj interface {
 	Freeze(freeze bool)
 
 	// Pause an object temporarily.
-	Pause(dt script.Duration)
+	Pause(dt Duration)
 
 	// Move an object to a waypoint. The object must be movable or attached to a "Mover".
 	//
@@ -339,7 +338,7 @@ type Obj interface {
 	Delete()
 
 	// DeleteAfter delete object after a delay.
-	DeleteAfter(dt script.Duration)
+	DeleteAfter(dt Duration)
 
 	// Idle causes creature to idle.
 	Idle()
@@ -373,7 +372,7 @@ type Obj interface {
 	HitRanged(p Pointf)
 
 	// Flee causes creature to run away from target.
-	Flee(target Positioner, dt script.Duration)
+	Flee(target Positioner, dt Duration)
 
 	// HasItem gets whether the item is in the object's inventory.
 	HasItem(item Obj) bool
@@ -418,7 +417,7 @@ type Obj interface {
 	// ChatTimer displays a localized string in a speech bubble for a given duration (in seconds or frames).
 	//
 	// If the string is not in the string database, it will instead print an error message with "MISSING:".
-	ChatTimer(message StringID, dt script.Duration)
+	ChatTimer(message StringID, dt Duration)
 
 	// ChatStr displays a string in a speech bubble.
 	// It does not localize the string.
@@ -426,7 +425,7 @@ type Obj interface {
 
 	// ChatStrTimer displays a string in a speech bubble for a given duration (in seconds or frames).
 	// It does not localize the string.
-	ChatStrTimer(message string, dt script.Duration)
+	ChatStrTimer(message string, dt Duration)
 
 	// DestroyChat destroys object's speech bubble.
 	DestroyChat()
@@ -456,7 +455,7 @@ type Obj interface {
 	AwardSpell(spell spell.Spell) bool
 
 	// Enchant grants object an enchantment of a specified duration.
-	Enchant(enchant enchant.Enchant, dt script.Duration)
+	Enchant(enchant enchant.Enchant, dt Duration)
 
 	// EnchantOff removes enchant from an object.
 	EnchantOff(enchant enchant.Enchant)
@@ -491,7 +490,7 @@ type ObjGroup interface {
 	SetOwners(owners ObjGroup)
 
 	// Pause objects of a group temporarily.
-	Pause(dt script.Duration)
+	Pause(dt Duration)
 
 	// Move moves the objects in a group to a waypoint. The objects must be movable or attached to a "Mover".
 	//
@@ -526,7 +525,7 @@ type ObjGroup interface {
 	Guard(p1, p2 Pointf, distance float32)
 
 	// Flee causes creatures to run away from target.
-	Flee(target Positioner, dt script.Duration)
+	Flee(target Positioner, dt Duration)
 
 	// HitMelee causes objects in a group to melee attacks a location.
 	HitMelee(p Pointf)
@@ -565,7 +564,7 @@ type ObjGroup interface {
 	AwardSpell(spell spell.Spell)
 
 	// Enchant grants objects in a group an enchantment of a specified duration.
-	Enchant(enchant enchant.Enchant, dt script.Duration)
+	Enchant(enchant enchant.Enchant, dt Duration)
 
 	// EachObject calls fnc for all objects in the group.
 	// If fnc returns false, the iteration stops.
