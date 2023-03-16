@@ -32,7 +32,7 @@ func HasEnchant(id ObjectID, enchantID EnchantID) bool {
 //
 // This will grant an object an enchantment of a specified duration.
 func Enchant(id ObjectID, enchantID EnchantID, duration float32) {
-	ns4.AsObj(id).Enchant(enchant.Enchant(enchantID), timeSeconds(duration))
+	ns4.AsObj(id).Enchant(enchant.Enchant(enchantID), ns4.Seconds(float64(duration)))
 }
 
 // EnchantOff removes enchant from an object.
@@ -45,7 +45,7 @@ func EnchantOff(id ObjectID, enchantID EnchantID) {
 // This will grant the objects in a group an enchantment of a specified
 // duration.
 func GroupEnchant(id ObjectGroupID, enchantID EnchantID, duration float32) {
-	ns4.AsObjGroup(id).Enchant(enchant.Enchant(enchantID), timeSeconds(duration))
+	ns4.AsObjGroup(id).Enchant(enchant.Enchant(enchantID), ns4.Seconds(float64(duration)))
 }
 
 // CastSpellObjectObject casts a spell from source to target.

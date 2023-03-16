@@ -1,8 +1,6 @@
 package ns
 
 import (
-	"github.com/noxworld-dev/opennox-lib/script"
-
 	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
 	"github.com/noxworld-dev/noxscript/ns/v4/class"
 	"github.com/noxworld-dev/noxscript/ns/v4/damage"
@@ -363,7 +361,7 @@ func SetCallback(id ObjectID, idx ObjEvent, callback Func) {
 
 // DeleteObjectTimer deletes object after a delay.
 func DeleteObjectTimer(id ObjectID, delay int) {
-	ns4.AsObj(id).DeleteAfter(script.Frames(delay))
+	ns4.AsObj(id).DeleteAfter(ns4.Frames(delay))
 }
 
 // TrapSpells sets spells on a bomber.
@@ -431,7 +429,7 @@ func ClearOwner(id ObjectID) {
 // is not in the database string, it will instead print an error message with
 // "MISSING:".
 func ChatTimerSeconds(id ObjectID, message string, duration int) {
-	ns4.AsObj(id).ChatTimer(ns4.StringID(message), timeSeconds(float32(duration)))
+	ns4.AsObj(id).ChatTimer(ns4.StringID(message), ns4.Seconds(float64(duration)))
 }
 
 // ChatTimer causes an object to say a localized for string duration in frames.
@@ -440,7 +438,7 @@ func ChatTimerSeconds(id ObjectID, message string, duration int) {
 // is not in the database string, it will instead print an error message with
 // "MISSING:".
 func ChatTimer(id ObjectID, message string, duration int) {
-	ns4.AsObj(id).ChatTimer(ns4.StringID(message), script.Frames(duration))
+	ns4.AsObj(id).ChatTimer(ns4.StringID(message), ns4.Frames(duration))
 }
 
 // DestroyChat destroys object's speech bubble.
@@ -536,12 +534,12 @@ func ResumeLevel(id ObjectID, percent float32) {
 
 // RunAway causes creature to run away from target.
 func RunAway(id ObjectID, target ObjectID, duration int) {
-	ns4.AsObj(id).Flee(ns4.AsObj(target), script.Frames(duration))
+	ns4.AsObj(id).Flee(ns4.AsObj(target), ns4.Frames(duration))
 }
 
 // PauseObject pauses an object temporarily.
 func PauseObject(id ObjectID, duration int) {
-	ns4.AsObj(id).Pause(script.Frames(duration))
+	ns4.AsObj(id).Pause(ns4.Frames(duration))
 }
 
 // IsAttackedBy gets whether object1 is being attacked by object2.
@@ -672,12 +670,12 @@ func GroupResumeLevel(objectGroup ObjectGroupID, percent float32) {
 
 // GroupRunAway causes creatures to run away from target.
 func GroupRunAway(objectGroup ObjectGroupID, target ObjectID, duration int) {
-	ns4.AsObjGroup(objectGroup).Flee(ns4.AsObj(target), script.Frames(duration))
+	ns4.AsObjGroup(objectGroup).Flee(ns4.AsObj(target), ns4.Frames(duration))
 }
 
 // GroupPauseObject pauses objects of a group temporarily.
 func GroupPauseObject(objectGroup ObjectGroupID, duration int) {
-	ns4.AsObjGroup(objectGroup).Pause(script.Frames(duration))
+	ns4.AsObjGroup(objectGroup).Pause(ns4.Frames(duration))
 }
 
 // GroupWalk causes objects in a group to walk to a location.

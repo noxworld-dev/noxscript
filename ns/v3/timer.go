@@ -1,17 +1,8 @@
 package ns
 
 import (
-	"time"
-
-	"github.com/noxworld-dev/opennox-lib/script"
-
 	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
 )
-
-func timeSeconds(sec float32) script.Duration {
-	dur := time.Duration(float64(sec) * float64(time.Second))
-	return script.Time(dur)
-}
 
 type TimerID int
 
@@ -28,7 +19,7 @@ func (id TimerID) TimerScriptID() int {
 // This will create a timer that calls the given script function after a
 // delay given in seconds.
 func SecondTimer(seconds int, callback Func) TimerID {
-	return asTimer(ns4.NewTimer(timeSeconds(float32(seconds)), callback))
+	return asTimer(ns4.NewTimer(ns4.Seconds(float64(seconds)), callback))
 }
 
 // FrameTimer creates a timer with delay in frames.
@@ -36,7 +27,7 @@ func SecondTimer(seconds int, callback Func) TimerID {
 // This will create a timer that calls the given script function after a
 // delay given in frames.
 func FrameTimer(frames int, callback Func) TimerID {
-	return asTimer(ns4.NewTimer(script.Frames(frames), callback))
+	return asTimer(ns4.NewTimer(ns4.Frames(frames), callback))
 }
 
 // SecondTimerWithArg creates a timer with delay in seconds with an argument.
@@ -45,7 +36,7 @@ func FrameTimer(frames int, callback Func) TimerID {
 // delay given in seconds. The given argument will be passed into the script
 // function.
 func SecondTimerWithArg(seconds int, arg any, callback Func) TimerID {
-	return asTimer(ns4.NewTimer(timeSeconds(float32(seconds)), callback, arg))
+	return asTimer(ns4.NewTimer(ns4.Seconds(float64(seconds)), callback, arg))
 }
 
 // FrameTimerWithArg creates a timer with delay in frames with an argument.
@@ -54,7 +45,7 @@ func SecondTimerWithArg(seconds int, arg any, callback Func) TimerID {
 // delay given in frames. The given argument will be passed into the script
 // function.
 func FrameTimerWithArg(frames int, arg any, callback Func) TimerID {
-	return asTimer(ns4.NewTimer(script.Frames(frames), callback, arg))
+	return asTimer(ns4.NewTimer(ns4.Frames(frames), callback, arg))
 }
 
 // CancelTimer cancel a timer. Returns true on success.
