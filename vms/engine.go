@@ -3,11 +3,15 @@ package vms
 import (
 	"context"
 	"io"
+	"time"
 )
 
 // Engine is an interface to the game engine.
 type Engine interface {
-	TimeSource
+	// Frame returns current server tick/frame number.
+	Frame() int
+	// Time returns relative time from server start.
+	Time() time.Duration
 
 	// Console returns script console.
 	Console(error bool) Writer
