@@ -3,6 +3,7 @@
 package eval
 
 import (
+	"image/color"
 	"reflect"
 	"time"
 
@@ -67,6 +68,10 @@ func init() {
 		"EventLookingForEnemy": reflect.ValueOf(ns.EventLookingForEnemy),
 		"EventLostEnemy":       reflect.ValueOf(ns.EventLostEnemy),
 		"EventRetreat":         reflect.ValueOf(ns.EventRetreat),
+		"FindAllObjects":       reflect.ValueOf(ns.FindAllObjects),
+		"FindClosestObject":    reflect.ValueOf(ns.FindClosestObject),
+		"FindObject":           reflect.ValueOf(ns.FindObject),
+		"FindObjects":          reflect.ValueOf(ns.FindObjects),
 		"Frames":               reflect.ValueOf(ns.Frames),
 		"GetAnswer":            reflect.ValueOf(ns.GetAnswer),
 		"GetCaller":            reflect.ValueOf(ns.GetCaller),
@@ -101,6 +106,7 @@ func init() {
 		"NE":                   reflect.ValueOf(ns.NE),
 		"NW":                   reflect.ValueOf(ns.NW),
 		"NewTimer":             reflect.ValueOf(ns.NewTimer),
+		"NewWaypoint":          reflect.ValueOf(ns.NewWaypoint),
 		"NoWallSound":          reflect.ValueOf(ns.NoWallSound),
 		"NowWithSource":        reflect.ValueOf(ns.NowWithSource),
 		"Object":               reflect.ValueOf(ns.Object),
@@ -164,17 +170,29 @@ func init() {
 		"WithRuntime":          reflect.ValueOf(ns.WithRuntime),
 
 		// type definitions
+		"AND":                 reflect.ValueOf((*ns.AND)(nil)),
 		"DialogAnswer":        reflect.ValueOf((*ns.DialogAnswer)(nil)),
 		"DialogType":          reflect.ValueOf((*ns.DialogType)(nil)),
 		"Direction":           reflect.ValueOf((*ns.Direction)(nil)),
 		"Duration":            reflect.ValueOf((*ns.Duration)(nil)),
 		"EntryType":           reflect.ValueOf((*ns.EntryType)(nil)),
+		"EqualClass":          reflect.ValueOf((*ns.EqualClass)(nil)),
 		"Func":                reflect.ValueOf((*ns.Func)(nil)),
 		"Game":                reflect.ValueOf((*ns.Game)(nil)),
 		"HalberdLevel":        reflect.ValueOf((*ns.HalberdLevel)(nil)),
 		"Handle":              reflect.ValueOf((*ns.Handle)(nil)),
+		"HasAllClasses":       reflect.ValueOf((*ns.HasAllClasses)(nil)),
+		"HasClass":            reflect.ValueOf((*ns.HasClass)(nil)),
+		"HasType":             reflect.ValueOf((*ns.HasType)(nil)),
+		"HasTypeName":         reflect.ValueOf((*ns.HasTypeName)(nil)),
 		"Implementation":      reflect.ValueOf((*ns.Implementation)(nil)),
+		"InCirclef":           reflect.ValueOf((*ns.InCirclef)(nil)),
+		"InRectf":             reflect.ValueOf((*ns.InRectf)(nil)),
+		"NOT":                 reflect.ValueOf((*ns.NOT)(nil)),
+		"OR":                  reflect.ValueOf((*ns.OR)(nil)),
 		"Obj":                 reflect.ValueOf((*ns.Obj)(nil)),
+		"ObjCond":             reflect.ValueOf((*ns.ObjCond)(nil)),
+		"ObjCondFunc":         reflect.ValueOf((*ns.ObjCondFunc)(nil)),
 		"ObjGroup":            reflect.ValueOf((*ns.ObjGroup)(nil)),
 		"ObjGroupHandle":      reflect.ValueOf((*ns.ObjGroupHandle)(nil)),
 		"ObjHandle":           reflect.ValueOf((*ns.ObjHandle)(nil)),
@@ -202,6 +220,7 @@ func init() {
 		"_Handle":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Handle)(nil)),
 		"_Implementation":      reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Implementation)(nil)),
 		"_Obj":                 reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Obj)(nil)),
+		"_ObjCond":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjCond)(nil)),
 		"_ObjGroup":            reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjGroup)(nil)),
 		"_ObjGroupHandle":      reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjGroupHandle)(nil)),
 		"_ObjHandle":           reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjHandle)(nil)),
@@ -263,6 +282,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WDestroyEveryChat      func()
 	WEffect                func(effect effect.Effect, p1 ns.Positioner, p2 ns.Positioner)
 	WEndGame               func(class player.Class)
+	WFindObjects           func(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int
 	WGetAnswer             func(obj ns.Obj) ns.DialogAnswer
 	WGetCaller             func() ns.Obj
 	WGetCharacterData      func(field int) int
@@ -292,6 +312,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WMusicPopEvent         func()
 	WMusicPushEvent        func()
 	WNewTimer              func(dt ns.Duration, fnc any, args ...any) ns.Timer
+	WNewWaypoint           func(name string, pos types.Pointf) ns.WaypointObj
 	WNoWallSound           func(noWallSound bool)
 	WObject                func(name string) ns.Obj
 	WObjectByHandle        func(h ns.ObjHandle) ns.Obj
@@ -386,6 +407,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Effect(effect e
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) EndGame(class player.Class) {
 	W.WEndGame(class)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) FindObjects(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int {
+	return W.WFindObjects(fnc, conditions...)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) GetAnswer(obj ns.Obj) ns.DialogAnswer {
 	return W.WGetAnswer(obj)
 }
@@ -472,6 +496,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) MusicPushEvent(
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewTimer(dt ns.Duration, fnc any, args ...any) ns.Timer {
 	return W.WNewTimer(dt, fnc, args...)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewWaypoint(name string, pos types.Pointf) ns.WaypointObj {
+	return W.WNewWaypoint(name, pos)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NoWallSound(noWallSound bool) {
 	W.WNoWallSound(noWallSound)
@@ -660,6 +687,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WEnable            func(enable bool)
 	WEnchant           func(enchant enchant.Enchant, dt ns.Duration)
 	WEnchantOff        func(enchant enchant.Enchant)
+	WEquip             func(item ns.Obj) bool
 	WFlee              func(target ns.Positioner, dt ns.Duration)
 	WFollow            func(target ns.Positioner)
 	WFreeze            func(freeze bool)
@@ -686,6 +714,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WIsAttackedBy      func(by ns.Obj) bool
 	WIsEnabled         func() bool
 	WIsLocked          func() bool
+	WItems             func() []ns.Obj
 	WLock              func(lock bool)
 	WLookAtDirection   func(dir int)
 	WLookAtObject      func(target ns.Positioner)
@@ -706,6 +735,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WRetreatLevel      func(percent float32)
 	WReturn            func()
 	WScriptID          func() int
+	WSetColor          func(ind int, cl color.Color)
 	WSetHealth         func(v int)
 	WSetMana           func(v int)
 	WSetMaxHealth      func(v int)
@@ -796,6 +826,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Enchant(enchant enchant.En
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) EnchantOff(enchant enchant.Enchant) {
 	W.WEnchantOff(enchant)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Equip(item ns.Obj) bool {
+	return W.WEquip(item)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Flee(target ns.Positioner, dt ns.Duration) {
 	W.WFlee(target, dt)
 }
@@ -874,6 +907,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) IsEnabled() bool {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) IsLocked() bool {
 	return W.WIsLocked()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Items() []ns.Obj {
+	return W.WItems()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Lock(lock bool) {
 	W.WLock(lock)
 }
@@ -934,6 +970,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Return() {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ScriptID() int {
 	return W.WScriptID()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetColor(ind int, cl color.Color) {
+	W.WSetColor(ind, cl)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealth(v int) {
 	W.WSetHealth(v)
 }
@@ -981,6 +1020,16 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Z() float32 {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ZombieStayDown() {
 	W.WZombieStayDown()
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_ObjCond is an interface wrapper for ObjCond type
+type _github_com_noxworld_dev_noxscript_ns_v4_ObjCond struct {
+	IValue   interface{}
+	WMatches func(obj ns.Obj) bool
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjCond) Matches(obj ns.Obj) bool {
+	return W.WMatches(obj)
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_ObjGroup is an interface wrapper for ObjGroup type

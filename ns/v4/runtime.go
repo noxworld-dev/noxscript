@@ -57,6 +57,7 @@ type Implementation interface {
 	ObjectGroupByHandle(h ObjGroupHandle) ObjGroup
 	ObjectGroup(name string) ObjGroup
 	CreateObject(typ string, pos Positioner) Obj
+	FindObjects(fnc func(obj Obj) bool, conditions ...ObjCond) int
 	GetTrigger() Obj
 	GetCaller() Obj
 	GetHost() Obj
@@ -124,6 +125,7 @@ type Implementation interface {
 	Waypoints() []WaypointObj
 	WaypointByHandle(h WaypointHandle) WaypointObj
 	Waypoint(name string) WaypointObj
+	NewWaypoint(name string, pos Pointf) WaypointObj
 	WaypointGroupByHandle(h WaypointGroupHandle) WaypointGroupObj
 	WaypointGroup(name string) WaypointGroupObj
 

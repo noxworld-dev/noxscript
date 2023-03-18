@@ -1,6 +1,8 @@
 package ns
 
 import (
+	"image/color"
+
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
 	"github.com/noxworld-dev/opennox-lib/types"
@@ -247,6 +249,13 @@ type Obj interface {
 	// SetMaxMana sets maximum object mana. Only works on players.
 	SetMaxMana(v int)
 
+	// SetColor sets NPC or player color, given its index.
+	//
+	// Example:
+	//
+	// 		obj.SetColor(0, color.NRGBA{R:80, A: 255}) // dark red, 100% opacity
+	SetColor(ind int, cl color.Color)
+
 	// GetGold gets amount of gold for player object.
 	GetGold() int
 
@@ -394,6 +403,12 @@ type Obj interface {
 	// This is used with GetLastItem to iterate through an object's inventory.
 	GetPreviousItem() Obj
 
+	// Items returns all items in the object's inventory.
+	//
+	// Resulting slice is read-only, changes to it won't be reflected on the object.
+	// Use Pickup or Drop for adding or removing items.
+	Items() []Obj
+
 	// GetHolder returns the object that contains the item in its inventory.
 	GetHolder() Obj
 
@@ -406,6 +421,13 @@ type Obj interface {
 	//
 	// Returns false if object cannot drop up the item.
 	Drop(item Obj) bool
+
+	// Equip cause object to equip an item.
+	//
+	// If an item is not in object's inventory, it will be transferred to it.
+	//
+	// Returns false if object cannot pick up or equip the item.
+	Equip(item Obj) bool
 
 	// ZombieStayDown sets zombie to stay down.
 	ZombieStayDown()

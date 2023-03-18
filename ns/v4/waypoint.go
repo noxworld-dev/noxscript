@@ -33,6 +33,14 @@ type WaypointGroupObj interface {
 	EachWaypoint(recursive bool, fnc func(obj WaypointObj) bool)
 }
 
+// NewWaypoint creates a new waypoint with a given name and position.
+func NewWaypoint(name string, pos Pointf) WaypointObj {
+	if impl == nil {
+		return nil
+	}
+	return impl.NewWaypoint(name, pos)
+}
+
 // Waypoints returns a list of all waypoints.
 func Waypoints() []WaypointObj {
 	if impl == nil {
