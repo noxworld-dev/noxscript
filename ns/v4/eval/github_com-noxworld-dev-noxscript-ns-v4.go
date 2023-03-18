@@ -102,6 +102,7 @@ func init() {
 		"NW":                   reflect.ValueOf(ns.NW),
 		"NewTimer":             reflect.ValueOf(ns.NewTimer),
 		"NoWallSound":          reflect.ValueOf(ns.NoWallSound),
+		"NowWithSource":        reflect.ValueOf(ns.NowWithSource),
 		"Object":               reflect.ValueOf(ns.Object),
 		"ObjectGroup":          reflect.ValueOf(ns.ObjectGroup),
 		"ObjectType":           reflect.ValueOf(ns.ObjectType),

@@ -25,6 +25,14 @@ func Seconds(sec float64) Duration {
 	return Time(time.Duration(sec * float64(time.Second)))
 }
 
+// NowWithSource returns current timestamp of the time source.
+func NowWithSource(s TimeSource) Duration {
+	return Duration{
+		frames: s.Frame(),
+		time:   s.Time(),
+	}
+}
+
 // Duration for script events.
 //
 // It's separate from time.Duration because it can be expressed in game frames.
@@ -49,6 +57,16 @@ func (d Duration) Add(d2 Duration) Duration {
 	}
 	if d.IsTime() && d2.IsTime() {
 		d.time += d2.time
+	}
+	return d
+}
+
+func (d Duration) Sub(d2 Duration) Duration {
+	if d.IsFrames() && d2.IsFrames() {
+		d.frames -= d2.frames
+	}
+	if d.IsTime() && d2.IsTime() {
+		d.time -= d2.time
 	}
 	return d
 }
