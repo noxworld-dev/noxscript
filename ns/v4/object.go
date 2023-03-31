@@ -486,8 +486,11 @@ type Obj interface {
 	// EnchantOff removes enchant from an object.
 	EnchantOff(enchant enchant.Enchant)
 
-	// TrapSpells sets spells on a bomber.
-	TrapSpells(spell1 spell.Spell, spell2 spell.Spell, spell3 spell.Spell)
+	// TrapSpells sets spells on a bomber or a wizard trap.
+	TrapSpells(spells ...spell.Spell)
+
+	// TrapSpellsAdv sets spells on a bomber or a wizard trap. It's an advanced version of TrapSpells.
+	TrapSpellsAdv(spells []TrapSpell)
 
 	// OnEvent sets a function script to call for an event.
 	OnEvent(event ObjectEvent, fnc Func)

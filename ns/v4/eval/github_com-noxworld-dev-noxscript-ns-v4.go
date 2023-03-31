@@ -40,6 +40,7 @@ func init() {
 		"Blind":                reflect.ValueOf(ns.Blind),
 		"CancelDialog":         reflect.ValueOf(ns.CancelDialog),
 		"CastSpell":            reflect.ValueOf(ns.CastSpell),
+		"CastSpellLvl":         reflect.ValueOf(ns.CastSpellLvl),
 		"ClearMessages":        reflect.ValueOf(ns.ClearMessages),
 		"CreateObject":         reflect.ValueOf(ns.CreateObject),
 		"DeathScreen":          reflect.ValueOf(ns.DeathScreen),
@@ -106,6 +107,8 @@ func init() {
 		"NE":                   reflect.ValueOf(ns.NE),
 		"NW":                   reflect.ValueOf(ns.NW),
 		"NewTimer":             reflect.ValueOf(ns.NewTimer),
+		"NewTrap":              reflect.ValueOf(ns.NewTrap),
+		"NewTrapAdv":           reflect.ValueOf(ns.NewTrapAdv),
 		"NewWaypoint":          reflect.ValueOf(ns.NewWaypoint),
 		"NoWallSound":          reflect.ValueOf(ns.NoWallSound),
 		"NowWithSource":        reflect.ValueOf(ns.NowWithSource),
@@ -205,6 +208,7 @@ func init() {
 		"TimeSource":          reflect.ValueOf((*ns.TimeSource)(nil)),
 		"Timer":               reflect.ValueOf((*ns.Timer)(nil)),
 		"TimerHandle":         reflect.ValueOf((*ns.TimerHandle)(nil)),
+		"TrapSpell":           reflect.ValueOf((*ns.TrapSpell)(nil)),
 		"WallGroupHandle":     reflect.ValueOf((*ns.WallGroupHandle)(nil)),
 		"WallGroupObj":        reflect.ValueOf((*ns.WallGroupObj)(nil)),
 		"WallHandle":          reflect.ValueOf((*ns.WallHandle)(nil)),
@@ -276,6 +280,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WBlind                 func()
 	WCancelDialog          func(obj ns.Obj)
 	WCastSpell             func(spell spell.Spell, source ns.Positioner, target ns.Positioner)
+	WCastSpellLvl          func(spell spell.Spell, lvl int, source ns.Positioner, target ns.Positioner)
 	WClearMessages         func(player ns.Obj)
 	WCreateObject          func(typ string, pos ns.Positioner) ns.Obj
 	WDeathScreen           func(which int)
@@ -312,6 +317,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WMusicPopEvent         func()
 	WMusicPushEvent        func()
 	WNewTimer              func(dt ns.Duration, fnc any, args ...any) ns.Timer
+	WNewTrap               func(pos ns.Positioner, spells []ns.TrapSpell) ns.Obj
 	WNewWaypoint           func(name string, pos types.Pointf) ns.WaypointObj
 	WNoWallSound           func(noWallSound bool)
 	WObject                func(name string) ns.Obj
@@ -388,6 +394,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) CancelDialog(ob
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) CastSpell(spell spell.Spell, source ns.Positioner, target ns.Positioner) {
 	W.WCastSpell(spell, source, target)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) CastSpellLvl(spell spell.Spell, lvl int, source ns.Positioner, target ns.Positioner) {
+	W.WCastSpellLvl(spell, lvl, source, target)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ClearMessages(player ns.Obj) {
 	W.WClearMessages(player)
@@ -496,6 +505,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) MusicPushEvent(
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewTimer(dt ns.Duration, fnc any, args ...any) ns.Timer {
 	return W.WNewTimer(dt, fnc, args...)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewTrap(pos ns.Positioner, spells []ns.TrapSpell) ns.Obj {
+	return W.WNewTrap(pos, spells)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) NewWaypoint(name string, pos types.Pointf) ns.WaypointObj {
 	return W.WNewWaypoint(name, pos)
@@ -746,7 +758,8 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WSetRoamFlag       func(flags int)
 	WSetZ              func(z float32)
 	WToggle            func() bool
-	WTrapSpells        func(spell1 spell.Spell, spell2 spell.Spell, spell3 spell.Spell)
+	WTrapSpells        func(spells ...spell.Spell)
+	WTrapSpellsAdv     func(spells []ns.TrapSpell)
 	WType              func() ns.ObjType
 	WWalkTo            func(p types.Pointf)
 	WWander            func()
@@ -1003,8 +1016,11 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetZ(z float32) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Toggle() bool {
 	return W.WToggle()
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) TrapSpells(spell1 spell.Spell, spell2 spell.Spell, spell3 spell.Spell) {
-	W.WTrapSpells(spell1, spell2, spell3)
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) TrapSpells(spells ...spell.Spell) {
+	W.WTrapSpells(spells...)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) TrapSpellsAdv(spells []ns.TrapSpell) {
+	W.WTrapSpellsAdv(spells)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Type() ns.ObjType {
 	return W.WType()

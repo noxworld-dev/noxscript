@@ -108,6 +108,8 @@ type Implementation interface {
 
 	Effect(effect effect.Effect, p1, p2 Positioner)
 	CastSpell(spell spell.Spell, source, target Positioner)
+	CastSpellLvl(spell spell.Spell, lvl int, source, target Positioner)
+	NewTrap(pos Positioner, spells []TrapSpell) Obj
 
 	GetQuestStatus(name string) int
 	GetQuestStatusFloat(name string) float32
