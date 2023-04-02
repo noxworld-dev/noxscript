@@ -73,9 +73,10 @@ Thus, it's highly advised.
 For proper setup you will need:
 
 1. [Go 1.19+](https://go.dev/dl/) (for type checking, dependencies)
-2. [GoPls](https://github.com/golang/tools/blob/master/gopls/README.md) (for integration with VSCode)
-3. [VSCode](https://code.visualstudio.com/) (IDE itself)
-4. [Go extension](https://code.visualstudio.com/docs/languages/go) for VSCode (includes docs about `gopls`)
+2. [Git](https://git-scm.com/) (for [Windows](https://gitforwindows.org))
+3. [GoPls](https://github.com/golang/tools/blob/master/gopls/README.md) (for integration with VSCode)
+4. [VSCode](https://code.visualstudio.com/) (IDE itself)
+5. [Go extension](https://code.visualstudio.com/docs/languages/go) for VSCode (includes docs about `gopls`)
 
 Once done, we can make a new project:
 
@@ -174,12 +175,32 @@ This is, however, not typical to Go, since it's not clear if `IsTalking` is defi
 Now, going back to the full IDE setup, you may have noticed that it doesn't recognize the imports.
 This is because we need to update project dependencies in `go.mod`. We can do it with either of two ways:
 
-- `go mod tidy` from the terminal.
+- `go mod tidy` from the terminal (requires Git).
 - Or hover over the unrecognized import name, select `Quick fix...`, and `go get ...` there. 
 
 In both cases it should download the dependency (which is the NS runtime you selected) and will add it to `go.mod`.
 
 Now you should see autocomplete working properly on these runtime packages.
+
+## Updating runtimes
+
+Script runtimes are updated periodically in OpenNox to expose new functionality or fix bugs.
+
+This is done automatically, new OpenNox releases will enable new runtimes without any actions needed from the map developer.
+
+However, the IDE will not see new functions in the new runtime version, unless it is updated locally.
+
+The easiest way to update is to open `go.mod` file in the map folder and find the line with the runtime you want to update:
+```
+require (
+    github.com/noxworld-dev/noxscript/ns/v4 v4.3.0
+    // ... other lines
+)
+```
+
+Just update the version there, and run `go mod tidy`.
+The full list of version is available by clicking on the version in the [script documentation](https://pkg.go.dev/github.com/noxworld-dev/noxscript/ns/v4?tab=versions) 
+and on the [GitHub](https://github.com/noxworld-dev/noxscript/tags).
 
 ## Packages
 

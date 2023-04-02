@@ -15,6 +15,10 @@ See [this guide](./ns3_to_go.md).
 
 See [examples](../examples).
 
+## How to use new script functions?
+
+See [updating script runtimes](./quickstart.md#updating-runtimes) section.
+
 ## How does it all work?
 
 As you may know OpenNox supports original NoxScript, which is compiled into the map.
