@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	github.com/noxworld-dev/noxscript/ns v1.0.2
-	github.com/noxworld-dev/noxscript/ns/v4 v4.3.0
-	github.com/noxworld-dev/opennox-lib v0.0.0-20230304151458-840736e242c3
+	github.com/noxworld-dev/noxscript/ns/v4 v4.4.0
+	github.com/noxworld-dev/opennox-lib v0.0.0-20230401114242-a929e8b41328
 	github.com/stretchr/testify v1.8.2
 )
 
