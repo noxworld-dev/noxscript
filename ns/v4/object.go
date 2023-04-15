@@ -214,6 +214,23 @@ type Obj interface {
 	// The subclass overlaps, so you should probably test for the class first (via HasClass).
 	HasSubclass(subclass subclass.SubClass) bool
 
+	// MonsterStatus returns monster/NPC status flags.
+	// It returns 0 if object's class is not a monster/NPC.
+	MonsterStatus() object.MonsterStatus
+
+	// SetMonsterStatus sets monster status flags to the given value.
+	// For switching individual statuses see MonsterStatusEnable and MonsterStatusDisable.
+	// It does nothing if object's class is not a monster/NPC.
+	SetMonsterStatus(v object.MonsterStatus)
+
+	// MonsterStatusEnable enables specific monster status flags.
+	// It does nothing if object's class is not a monster/NPC.
+	MonsterStatusEnable(v object.MonsterStatus)
+
+	// MonsterStatusDisable disables specific monster status flags.
+	// It does nothing if object's class is not a monster/NPC.
+	MonsterStatusDisable(v object.MonsterStatus)
+
 	// HasEnchant gets whether object has an enchant.
 	HasEnchant(enchant enchant.Enchant) bool
 

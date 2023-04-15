@@ -3,11 +3,10 @@
 package eval
 
 import (
+	"github.com/noxworld-dev/noxscript/ns/v4/audio"
 	"go/constant"
 	"go/token"
 	"reflect"
-
-	"github.com/noxworld-dev/noxscript/ns/v4/audio"
 )
 
 func init() {

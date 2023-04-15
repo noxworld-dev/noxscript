@@ -3,10 +3,6 @@
 package eval
 
 import (
-	"image/color"
-	"reflect"
-	"time"
-
 	"github.com/noxworld-dev/noxscript/ns/v4"
 	"github.com/noxworld-dev/noxscript/ns/v4/audio"
 	"github.com/noxworld-dev/noxscript/ns/v4/class"
@@ -18,6 +14,9 @@ import (
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
 	"github.com/noxworld-dev/opennox-lib/types"
+	"image/color"
+	"reflect"
+	"time"
 )
 
 func init() {
@@ -674,97 +673,101 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) WideScreen(enab
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Obj is an interface wrapper for Obj type
 type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
-	IValue             interface{}
-	WAggressionLevel   func(level float32)
-	WApplyForce        func(force types.Pointf)
-	WAttack            func(target ns.Positioner)
-	WAwardSpell        func(spell spell.Spell) bool
-	WCanSee            func(obj ns.Obj) bool
-	WChangeGold        func(delta int)
-	WChangeScore       func(score int)
-	WChat              func(message string)
-	WChatStr           func(message string)
-	WChatStrTimer      func(message string, dt ns.Duration)
-	WChatTimer         func(message string, dt ns.Duration)
-	WClass             func() object.Class
-	WCreateMover       func(wp ns.WaypointObj, speed float32) ns.Obj
-	WCurrentHealth     func() int
-	WCurrentMana       func() int
-	WDamage            func(source ns.Obj, amount int, typ damage.Type)
-	WDelete            func()
-	WDeleteAfter       func(dt ns.Duration)
-	WDestroyChat       func()
-	WDirection         func() int
-	WDrop              func(item ns.Obj) bool
-	WEnable            func(enable bool)
-	WEnchant           func(enchant enchant.Enchant, dt ns.Duration)
-	WEnchantOff        func(enchant enchant.Enchant)
-	WEquip             func(item ns.Obj) bool
-	WFlee              func(target ns.Positioner, dt ns.Duration)
-	WFollow            func(target ns.Positioner)
-	WFreeze            func(freeze bool)
-	WGetClass          func() player.Class
-	WGetElevatorStatus func() int
-	WGetGold           func() int
-	WGetHolder         func() ns.Obj
-	WGetLastItem       func() ns.Obj
-	WGetLevel          func() int
-	WGetPreviousItem   func() ns.Obj
-	WGetScore          func() int
-	WGiveXp            func(xp float32)
-	WGuard             func(p1 types.Pointf, p2 types.Pointf, distance float32)
-	WHasClass          func(class class.Class) bool
-	WHasEnchant        func(enchant enchant.Enchant) bool
-	WHasItem           func(item ns.Obj) bool
-	WHasOwner          func(owner ns.Obj) bool
-	WHasOwnerIn        func(owners ns.ObjGroup) bool
-	WHasSubclass       func(subclass subclass.SubClass) bool
-	WHitMelee          func(p types.Pointf)
-	WHitRanged         func(p types.Pointf)
-	WHunt              func()
-	WIdle              func()
-	WIsAttackedBy      func(by ns.Obj) bool
-	WIsEnabled         func() bool
-	WIsLocked          func() bool
-	WItems             func() []ns.Obj
-	WLock              func(lock bool)
-	WLookAtDirection   func(dir int)
-	WLookAtObject      func(target ns.Positioner)
-	WLookWithAngle     func(angle int)
-	WMaxHealth         func() int
-	WMaxMana           func() int
-	WMove              func(wp ns.WaypointObj)
-	WObjScriptID       func() int
-	WOnEvent           func(event ns.ObjectEvent, fnc any)
-	WPause             func(dt ns.Duration)
-	WPickup            func(item ns.Obj) bool
-	WPlayer            func() ns.Player
-	WPos               func() types.Pointf
-	WPushTo            func(pos ns.Positioner, force float32)
-	WRaiseZombie       func()
-	WRestoreHealth     func(amount int)
-	WResumeLevel       func(percent float32)
-	WRetreatLevel      func(percent float32)
-	WReturn            func()
-	WScriptID          func() int
-	WSetColor          func(ind int, cl color.Color)
-	WSetHealth         func(v int)
-	WSetMana           func(v int)
-	WSetMaxHealth      func(v int)
-	WSetMaxMana        func(v int)
-	WSetOwner          func(owner ns.Obj)
-	WSetOwners         func(owners ns.ObjGroup)
-	WSetPos            func(p types.Pointf)
-	WSetRoamFlag       func(flags int)
-	WSetZ              func(z float32)
-	WToggle            func() bool
-	WTrapSpells        func(spells ...spell.Spell)
-	WTrapSpellsAdv     func(spells []ns.TrapSpell)
-	WType              func() ns.ObjType
-	WWalkTo            func(p types.Pointf)
-	WWander            func()
-	WZ                 func() float32
-	WZombieStayDown    func()
+	IValue                interface{}
+	WAggressionLevel      func(level float32)
+	WApplyForce           func(force types.Pointf)
+	WAttack               func(target ns.Positioner)
+	WAwardSpell           func(spell spell.Spell) bool
+	WCanSee               func(obj ns.Obj) bool
+	WChangeGold           func(delta int)
+	WChangeScore          func(score int)
+	WChat                 func(message string)
+	WChatStr              func(message string)
+	WChatStrTimer         func(message string, dt ns.Duration)
+	WChatTimer            func(message string, dt ns.Duration)
+	WClass                func() object.Class
+	WCreateMover          func(wp ns.WaypointObj, speed float32) ns.Obj
+	WCurrentHealth        func() int
+	WCurrentMana          func() int
+	WDamage               func(source ns.Obj, amount int, typ damage.Type)
+	WDelete               func()
+	WDeleteAfter          func(dt ns.Duration)
+	WDestroyChat          func()
+	WDirection            func() int
+	WDrop                 func(item ns.Obj) bool
+	WEnable               func(enable bool)
+	WEnchant              func(enchant enchant.Enchant, dt ns.Duration)
+	WEnchantOff           func(enchant enchant.Enchant)
+	WEquip                func(item ns.Obj) bool
+	WFlee                 func(target ns.Positioner, dt ns.Duration)
+	WFollow               func(target ns.Positioner)
+	WFreeze               func(freeze bool)
+	WGetClass             func() player.Class
+	WGetElevatorStatus    func() int
+	WGetGold              func() int
+	WGetHolder            func() ns.Obj
+	WGetLastItem          func() ns.Obj
+	WGetLevel             func() int
+	WGetPreviousItem      func() ns.Obj
+	WGetScore             func() int
+	WGiveXp               func(xp float32)
+	WGuard                func(p1 types.Pointf, p2 types.Pointf, distance float32)
+	WHasClass             func(class class.Class) bool
+	WHasEnchant           func(enchant enchant.Enchant) bool
+	WHasItem              func(item ns.Obj) bool
+	WHasOwner             func(owner ns.Obj) bool
+	WHasOwnerIn           func(owners ns.ObjGroup) bool
+	WHasSubclass          func(subclass subclass.SubClass) bool
+	WHitMelee             func(p types.Pointf)
+	WHitRanged            func(p types.Pointf)
+	WHunt                 func()
+	WIdle                 func()
+	WIsAttackedBy         func(by ns.Obj) bool
+	WIsEnabled            func() bool
+	WIsLocked             func() bool
+	WItems                func() []ns.Obj
+	WLock                 func(lock bool)
+	WLookAtDirection      func(dir int)
+	WLookAtObject         func(target ns.Positioner)
+	WLookWithAngle        func(angle int)
+	WMaxHealth            func() int
+	WMaxMana              func() int
+	WMonsterStatus        func() object.MonsterStatus
+	WMonsterStatusDisable func(v object.MonsterStatus)
+	WMonsterStatusEnable  func(v object.MonsterStatus)
+	WMove                 func(wp ns.WaypointObj)
+	WObjScriptID          func() int
+	WOnEvent              func(event ns.ObjectEvent, fnc any)
+	WPause                func(dt ns.Duration)
+	WPickup               func(item ns.Obj) bool
+	WPlayer               func() ns.Player
+	WPos                  func() types.Pointf
+	WPushTo               func(pos ns.Positioner, force float32)
+	WRaiseZombie          func()
+	WRestoreHealth        func(amount int)
+	WResumeLevel          func(percent float32)
+	WRetreatLevel         func(percent float32)
+	WReturn               func()
+	WScriptID             func() int
+	WSetColor             func(ind int, cl color.Color)
+	WSetHealth            func(v int)
+	WSetMana              func(v int)
+	WSetMaxHealth         func(v int)
+	WSetMaxMana           func(v int)
+	WSetMonsterStatus     func(v object.MonsterStatus)
+	WSetOwner             func(owner ns.Obj)
+	WSetOwners            func(owners ns.ObjGroup)
+	WSetPos               func(p types.Pointf)
+	WSetRoamFlag          func(flags int)
+	WSetZ                 func(z float32)
+	WToggle               func() bool
+	WTrapSpells           func(spells ...spell.Spell)
+	WTrapSpellsAdv        func(spells []ns.TrapSpell)
+	WType                 func() ns.ObjType
+	WWalkTo               func(p types.Pointf)
+	WWander               func()
+	WZ                    func() float32
+	WZombieStayDown       func()
 }
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) AggressionLevel(level float32) {
@@ -941,6 +944,15 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MaxHealth() int {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MaxMana() int {
 	return W.WMaxMana()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MonsterStatus() object.MonsterStatus {
+	return W.WMonsterStatus()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MonsterStatusDisable(v object.MonsterStatus) {
+	W.WMonsterStatusDisable(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MonsterStatusEnable(v object.MonsterStatus) {
+	W.WMonsterStatusEnable(v)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Move(wp ns.WaypointObj) {
 	W.WMove(wp)
 }
@@ -997,6 +1009,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMaxHealth(v int) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMaxMana(v int) {
 	W.WSetMaxMana(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMonsterStatus(v object.MonsterStatus) {
+	W.WSetMonsterStatus(v)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetOwner(owner ns.Obj) {
 	W.WSetOwner(owner)
