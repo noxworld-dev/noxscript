@@ -170,3 +170,19 @@ func DistanceUnitToUnit(unit1, unit2 ns3.ObjectID) float32 {
 	}
 	return float32(obj1.Pos().Sub(obj2.Pos()).Len())
 }
+
+func GetUnitStatus(unit ns3.ObjectID) int {
+	obj := ns4.AsObj(unit)
+	if obj == nil {
+		return 0
+	}
+	return int(obj.MonsterStatus())
+}
+
+func SetUnitStatus(unit ns3.ObjectID, stat int) {
+	obj := ns4.AsObj(unit)
+	if obj == nil {
+		return
+	}
+	obj.SetMonsterStatus(object.MonsterStatus(stat))
+}
