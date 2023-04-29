@@ -3,6 +3,10 @@
 package eval
 
 import (
+	"image/color"
+	"reflect"
+	"time"
+
 	"github.com/noxworld-dev/noxscript/ns/v4"
 	"github.com/noxworld-dev/noxscript/ns/v4/audio"
 	"github.com/noxworld-dev/noxscript/ns/v4/class"
@@ -14,9 +18,6 @@ import (
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
 	"github.com/noxworld-dev/opennox-lib/types"
-	"image/color"
-	"reflect"
-	"time"
 )
 
 func init() {
@@ -699,6 +700,9 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WEnchant              func(enchant enchant.Enchant, dt ns.Duration)
 	WEnchantOff           func(enchant enchant.Enchant)
 	WEquip                func(item ns.Obj) bool
+	WFlags                func() object.Flags
+	WFlagsDisable         func(v object.Flags)
+	WFlagsEnable          func(v object.Flags)
 	WFlee                 func(target ns.Positioner, dt ns.Duration)
 	WFollow               func(target ns.Positioner)
 	WFreeze               func(freeze bool)
@@ -750,6 +754,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WReturn               func()
 	WScriptID             func() int
 	WSetColor             func(ind int, cl color.Color)
+	WSetFlags             func(v object.Flags)
 	WSetHealth            func(v int)
 	WSetMana              func(v int)
 	WSetMaxHealth         func(v int)
@@ -844,6 +849,15 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) EnchantOff(enchant enchant
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Equip(item ns.Obj) bool {
 	return W.WEquip(item)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Flags() object.Flags {
+	return W.WFlags()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) FlagsDisable(v object.Flags) {
+	W.WFlagsDisable(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) FlagsEnable(v object.Flags) {
+	W.WFlagsEnable(v)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Flee(target ns.Positioner, dt ns.Duration) {
 	W.WFlee(target, dt)
@@ -997,6 +1011,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ScriptID() int {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetColor(ind int, cl color.Color) {
 	W.WSetColor(ind, cl)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetFlags(v object.Flags) {
+	W.WSetFlags(v)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealth(v int) {
 	W.WSetHealth(v)
@@ -1238,6 +1255,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_ObjType struct {
 	IValue       interface{}
 	WClass       func() object.Class
 	WCreate      func(pos ns.Positioner) ns.Obj
+	WFlags       func() object.Flags
 	WHasClass    func(class class.Class) bool
 	WHasSubclass func(subclass subclass.SubClass) bool
 	WIndex       func() int
@@ -1249,6 +1267,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Class() object.Class {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Create(pos ns.Positioner) ns.Obj {
 	return W.WCreate(pos)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) Flags() object.Flags {
+	return W.WFlags()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_ObjType) HasClass(class class.Class) bool {
 	return W.WHasClass(class)

@@ -3,8 +3,9 @@
 package eval
 
 import (
-	"github.com/noxworld-dev/noxscript/ns/v4/damage"
 	"reflect"
+
+	"github.com/noxworld-dev/noxscript/ns/v4/damage"
 )
 
 func init() {

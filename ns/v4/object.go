@@ -175,6 +175,9 @@ type ObjType interface {
 	// The subclass overlaps, so you should probably test for the class first (via HasClass).
 	HasSubclass(subclass subclass.SubClass) bool
 
+	// Flags returns object type flags.
+	Flags() object.Flags
+
 	// Create and object of this type.
 	Create(pos Positioner) Obj
 }
@@ -213,6 +216,19 @@ type Obj interface {
 	// HasSubclass tests whether an object has a specific subclass.
 	// The subclass overlaps, so you should probably test for the class first (via HasClass).
 	HasSubclass(subclass subclass.SubClass) bool
+
+	// Flags returns object flags.
+	Flags() object.Flags
+
+	// SetFlags sets object flags to the given value.
+	// For switching individual flags see FlagsEnable and FlagsDisable.
+	SetFlags(v object.Flags)
+
+	// FlagsEnable enables specific object flags.
+	FlagsEnable(v object.Flags)
+
+	// FlagsDisable disables specific object flags.
+	FlagsDisable(v object.Flags)
 
 	// MonsterStatus returns monster/NPC status flags.
 	// It returns 0 if object's class is not a monster/NPC.
