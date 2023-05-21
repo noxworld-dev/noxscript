@@ -551,9 +551,17 @@ func (t *translator) translateCode(d *ast.BlockStmt, ret bool, vars []ast.Expr, 
 			case asm.OpLoadVarInt, asm.OpLoadVarFloat, asm.OpLoadVarString, asm.OpLoadVarPtr:
 				var x ast.Expr
 				if v.IsGlobal != 0 {
-					x = t.globals[v.Index]
+					if v.Index < 0 || int(v.Index) >= len(t.globals) {
+						x = ast.NewIdent(fmt.Sprintf("gvarUnk%d", v.Index))
+					} else {
+						x = t.globals[v.Index]
+					}
 				} else {
-					x = vars[v.Index]
+					if v.Index < 0 || int(v.Index) >= len(vars) {
+						x = ast.NewIdent(fmt.Sprintf("unk%d", v.Index))
+					} else {
+						x = vars[v.Index]
+					}
 				}
 				switch v.Op {
 				case asm.OpLoadVarFloat:
@@ -597,9 +605,17 @@ func (t *translator) translateCode(d *ast.BlockStmt, ret bool, vars []ast.Expr, 
 					if !isInd {
 						rhs = indU.X
 					} else if isGlobal != 0 {
-						rhs = t.globals[ind]
+						if ind < 0 || ind >= len(t.globals) {
+							rhs = ast.NewIdent(fmt.Sprintf("gvarUnk%d", ind))
+						} else {
+							rhs = t.globals[ind]
+						}
 					} else {
-						rhs = vars[ind]
+						if ind < 0 || ind >= len(vars) {
+							rhs = ast.NewIdent(fmt.Sprintf("unk%d", ind))
+						} else {
+							rhs = vars[ind]
+						}
 					}
 					rhs = &ast.IndexExpr{X: rhs, Index: off}
 				} else {
@@ -646,9 +662,17 @@ func (t *translator) translateCode(d *ast.BlockStmt, ret bool, vars []ast.Expr, 
 				if isPtr {
 					lhs = indU.X
 				} else if isGlobal != 0 {
-					lhs = t.globals[ind]
+					if ind < 0 || ind >= len(t.globals) {
+						lhs = ast.NewIdent(fmt.Sprintf("gvarUnk%d", ind))
+					} else {
+						lhs = t.globals[ind]
+					}
 				} else {
-					lhs = vars[ind]
+					if ind < 0 || ind >= len(vars) {
+						lhs = ast.NewIdent(fmt.Sprintf("unk%d", ind))
+					} else {
+						lhs = vars[ind]
+					}
 				}
 				switch v.Op {
 				case asm.OpStoreFloat, asm.OpStoreFloatAdd, asm.OpStoreFloatSub, asm.OpStoreFloatMul, asm.OpStoreFloatDiv:
