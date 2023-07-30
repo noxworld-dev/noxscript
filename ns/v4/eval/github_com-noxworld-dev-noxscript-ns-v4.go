@@ -679,6 +679,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WApplyForce           func(force types.Pointf)
 	WAttack               func(target ns.Positioner)
 	WAwardSpell           func(spell spell.Spell) bool
+	WBaseSpeed            func() float32
 	WCanSee               func(obj ns.Obj) bool
 	WChangeGold           func(delta int)
 	WChangeScore          func(score int)
@@ -690,6 +691,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WCreateMover          func(wp ns.WaypointObj, speed float32) ns.Obj
 	WCurrentHealth        func() int
 	WCurrentMana          func() int
+	WCurrentSpeed         func() float32
 	WDamage               func(source ns.Obj, amount int, typ damage.Type)
 	WDelete               func()
 	WDeleteAfter          func(dt ns.Duration)
@@ -753,6 +755,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WRetreatLevel         func(percent float32)
 	WReturn               func()
 	WScriptID             func() int
+	WSetBaseSpeed         func(v float32)
 	WSetColor             func(ind int, cl color.Color)
 	WSetFlags             func(v object.Flags)
 	WSetHealth            func(v int)
@@ -764,7 +767,9 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WSetOwners            func(owners ns.ObjGroup)
 	WSetPos               func(p types.Pointf)
 	WSetRoamFlag          func(flags int)
+	WSetStrength          func(v int)
 	WSetZ                 func(z float32)
+	WStrength             func() int
 	WToggle               func() bool
 	WTrapSpells           func(spells ...spell.Spell)
 	WTrapSpellsAdv        func(spells []ns.TrapSpell)
@@ -786,6 +791,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Attack(target ns.Positione
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) AwardSpell(spell spell.Spell) bool {
 	return W.WAwardSpell(spell)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) BaseSpeed() float32 {
+	return W.WBaseSpeed()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CanSee(obj ns.Obj) bool {
 	return W.WCanSee(obj)
@@ -819,6 +827,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentHealth() int {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentMana() int {
 	return W.WCurrentMana()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentSpeed() float32 {
+	return W.WCurrentSpeed()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Damage(source ns.Obj, amount int, typ damage.Type) {
 	W.WDamage(source, amount, typ)
@@ -1009,6 +1020,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Return() {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) ScriptID() int {
 	return W.WScriptID()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetBaseSpeed(v float32) {
+	W.WSetBaseSpeed(v)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetColor(ind int, cl color.Color) {
 	W.WSetColor(ind, cl)
 }
@@ -1042,8 +1056,14 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetPos(p types.Pointf) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetRoamFlag(flags int) {
 	W.WSetRoamFlag(flags)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetStrength(v int) {
+	W.WSetStrength(v)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetZ(z float32) {
 	W.WSetZ(z)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Strength() int {
+	return W.WStrength()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Toggle() bool {
 	return W.WToggle()

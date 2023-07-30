@@ -282,6 +282,21 @@ type Obj interface {
 	// SetMaxMana sets maximum object mana. Only works on players.
 	SetMaxMana(v int)
 
+	// CurrentSpeed returns current speed of the object.
+	CurrentSpeed() float32
+
+	// BaseSpeed returns base speed of the object.
+	BaseSpeed() float32
+
+	// SetBaseSpeed sets base speed of the object.
+	SetBaseSpeed(v float32)
+
+	// Strength returns strength of the unit.
+	Strength() int
+
+	// SetStrength sets strength of the unit.
+	SetStrength(v int)
+
 	// SetColor sets NPC or player color, given its index.
 	//
 	// Example:
