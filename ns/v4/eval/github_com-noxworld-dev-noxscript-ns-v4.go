@@ -702,6 +702,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WEnchant              func(enchant enchant.Enchant, dt ns.Duration)
 	WEnchantOff           func(enchant enchant.Enchant)
 	WEquip                func(item ns.Obj) bool
+	WFindItems            func(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int
 	WFlags                func() object.Flags
 	WFlagsDisable         func(v object.Flags)
 	WFlagsEnable          func(v object.Flags)
@@ -731,7 +732,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WIsAttackedBy         func(by ns.Obj) bool
 	WIsEnabled            func() bool
 	WIsLocked             func() bool
-	WItems                func() []ns.Obj
+	WItems                func(conditions ...ns.ObjCond) []ns.Obj
 	WLock                 func(lock bool)
 	WLookAtDirection      func(dir int)
 	WLookAtObject         func(target ns.Positioner)
@@ -861,6 +862,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) EnchantOff(enchant enchant
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Equip(item ns.Obj) bool {
 	return W.WEquip(item)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) FindItems(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int {
+	return W.WFindItems(fnc, conditions...)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Flags() object.Flags {
 	return W.WFlags()
 }
@@ -948,8 +952,8 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) IsEnabled() bool {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) IsLocked() bool {
 	return W.WIsLocked()
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Items() []ns.Obj {
-	return W.WItems()
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Items(conditions ...ns.ObjCond) []ns.Obj {
+	return W.WItems(conditions...)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Lock(lock bool) {
 	W.WLock(lock)

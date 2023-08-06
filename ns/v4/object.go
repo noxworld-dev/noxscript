@@ -431,8 +431,30 @@ type Obj interface {
 	// Flee causes creature to run away from target.
 	Flee(target Positioner, dt Duration)
 
-	// HasItem gets whether the item is in the object's inventory.
+	// HasItem gets whether this specific item is in the object's inventory.
+	// For searching items by object type or other properties, see FindItems.
 	HasItem(item Obj) bool
+
+	// FindItems calls fnc for all items matching all the conditions.
+	// It returns a number of items matched. If fnc returns false, the function stops the search.
+	// If fnc is nil, the function only counts a number of objects matching a condition.
+	//
+	// Example:
+	//
+	//	// Check if unit has at least one apple
+	//	if obj.FindItems(nil, ns.HasTypeName{"RedApple"}) != 0 {
+	//		fmt.Println("Has an apple!")
+	//	}
+	//
+	//	// Drop all armor
+	//	obj.FindItems(
+	//		func(it ns.Obj) {
+	//			obj.Drop(it)
+	//			return true
+	//		},
+	//		ns.EqualClass(object.ClassArmor),
+	//	)
+	FindItems(fnc func(obj Obj) bool, conditions ...ObjCond) int
 
 	// GetLastItem returns the object of the last item in the object's inventory. If the inventory is empty, it returns nil.
 	//
@@ -452,10 +474,11 @@ type Obj interface {
 	GetPreviousItem() Obj
 
 	// Items returns all items in the object's inventory.
+	// An optional list of conditions can be specified for filtering returned items.
 	//
 	// Resulting slice is read-only, changes to it won't be reflected on the object.
 	// Use Pickup or Drop for adding or removing items.
-	Items() []Obj
+	Items(conditions ...ObjCond) []Obj
 
 	// GetHolder returns the object that contains the item in its inventory.
 	GetHolder() Obj
@@ -467,7 +490,7 @@ type Obj interface {
 
 	// Drop cause object to drop an item.
 	//
-	// Returns false if object cannot drop up the item.
+	// Returns false if object cannot drop the item.
 	Drop(item Obj) bool
 
 	// Equip cause object to equip an item.
