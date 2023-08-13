@@ -28,7 +28,7 @@ func TestTranslate(t *testing.T) {
 	s, err := asm.ReadScript(f)
 	require.NoError(t, err)
 
-	af := noxast.Translate(s)
+	af := noxast.Translate(s, nil)
 	var buf bytes.Buffer
 	format.Node(&buf, token.NewFileSet(), af)
 	t.Logf("\n%s", &buf)

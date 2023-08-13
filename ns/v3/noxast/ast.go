@@ -34,9 +34,18 @@ func importPathFor(v any) string {
 	return t.PkgPath()
 }
 
-func Translate(s *asm.Script) *ast.File {
+type Config struct {
+	DoNotOptimize bool
+	DoNotFold     bool
+}
+
+func Translate(s *asm.Script, c *Config) *ast.File {
+	if c == nil {
+		c = &Config{}
+	}
 	t := &translator{
 		s: s,
+		c: c,
 		f: &ast.File{
 			Name: ast.NewIdent("script"),
 		},
@@ -237,6 +246,7 @@ func typeHintFrom(x ast.Expr) []reflect.Type {
 
 type translator struct {
 	s     *asm.Script
+	c     *Config
 	f     *ast.File
 	types struct {
 		nil      *ast.Ident
@@ -270,6 +280,7 @@ func (t *translator) Translate() {
 			if i := strings.IndexByte(name, ':'); i > 0 {
 				name = name[:i]
 			}
+			name = strings.ReplaceAll(name, " ", "_")
 			t.funcs = append(t.funcs, ast.NewIdent(name))
 		}
 	}
@@ -810,15 +821,21 @@ func isLogicalOp(op token.Token) bool {
 }
 
 func (t *translator) simplifyCode(d *ast.BlockStmt, ret bool) {
-	t.removeSingleDefines(d)
-	t.makeSwitches(d)
-	t.makeLoops(d)
-	if !ret {
-		t.removeLastReturn(d)
+	if !t.c.DoNotOptimize {
+		t.removeSingleDefines(d)
 	}
-	t.removeUnusedDefines(d)
-	t.removeUnusedLabels(d)
-	t.fixUnusedVars(d)
+	if !t.c.DoNotFold {
+		t.makeSwitches(d)
+		t.makeLoops(d)
+		if !ret {
+			t.removeLastReturn(d)
+		}
+	}
+	if !t.c.DoNotOptimize {
+		t.removeUnusedDefines(d)
+		t.removeUnusedLabels(d)
+		t.fixUnusedVars(d)
+	}
 }
 
 func (t *translator) removeSingleDefines(d *ast.BlockStmt) {
@@ -853,6 +870,9 @@ func (t *translator) removeSingleDefines(d *ast.BlockStmt) {
 			continue
 		}
 		val := df.Rhs[0]
+		if hasSideEffects(val) {
+			continue
+		}
 		usages := cntUsages(d.List[i+1], id)
 		if usages > 1 {
 			continue
@@ -1382,6 +1402,29 @@ func cntUsages(root ast.Node, id *ast.Ident) int {
 		return true
 	})
 	return usages
+}
+
+func hasSideEffects(root ast.Node) bool {
+	has := false
+	ast.Inspect(root, func(n ast.Node) bool {
+		if has {
+			return false
+		}
+		call, ok := n.(*ast.CallExpr)
+		if !ok {
+			return false
+		}
+		switch fnc := call.Fun.(type) {
+		case *ast.SelectorExpr:
+			if def, ok := fnc.Sel.Obj.Data.(*builtinDef); !ok || !def.Idemp {
+				has = true
+			}
+		default:
+			has = true
+		}
+		return !has
+	})
+	return has
 }
 
 func arrayLen(x ast.Expr) (int, bool) {
