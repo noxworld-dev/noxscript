@@ -230,6 +230,15 @@ type Obj interface {
 	// FlagsDisable disables specific object flags.
 	FlagsDisable(v object.Flags)
 
+	// HasTeam checks if an object belongs to a team.
+	HasTeam(t Team) bool
+
+	// Team returns current team of an object, if any.
+	Team() Team
+
+	// SetTeam sets team of an object.
+	SetTeam(t Team)
+
 	// MonsterStatus returns monster/NPC status flags.
 	// It returns 0 if object's class is not a monster/NPC.
 	MonsterStatus() object.MonsterStatus

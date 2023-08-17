@@ -148,6 +148,7 @@ func init() {
 		"StartupScreen":        reflect.ValueOf(ns.StartupScreen),
 		"StopScript":           reflect.ValueOf(ns.StopScript),
 		"StoryPic":             reflect.ValueOf(ns.StoryPic),
+		"Teams":                reflect.ValueOf(ns.Teams),
 		"TellStory":            reflect.ValueOf(ns.TellStory),
 		"TellStoryStr":         reflect.ValueOf(ns.TellStoryStr),
 		"Time":                 reflect.ValueOf(ns.Time),
@@ -189,6 +190,7 @@ func init() {
 		"Handle":              reflect.ValueOf((*ns.Handle)(nil)),
 		"HasAllClasses":       reflect.ValueOf((*ns.HasAllClasses)(nil)),
 		"HasClass":            reflect.ValueOf((*ns.HasClass)(nil)),
+		"HasTeam":             reflect.ValueOf((*ns.HasTeam)(nil)),
 		"HasType":             reflect.ValueOf((*ns.HasType)(nil)),
 		"HasTypeName":         reflect.ValueOf((*ns.HasTypeName)(nil)),
 		"Implementation":      reflect.ValueOf((*ns.Implementation)(nil)),
@@ -210,6 +212,7 @@ func init() {
 		"Pointf":              reflect.ValueOf((*ns.Pointf)(nil)),
 		"Positioner":          reflect.ValueOf((*ns.Positioner)(nil)),
 		"StringID":            reflect.ValueOf((*ns.StringID)(nil)),
+		"Team":                reflect.ValueOf((*ns.Team)(nil)),
 		"TimeSource":          reflect.ValueOf((*ns.TimeSource)(nil)),
 		"Timer":               reflect.ValueOf((*ns.Timer)(nil)),
 		"TimerHandle":         reflect.ValueOf((*ns.TimerHandle)(nil)),
@@ -237,6 +240,7 @@ func init() {
 		"_ObjType":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjType)(nil)),
 		"_Player":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Player)(nil)),
 		"_Positioner":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Positioner)(nil)),
+		"_Team":                reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Team)(nil)),
 		"_TimeSource":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimeSource)(nil)),
 		"_Timer":               reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Timer)(nil)),
 		"_TimerHandle":         reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimerHandle)(nil)),
@@ -350,6 +354,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WStartupScreen         func(which int)
 	WStopScript            func(value any)
 	WStoryPic              func(obj ns.Obj, name string)
+	WTeams                 func() []ns.Team
 	WTellStory             func(audio audio.Name, story string)
 	WTellStoryStr          func(audio audio.Name, story string)
 	WTimerByHandle         func(h ns.TimerHandle) ns.Timer
@@ -593,6 +598,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StopScript(valu
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StoryPic(obj ns.Obj, name string) {
 	W.WStoryPic(obj, name)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Teams() []ns.Team {
+	return W.WTeams()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TellStory(audio audio.Name, story string) {
 	W.WTellStory(audio, story)
 }
@@ -731,6 +739,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WHasOwner             func(owner ns.Obj) bool
 	WHasOwnerIn           func(owners ns.ObjGroup) bool
 	WHasSubclass          func(subclass subclass.SubClass) bool
+	WHasTeam              func(t ns.Team) bool
 	WHitMelee             func(p types.Pointf)
 	WHitRanged            func(p types.Pointf)
 	WHunt                 func()
@@ -776,8 +785,10 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WSetPos               func(p types.Pointf)
 	WSetRoamFlag          func(flags int)
 	WSetStrength          func(v int)
+	WSetTeam              func(t ns.Team)
 	WSetZ                 func(z float32)
 	WStrength             func() int
+	WTeam                 func() ns.Team
 	WToggle               func() bool
 	WTrapSpells           func(spells ...spell.Spell)
 	WTrapSpellsAdv        func(spells []ns.TrapSpell)
@@ -938,6 +949,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasOwnerIn(owners ns.ObjGr
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasSubclass(subclass subclass.SubClass) bool {
 	return W.WHasSubclass(subclass)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasTeam(t ns.Team) bool {
+	return W.WHasTeam(t)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HitMelee(p types.Pointf) {
 	W.WHitMelee(p)
 }
@@ -1073,11 +1087,17 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetRoamFlag(flags int) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetStrength(v int) {
 	W.WSetStrength(v)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetTeam(t ns.Team) {
+	W.WSetTeam(t)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetZ(z float32) {
 	W.WSetZ(z)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Strength() int {
 	return W.WStrength()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Team() ns.Team {
+	return W.WTeam()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Toggle() bool {
 	return W.WToggle()
@@ -1342,9 +1362,11 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Player struct {
 	WBlind       func(blind bool)
 	WChangeScore func(score int)
 	WGetScore    func() int
+	WHasTeam     func(t ns.Team) bool
 	WName        func() string
 	WPrint       func(message string)
 	WPrintStr    func(message string)
+	WTeam        func() ns.Team
 	WUnit        func() ns.Obj
 }
 
@@ -1357,6 +1379,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) ChangeScore(score int) 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) GetScore() int {
 	return W.WGetScore()
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) HasTeam(t ns.Team) bool {
+	return W.WHasTeam(t)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Name() string {
 	return W.WName()
 }
@@ -1365,6 +1390,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Print(message string) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) PrintStr(message string) {
 	W.WPrintStr(message)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Team() ns.Team {
+	return W.WTeam()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Unit() ns.Obj {
 	return W.WUnit()
@@ -1378,6 +1406,28 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Positioner struct {
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Positioner) Pos() types.Pointf {
 	return W.WPos()
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_Team is an interface wrapper for Team type
+type _github_com_noxworld_dev_noxscript_ns_v4_Team struct {
+	IValue       interface{}
+	WChangeScore func(score int)
+	WGetScore    func() int
+	WName        func() string
+	WPlayers     func() []ns.Player
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) ChangeScore(score int) {
+	W.WChangeScore(score)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) GetScore() int {
+	return W.WGetScore()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) Name() string {
+	return W.WName()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) Players() []ns.Player {
+	return W.WPlayers()
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_TimeSource is an interface wrapper for TimeSource type

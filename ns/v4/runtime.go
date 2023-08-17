@@ -71,6 +71,8 @@ type Implementation interface {
 	BecomePet(obj Obj)
 	BecomeEnemy(obj Obj)
 
+	Teams() []Team
+
 	HostPlayer() Player
 	Players() []Player
 

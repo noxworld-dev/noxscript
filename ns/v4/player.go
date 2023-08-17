@@ -9,7 +9,7 @@ type Player interface {
 	Unit() Obj
 	// GetScore gets player's score.
 	GetScore() int
-	// ChangeScore changes player's score.
+	// ChangeScore adds or removes player's score(s).
 	ChangeScore(score int)
 	// Print displays a localized string on the screen of the player.
 	//
@@ -19,6 +19,10 @@ type Player interface {
 	PrintStr(message string)
 	// Blind or unblind the player.
 	Blind(blind bool)
+	// HasTeam checks if a player belongs to a team.
+	HasTeam(t Team) bool
+	// Team returns current team of a player, if any.
+	Team() Team
 }
 
 // GetHost gets host's player object.

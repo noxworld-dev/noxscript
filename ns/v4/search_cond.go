@@ -148,4 +148,17 @@ func (arr HasType) Matches(obj Obj) bool {
 	return false
 }
 
+// HasTeam checks that object matches any of provided teams.
+type HasTeam []Team
+
+func (arr HasTeam) Matches(obj Obj) bool {
+	for _, t := range arr {
+		// don't check for nil, because it's a valid query for HasTeam
+		if obj.HasTeam(t) {
+			return true
+		}
+	}
+	return false
+}
+
 // TODO: InPolygon, need to support polygons in the library
