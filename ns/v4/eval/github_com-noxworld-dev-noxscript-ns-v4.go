@@ -123,6 +123,7 @@ func init() {
 		"OblivionHeart":        reflect.ValueOf(ns.OblivionHeart),
 		"OblivionOrb":          reflect.ValueOf(ns.OblivionOrb),
 		"OblivionWierdling":    reflect.ValueOf(ns.OblivionWierdling),
+		"OnChat":               reflect.ValueOf(ns.OnChat),
 		"Players":              reflect.ValueOf(ns.Players),
 		"Print":                reflect.ValueOf(ns.Print),
 		"PrintStr":             reflect.ValueOf(ns.PrintStr),
@@ -178,6 +179,7 @@ func init() {
 
 		// type definitions
 		"AND":                 reflect.ValueOf((*ns.AND)(nil)),
+		"ChatFunc":            reflect.ValueOf((*ns.ChatFunc)(nil)),
 		"DialogAnswer":        reflect.ValueOf((*ns.DialogAnswer)(nil)),
 		"DialogType":          reflect.ValueOf((*ns.DialogType)(nil)),
 		"Direction":           reflect.ValueOf((*ns.Direction)(nil)),
@@ -336,6 +338,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WObjectGroupByHandle   func(h ns.ObjGroupHandle) ns.ObjGroup
 	WObjectType            func(name string) ns.ObjType
 	WObjectTypeByInd       func(ind int) ns.ObjType
+	WOnChat                func(fnc ns.ChatFunc)
 	WPlayers               func() []ns.Player
 	WPrint                 func(message string)
 	WPrintStr              func(message string)
@@ -543,6 +546,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectType(name
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectTypeByInd(ind int) ns.ObjType {
 	return W.WObjectTypeByInd(ind)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnChat(fnc ns.ChatFunc) {
+	W.WOnChat(fnc)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Players() []ns.Player {
 	return W.WPlayers()

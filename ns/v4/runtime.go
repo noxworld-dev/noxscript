@@ -139,6 +139,8 @@ type Implementation interface {
 	WallGroupByHandle(h WallGroupHandle) WallGroupObj
 	WallGroup(name string) WallGroupObj
 
+	OnChat(fnc ChatFunc)
+
 	Unused1f(id int)
 	Unused20(id int)
 	Unused50()
