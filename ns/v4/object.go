@@ -454,6 +454,8 @@ type Obj interface {
 	//		},
 	//		ns.EqualClass(object.ClassArmor),
 	//	)
+	//
+	// Deprecated: use InItems().FindObjects(...)
 	FindItems(fnc func(obj Obj) bool, conditions ...ObjCond) int
 
 	// GetLastItem returns the object of the last item in the object's inventory. If the inventory is empty, it returns nil.
@@ -479,6 +481,29 @@ type Obj interface {
 	// Resulting slice is read-only, changes to it won't be reflected on the object.
 	// Use Pickup or Drop for adding or removing items.
 	Items(conditions ...ObjCond) []Obj
+
+	// InItems returns an ObjSearcher that can be used in FindObjectIn and FindAllObjectsIn or searched directly.
+	//
+	// Calling InItems().FindObjects() will call fnc for all items matching all the conditions.
+	// It returns a number of items matched. If fnc returns false, the function stops the search.
+	// If fnc is nil, the function only counts a number of objects matching a condition.
+	//
+	// Example:
+	//
+	//	// Check if unit has at least one apple
+	//	if obj.InItems().FindObjects(nil, ns.HasTypeName{"RedApple"}) != 0 {
+	//		fmt.Println("Has an apple!")
+	//	}
+	//
+	//	// Drop all armor
+	//	obj.InItems().FindObjects(
+	//		func(it ns.Obj) {
+	//			obj.Drop(it)
+	//			return true
+	//		},
+	//		ns.EqualClass(object.ClassArmor),
+	//	)
+	InItems() ObjSearcher
 
 	// GetHolder returns the object that contains the item in its inventory.
 	GetHolder() Obj
@@ -569,6 +594,8 @@ type Obj interface {
 
 type ObjGroup interface {
 	ObjGroupHandle
+	ObjSearcher
+
 	// Name returns object group name.
 	Name() string
 	// Enable or disable the object.
@@ -666,6 +693,9 @@ type ObjGroup interface {
 	// Enchant grants objects in a group an enchantment of a specified duration.
 	Enchant(enchant enchant.Enchant, dt Duration)
 
+	// AllObjects returns all objects as a list.
+	AllObjects() Objects
+
 	// EachObject calls fnc for all objects in the group.
 	// If fnc returns false, the iteration stops.
 	// If recursive is true, iteration will include items from nested groups.
@@ -710,4 +740,68 @@ func BecomeEnemy(obj Obj) {
 		return
 	}
 	impl.BecomeEnemy(obj)
+}
+
+var _ ObjSearcher = Objects{}
+
+// Objects is a list of objects. It can be searched.
+type Objects []Obj
+
+// Enable or disable the objects.
+func (arr Objects) Enable(enable bool) {
+	for _, obj := range arr {
+		obj.Enable(enable)
+	}
+}
+
+// Toggle the objects enabled state.
+// It returns the new state after toggling the objects. If at least one object is enabled, it returns true.
+func (arr Objects) Toggle() bool {
+	one := false
+	for _, obj := range arr {
+		if obj.Toggle() {
+			one = true
+		}
+	}
+	return one
+}
+
+// Delete deletes objects in a list.
+func (arr Objects) Delete() {
+	for _, obj := range arr {
+		obj.Delete()
+	}
+}
+
+// SetOwner sets the owner for each object in a list. See Obj.SetOwner for details.
+func (arr Objects) SetOwner(owner Obj) {
+	for _, obj := range arr {
+		obj.SetOwner(owner)
+	}
+}
+
+// SetOwners is the same as SetOwner but with an object group as the owner.
+func (arr Objects) SetOwners(owners ObjGroup) {
+	for _, obj := range arr {
+		obj.SetOwners(owners)
+	}
+}
+
+// FindObjects calls fnc for all objects in the list. See ObjSearcher.
+func (arr Objects) FindObjects(fnc func(it Obj) bool, conditions ...ObjCond) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	filter := AND(conditions)
+	cnt := 0
+	for _, obj := range arr {
+		if !filter.Matches(obj) {
+			continue
+		}
+		cnt++
+		if fnc != nil && !fnc(obj) {
+			break
+		}
+	}
+	return cnt
 }

@@ -57,7 +57,7 @@ type Implementation interface {
 	ObjectGroupByHandle(h ObjGroupHandle) ObjGroup
 	ObjectGroup(name string) ObjGroup
 	CreateObject(typ string, pos Positioner) Obj
-	FindObjects(fnc func(obj Obj) bool, conditions ...ObjCond) int
+	ObjSearcher
 	GetTrigger() Obj
 	GetCaller() Obj
 	GetHost() Obj
