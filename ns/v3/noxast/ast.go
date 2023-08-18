@@ -1487,10 +1487,15 @@ func hasSideEffects(root ast.Node) bool {
 		}
 		switch fnc := call.Fun.(type) {
 		case *ast.SelectorExpr:
-			if fnc.Sel.Obj == nil {
-				has = true
-			} else if def, ok := fnc.Sel.Obj.Data.(*builtinDef); !ok || !def.Idemp {
-				has = true
+			switch fnc.Sel.Name {
+			case "Atoi", "Itoa", "FormatFloat":
+				// ok
+			default:
+				if fnc.Sel.Obj == nil {
+					has = true
+				} else if def, ok := fnc.Sel.Obj.Data.(*builtinDef); !ok || !def.Idemp {
+					has = true
+				}
 			}
 		default:
 			has = true
