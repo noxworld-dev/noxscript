@@ -884,11 +884,15 @@ func (t *translator) removeSingleDefines(d *ast.BlockStmt) {
 			continue
 		}
 		val := df.Rhs[0]
-		if hasSideEffects(val) {
-			continue
-		}
 		usages := cntUsages(d.List[i+1], id)
 		if usages > 1 {
+			continue
+		}
+		effectSafe := false
+		if d2, ok := d.List[i+1].(*ast.AssignStmt); ok && len(d2.Rhs) == 1 && d2.Rhs[0] == id {
+			effectSafe = true
+		}
+		if !effectSafe && hasSideEffects(val) {
 			continue
 		}
 		replaced := replace(d.List[i+1], id, val)
