@@ -299,6 +299,7 @@ func (t *translator) Translate() {
 	}
 	t.inferTypes()
 	t.fixBoolAndNil()
+	t.addOnEvent()
 	t.updateImports()
 }
 
@@ -1279,6 +1280,59 @@ func (t *translator) fixBoolAndNil() {
 		}
 		return true
 	})
+}
+func (t *translator) addOnEvent() {
+	events := map[string]struct{}{
+		"MapInitialize": {},
+		"MapEntry":      {},
+		"MapExit":       {},
+		"MapShutdown":   {},
+		"PlayerDeath":   {},
+	}
+	var list []ast.Stmt
+	for _, f := range t.funcs {
+		_, ok := events[f.Name]
+		if !ok {
+			continue
+		}
+		// case "<event>":
+		// 		<func>()
+		list = append(list, &ast.CaseClause{
+			List: []ast.Expr{
+				stringLit(f.Name),
+			},
+			Body: []ast.Stmt{
+				&ast.ExprStmt{X: &ast.CallExpr{Fun: f}},
+			},
+		})
+	}
+	if len(list) != 0 {
+		// func OnEvent(typ string) {
+		// 		switch typ {
+		//		<list>
+		//		}
+		// }
+		arg := ast.NewIdent("typ")
+		t.f.Decls = append(t.f.Decls, &ast.FuncDecl{
+			Name: ast.NewIdent("OnEvent"),
+			Type: &ast.FuncType{Params: &ast.FieldList{
+				List: []*ast.Field{
+					{
+						Names: []*ast.Ident{
+							arg,
+						},
+						Type: ast.NewIdent("string"),
+					},
+				},
+			}},
+			Body: &ast.BlockStmt{List: []ast.Stmt{
+				&ast.SwitchStmt{
+					Tag:  arg,
+					Body: &ast.BlockStmt{List: list},
+				},
+			}},
+		})
+	}
 }
 func (t *translator) updateImports() {
 	var used struct {
