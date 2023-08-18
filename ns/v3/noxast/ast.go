@@ -1483,7 +1483,9 @@ func hasSideEffects(root ast.Node) bool {
 		}
 		switch fnc := call.Fun.(type) {
 		case *ast.SelectorExpr:
-			if def, ok := fnc.Sel.Obj.Data.(*builtinDef); !ok || !def.Idemp {
+			if fnc.Sel.Obj == nil {
+				has = true
+			} else if def, ok := fnc.Sel.Obj.Data.(*builtinDef); !ok || !def.Idemp {
 				has = true
 			}
 		default:
