@@ -9,6 +9,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/noxworld-dev/noxscript/ns/asm"
@@ -288,12 +289,19 @@ func cleanGoName(name string) string {
 }
 
 func (t *translator) Translate() {
+	funcNameUses := make(map[string]int)
 	for i, fnc := range t.s.Funcs {
 		switch i {
 		case 0, 1:
 			t.funcs = append(t.funcs, ast.NewIdent("init"))
 		default:
 			name := cleanGoName(fnc.Name)
+			num := funcNameUses[name]
+			num++
+			funcNameUses[name] = num
+			if num > 1 {
+				name += "_" + strconv.Itoa(num)
+			}
 			t.funcs = append(t.funcs, ast.NewIdent(name))
 		}
 	}
