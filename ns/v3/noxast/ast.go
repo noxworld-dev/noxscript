@@ -270,17 +270,30 @@ type translator struct {
 	}
 }
 
+var nameReplacer = strings.NewReplacer(
+	" ", "_",
+	"-", "_",
+)
+
+func cleanGoName(name string) string {
+	name = strings.TrimSpace(name)
+	if i := strings.IndexByte(name, ':'); i > 0 {
+		name = name[:i]
+	}
+	name = nameReplacer.Replace(name)
+	if name[0] >= '0' && name[0] <= '9' {
+		name = "_" + name
+	}
+	return name
+}
+
 func (t *translator) Translate() {
 	for i, fnc := range t.s.Funcs {
 		switch i {
 		case 0, 1:
 			t.funcs = append(t.funcs, ast.NewIdent("init"))
 		default:
-			name := fnc.Name
-			if i := strings.IndexByte(name, ':'); i > 0 {
-				name = name[:i]
-			}
-			name = strings.ReplaceAll(name, " ", "_")
+			name := cleanGoName(fnc.Name)
 			t.funcs = append(t.funcs, ast.NewIdent(name))
 		}
 	}
