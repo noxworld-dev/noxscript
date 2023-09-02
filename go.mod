@@ -1,3 +1,3 @@
 module github.com/noxworld-dev/noxscript
 
-go 1.19
+go 1.20

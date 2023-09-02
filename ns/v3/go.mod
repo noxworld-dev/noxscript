@@ -1,6 +1,6 @@
 module github.com/noxworld-dev/noxscript/ns/v3
 
-go 1.19
+go 1.20
 
 require (
 	github.com/noxworld-dev/noxscript/ns v1.0.2

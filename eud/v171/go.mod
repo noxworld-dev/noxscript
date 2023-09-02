@@ -1,6 +1,6 @@
 module github.com/noxworld-dev/noxscript/eud/v171
 
-go 1.19
+go 1.20
 
 require (
 	github.com/noxworld-dev/noxscript/ns/v3 v3.1.5
