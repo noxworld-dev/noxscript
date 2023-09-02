@@ -441,8 +441,12 @@ type Obj interface {
 	Flee(target Positioner, dt Duration)
 
 	// HasItem gets whether this specific item is in the object's inventory.
-	// For searching items by object type or other properties, see FindItems.
+	// For searching items by object type or other properties, see InItems().FindObjects(...).
 	HasItem(item Obj) bool
+
+	// HasEquipment gets whether this specific item is in the object's inventory and is equipped.
+	// For searching items by object type or other properties, see InEquipment().FindObjects(...).
+	HasEquipment(item Obj) bool
 
 	// FindItems calls fnc for all items matching all the conditions.
 	// It returns a number of items matched. If fnc returns false, the function stops the search.
@@ -491,6 +495,13 @@ type Obj interface {
 	// Use Pickup or Drop for adding or removing items.
 	Items(conditions ...ObjCond) []Obj
 
+	// Equipment returns all equipped items in the object's inventory.
+	// An optional list of conditions can be specified for filtering returned items.
+	//
+	// Resulting slice is read-only, changes to it won't be reflected on the object.
+	// Use Equip or Unequip for changing equipment.
+	Equipment(conditions ...ObjCond) []Obj
+
 	// InItems returns an ObjSearcher that can be used in FindObjectIn and FindAllObjectsIn or searched directly.
 	//
 	// Calling InItems().FindObjects() will call fnc for all items matching all the conditions.
@@ -514,6 +525,29 @@ type Obj interface {
 	//	)
 	InItems() ObjSearcher
 
+	// InEquipment returns an ObjSearcher that can be used in FindObjectIn and FindAllObjectsIn or searched directly.
+	//
+	// Calling InEquipment().FindObjects() will call fnc for all equipped items matching all the conditions.
+	// It returns a number of items matched. If fnc returns false, the function stops the search.
+	// If fnc is nil, the function only counts a number of objects matching a condition.
+	//
+	// Example:
+	//
+	//	// Check if unit has sword equipped
+	//	if obj.InEquipment().FindObjects(nil, ns.HasTypeName{"Sword"}) != 0 {
+	//		fmt.Println("Has an apple!")
+	//	}
+	//
+	//	// Drop all equipped armor
+	//	obj.InEquipment().FindObjects(
+	//		func(it ns.Obj) {
+	//			obj.Drop(it)
+	//			return true
+	//		},
+	//		ns.EqualClass(object.ClassArmor),
+	//	)
+	InEquipment() ObjSearcher
+
 	// GetHolder returns the object that contains the item in its inventory.
 	GetHolder() Obj
 
@@ -533,6 +567,13 @@ type Obj interface {
 	//
 	// Returns false if object cannot pick up or equip the item.
 	Equip(item Obj) bool
+
+	// Unequip cause object to unequip an item.
+	//
+	// If an item is not in object's inventory, it will do nothing.
+	//
+	// Returns false if object cannot unequip the item.
+	Unequip(item Obj) bool
 
 	// ZombieStayDown sets zombie to stay down.
 	ZombieStayDown()

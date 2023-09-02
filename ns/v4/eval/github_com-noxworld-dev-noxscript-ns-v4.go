@@ -191,7 +191,9 @@ func init() {
 		"HalberdLevel":        reflect.ValueOf((*ns.HalberdLevel)(nil)),
 		"Handle":              reflect.ValueOf((*ns.Handle)(nil)),
 		"HasAllClasses":       reflect.ValueOf((*ns.HasAllClasses)(nil)),
+		"HasAllObjFlags":      reflect.ValueOf((*ns.HasAllObjFlags)(nil)),
 		"HasClass":            reflect.ValueOf((*ns.HasClass)(nil)),
+		"HasObjFlags":         reflect.ValueOf((*ns.HasObjFlags)(nil)),
 		"HasTeam":             reflect.ValueOf((*ns.HasTeam)(nil)),
 		"HasType":             reflect.ValueOf((*ns.HasType)(nil)),
 		"HasTypeName":         reflect.ValueOf((*ns.HasTypeName)(nil)),
@@ -722,6 +724,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WEnchant              func(enchant enchant.Enchant, dt ns.Duration)
 	WEnchantOff           func(enchant enchant.Enchant)
 	WEquip                func(item ns.Obj) bool
+	WEquipment            func(conditions ...ns.ObjCond) []ns.Obj
 	WFindItems            func(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int
 	WFlags                func() object.Flags
 	WFlagsDisable         func(v object.Flags)
@@ -741,6 +744,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WGuard                func(p1 types.Pointf, p2 types.Pointf, distance float32)
 	WHasClass             func(class class.Class) bool
 	WHasEnchant           func(enchant enchant.Enchant) bool
+	WHasEquipment         func(item ns.Obj) bool
 	WHasItem              func(item ns.Obj) bool
 	WHasOwner             func(owner ns.Obj) bool
 	WHasOwnerIn           func(owners ns.ObjGroup) bool
@@ -750,6 +754,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WHitRanged            func(p types.Pointf)
 	WHunt                 func()
 	WIdle                 func()
+	WInEquipment          func() ns.ObjSearcher
 	WInItems              func() ns.ObjSearcher
 	WIsAttackedBy         func(by ns.Obj) bool
 	WIsEnabled            func() bool
@@ -799,6 +804,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WTrapSpells           func(spells ...spell.Spell)
 	WTrapSpellsAdv        func(spells []ns.TrapSpell)
 	WType                 func() ns.ObjType
+	WUnequip              func(item ns.Obj) bool
 	WWalkTo               func(p types.Pointf)
 	WWander               func()
 	WZ                    func() float32
@@ -886,6 +892,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) EnchantOff(enchant enchant
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Equip(item ns.Obj) bool {
 	return W.WEquip(item)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Equipment(conditions ...ns.ObjCond) []ns.Obj {
+	return W.WEquipment(conditions...)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) FindItems(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int {
 	return W.WFindItems(fnc, conditions...)
 }
@@ -943,6 +952,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasClass(class class.Class
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasEnchant(enchant enchant.Enchant) bool {
 	return W.WHasEnchant(enchant)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasEquipment(item ns.Obj) bool {
+	return W.WHasEquipment(item)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) HasItem(item ns.Obj) bool {
 	return W.WHasItem(item)
 }
@@ -969,6 +981,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Hunt() {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Idle() {
 	W.WIdle()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) InEquipment() ns.ObjSearcher {
+	return W.WInEquipment()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) InItems() ns.ObjSearcher {
 	return W.WInItems()
@@ -1116,6 +1131,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) TrapSpellsAdv(spells []ns.
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Type() ns.ObjType {
 	return W.WType()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Unequip(item ns.Obj) bool {
+	return W.WUnequip(item)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) WalkTo(p types.Pointf) {
 	W.WWalkTo(p)

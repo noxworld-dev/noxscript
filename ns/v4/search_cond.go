@@ -118,6 +118,26 @@ func (c HasAllClasses) Matches(obj Obj) bool {
 	return obj.Class()&c2 == c2
 }
 
+var _ ObjCond = HasObjFlags(0)
+
+// HasObjFlags checks that object's flags match any of provided flags.
+type HasObjFlags object.Flags
+
+func (c HasObjFlags) Matches(obj Obj) bool {
+	c2 := object.Flags(c)
+	return obj.Flags()&c2 != 0
+}
+
+var _ ObjCond = HasAllClasses(0)
+
+// HasAllObjFlags checks that object's flags match all of provided flags.
+type HasAllObjFlags object.Flags
+
+func (c HasAllObjFlags) Matches(obj Obj) bool {
+	c2 := object.Flags(c)
+	return obj.Flags()&c2 == c2
+}
+
 var _ ObjCond = HasTypeName{}
 
 // HasTypeName checks that object matches any of provided type names.
