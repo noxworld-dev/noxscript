@@ -71,12 +71,16 @@ func FindClosestObjectIn(from Positioner, s ObjSearcher, conditions ...ObjCond) 
 	if from == nil {
 		return nil
 	}
+	fromObj, _ := from.(Obj)
 	var (
 		found Obj
 		min   float64 = math.MaxFloat64
 	)
 	pos := from.Pos()
 	findObjectsIn(s, func(it Obj) bool {
+		if it == fromObj {
+			return true // skip
+		}
 		dist := it.Pos().Sub(pos).Len()
 		if dist < min {
 			min = dist
