@@ -291,6 +291,12 @@ type Obj interface {
 	// SetMaxMana sets maximum object mana. Only works on players.
 	SetMaxMana(v int)
 
+	// Mass of the object.
+	Mass() float32
+
+	// SetMass sets mass of the object.
+	SetMass(v float32)
+
 	// CurrentSpeed returns current speed of the object.
 	CurrentSpeed() float32
 
