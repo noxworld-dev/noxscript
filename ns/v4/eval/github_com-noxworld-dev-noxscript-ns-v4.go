@@ -764,6 +764,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WLookAtDirection      func(dir int)
 	WLookAtObject         func(target ns.Positioner)
 	WLookWithAngle        func(angle int)
+	WMass                 func() float32
 	WMaxHealth            func() int
 	WMaxMana              func() int
 	WMonsterStatus        func() object.MonsterStatus
@@ -788,6 +789,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WSetFlags             func(v object.Flags)
 	WSetHealth            func(v int)
 	WSetMana              func(v int)
+	WSetMass              func(v float32)
 	WSetMaxHealth         func(v int)
 	WSetMaxMana           func(v int)
 	WSetMonsterStatus     func(v object.MonsterStatus)
@@ -1012,6 +1014,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) LookAtObject(target ns.Pos
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) LookWithAngle(angle int) {
 	W.WLookWithAngle(angle)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Mass() float32 {
+	return W.WMass()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) MaxHealth() int {
 	return W.WMaxHealth()
 }
@@ -1083,6 +1088,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealth(v int) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMana(v int) {
 	W.WSetMana(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMass(v float32) {
+	W.WSetMass(v)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMaxHealth(v int) {
 	W.WSetMaxHealth(v)
