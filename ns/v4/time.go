@@ -12,12 +12,12 @@ type TimeSource interface {
 
 // Frames returns duration in game frames.
 func Frames(num int) Duration {
-	return Duration{frames: num}
+	return Duration{frames: num, kind: durFrames}
 }
 
 // Time returns duration given time.Duration.
 func Time(dt time.Duration) Duration {
-	return Duration{time: dt}
+	return Duration{time: dt, kind: durTime}
 }
 
 // Seconds returns duration in seconds.
@@ -25,13 +25,31 @@ func Seconds(sec float64) Duration {
 	return Time(time.Duration(sec * float64(time.Second)))
 }
 
+// Infinite returns an infinite duration.
+func Infinite() Duration {
+	return Duration{kind: durInfinite}
+}
+
 // NowWithSource returns current timestamp of the time source.
 func NowWithSource(s TimeSource) Duration {
 	return Duration{
 		frames: s.Frame(),
 		time:   s.Time(),
+		kind:   durFrames | durTime,
 	}
 }
+
+type durKind byte
+
+func (k durKind) Has(k2 durKind) bool {
+	return k&k2 != 0
+}
+
+const (
+	durFrames = durKind(1 << iota)
+	durTime
+	durInfinite
+)
 
 // Duration for script events.
 //
@@ -39,9 +57,13 @@ func NowWithSource(s TimeSource) Duration {
 type Duration struct {
 	frames int
 	time   time.Duration
+	kind   durKind
 }
 
 func (d Duration) LessOrEq(d2 Duration) bool {
+	if d.IsInfinite() || d2.IsInfinite() {
+		return false
+	}
 	if d.IsFrames() && d2.IsFrames() {
 		return d.frames <= d2.frames
 	}
@@ -52,41 +74,70 @@ func (d Duration) LessOrEq(d2 Duration) bool {
 }
 
 func (d Duration) Add(d2 Duration) Duration {
+	if d.IsInfinite() || d2.IsInfinite() {
+		return Infinite()
+	}
 	if d.IsFrames() && d2.IsFrames() {
 		d.frames += d2.frames
+	} else {
+		d.frames = 0
+		d.kind &^= durFrames
 	}
 	if d.IsTime() && d2.IsTime() {
 		d.time += d2.time
+	} else {
+		d.time = 0
+		d.kind &^= durTime
 	}
 	return d
 }
 
 func (d Duration) Sub(d2 Duration) Duration {
+	if d.IsInfinite() || d2.IsInfinite() {
+		return Infinite()
+	}
 	if d.IsFrames() && d2.IsFrames() {
 		d.frames -= d2.frames
+	} else {
+		d.frames = 0
+		d.kind &^= durFrames
 	}
 	if d.IsTime() && d2.IsTime() {
 		d.time -= d2.time
+	} else {
+		d.time = 0
+		d.kind &^= durTime
 	}
 	return d
 }
 
+// IsInfinite checks if duration is infinite.
+func (d Duration) IsInfinite() bool {
+	return d.kind.Has(durInfinite)
+}
+
 // IsTime checks if duration is set in seconds.
 func (d Duration) IsTime() bool {
-	return d.time != 0
+	return d.kind.Has(durTime)
 }
 
 // IsFrames checks if duration is set in frames.
 func (d Duration) IsFrames() bool {
-	return d.frames != 0
+	return d.kind.Has(durFrames)
 }
 
 // Time checks if duration is set in seconds and returns it.
 func (d Duration) Time() (time.Duration, bool) {
-	return d.time, d.IsTime()
+	if !d.IsTime() {
+		return 0, false
+	}
+	return d.time, true
 }
 
 // Frames checks if duration is set in frames and returns it.
 func (d Duration) Frames() (int, bool) {
-	return d.frames, d.IsFrames()
+	if !d.IsFrames() {
+		return 0, false
+	}
+	return d.frames, true
 }

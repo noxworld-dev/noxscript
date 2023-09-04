@@ -87,6 +87,7 @@ func init() {
 		"GetTrigger":           reflect.ValueOf(ns.GetTrigger),
 		"HostPlayer":           reflect.ValueOf(ns.HostPlayer),
 		"ImmediateBlind":       reflect.ValueOf(ns.ImmediateBlind),
+		"Infinite":             reflect.ValueOf(ns.Infinite),
 		"IsCaller":             reflect.ValueOf(ns.IsCaller),
 		"IsCrown":              reflect.ValueOf(ns.IsCrown),
 		"IsGameBall":           reflect.ValueOf(ns.IsGameBall),
