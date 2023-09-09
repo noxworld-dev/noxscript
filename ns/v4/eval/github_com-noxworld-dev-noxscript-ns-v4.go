@@ -1445,6 +1445,7 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Positioner) Pos() types.Pointf 
 type _github_com_noxworld_dev_noxscript_ns_v4_Team struct {
 	IValue       interface{}
 	WChangeScore func(score int)
+	WColor       func() color.Color
 	WGetScore    func() int
 	WName        func() string
 	WPlayers     func() []ns.Player
@@ -1452,6 +1453,9 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Team struct {
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) ChangeScore(score int) {
 	W.WChangeScore(score)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) Color() color.Color {
+	return W.WColor()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Team) GetScore() int {
 	return W.WGetScore()
