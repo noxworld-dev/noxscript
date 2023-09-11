@@ -6,27 +6,27 @@ import (
 
 type Func = any
 
-type Timer interface {
-	TimerHandle
-	// Cancel a timer. Returns true if successful.
-	Cancel() bool
-}
+// MapEvent is an event type for OnMapEvent function.
+type MapEvent int
 
-// NewTimer creates a timer that calls the given script function after a given delay.
+const (
+	MapInitialize = MapEvent(iota + 1)
+	MapEntry
+	MapExit
+	MapShutdown
+)
+
+// MapEventFunc is a callback type for OnMapEvent.
+type MapEventFunc func()
+
+// OnMapEvent registers a callback function that will be called each server map event.
 //
-// Example:
-//
-//	// Trigger by function reference:
-//	NewTimer(Frames(10), myCallback)
-//	// Trigger by function name (can call original NoxScript as well):
-//	NewTimer(Seconds(10), "myCallback")
-//	// Passing arguments to the callback:
-//	NewTimer(Time(3*time.Second), "myCallback", obj)
-func NewTimer(dt Duration, fnc Func, args ...any) Timer {
+// See MapEvent for a list of events and MapEventFunc for callback type.
+func OnMapEvent(typ MapEvent, fnc MapEventFunc) {
 	if impl == nil {
-		return nil
+		return
 	}
-	return impl.NewTimer(dt, fnc, args...)
+	impl.OnMapEvent(typ, fnc)
 }
 
 // RandomFloat generates random float.

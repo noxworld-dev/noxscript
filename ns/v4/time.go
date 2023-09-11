@@ -2,6 +2,84 @@ package ns
 
 import "time"
 
+// FrameFunc is a callback type for OnFrame.
+type FrameFunc func()
+
+// OnFrame registers a callback function that will be called each server frame.
+// See FrameFunc for details.
+func OnFrame(fnc FrameFunc) {
+	if impl == nil {
+		return
+	}
+	impl.OnFrame(fnc)
+}
+
+// OnEachFrame registers a callback function that will be called each N-th server frame.
+// See FrameFunc for details.
+func OnEachFrame(each int, fnc FrameFunc) {
+	if impl == nil {
+		return
+	}
+	if each <= 1 {
+		impl.OnFrame(fnc)
+		return
+	}
+	start := impl.Frame()
+	impl.OnFrame(func() {
+		if (impl.Frame()-start)%each == 0 {
+			fnc()
+		}
+	})
+}
+
+// Frame returns current server frame number.
+func Frame() int {
+	if impl == nil {
+		return 0
+	}
+	return impl.Frame()
+}
+
+// FrameRate returns current server update rate (aka server frame rate).
+func FrameRate() int {
+	if impl == nil {
+		return 30
+	}
+	return impl.FrameRate()
+}
+
+// Now returns relative time from the server/map start.
+// For absolute time, use time.Now().
+func Now() time.Duration {
+	if impl == nil {
+		return 0
+	}
+	return impl.Time()
+}
+
+type Timer interface {
+	TimerHandle
+	// Cancel a timer. Returns true if successful.
+	Cancel() bool
+}
+
+// NewTimer creates a timer that calls the given script function after a given delay.
+//
+// Example:
+//
+//	// Trigger by function reference:
+//	NewTimer(Frames(10), myCallback)
+//	// Trigger by function name (can call original NoxScript as well):
+//	NewTimer(Seconds(10), "myCallback")
+//	// Passing arguments to the callback:
+//	NewTimer(Time(3*time.Second), "myCallback", obj)
+func NewTimer(dt Duration, fnc Func, args ...any) Timer {
+	if impl == nil {
+		return nil
+	}
+	return impl.NewTimer(dt, fnc, args...)
+}
+
 // TimeSource is an interface for getting relative time.
 type TimeSource interface {
 	// Frame returns current server tick/frame number.

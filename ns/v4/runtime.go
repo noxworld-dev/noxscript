@@ -40,6 +40,9 @@ type Game interface {
 
 // Implementation of the script runtime. Only used in the engine itself.
 type Implementation interface {
+	TimeSource
+	FrameRate() int
+
 	TimerByHandle(h TimerHandle) Timer
 	NewTimer(dt Duration, fnc Func, args ...any) Timer
 	RandomFloat(min float32, max float32) float32
@@ -139,6 +142,8 @@ type Implementation interface {
 	WallGroupByHandle(h WallGroupHandle) WallGroupObj
 	WallGroup(name string) WallGroupObj
 
+	OnFrame(fnc FrameFunc)
+	OnMapEvent(typ MapEvent, fnc MapEventFunc)
 	OnChat(fnc ChatFunc)
 
 	Unused1f(id int)

@@ -645,6 +645,7 @@ type Obj interface {
 	TrapSpellsAdv(spells []TrapSpell)
 
 	// OnEvent sets a function script to call for an event.
+	// This function overrides previous event of the same type set on an object.
 	OnEvent(event ObjectEvent, fnc Func)
 }
 

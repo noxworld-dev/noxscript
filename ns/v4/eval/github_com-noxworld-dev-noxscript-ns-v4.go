@@ -76,6 +76,8 @@ func init() {
 		"FindObject":           reflect.ValueOf(ns.FindObject),
 		"FindObjectIn":         reflect.ValueOf(ns.FindObjectIn),
 		"FindObjects":          reflect.ValueOf(ns.FindObjects),
+		"Frame":                reflect.ValueOf(ns.Frame),
+		"FrameRate":            reflect.ValueOf(ns.FrameRate),
 		"Frames":               reflect.ValueOf(ns.Frames),
 		"GetAnswer":            reflect.ValueOf(ns.GetAnswer),
 		"GetCaller":            reflect.ValueOf(ns.GetCaller),
@@ -103,6 +105,10 @@ func init() {
 		"JournalEntryStr":      reflect.ValueOf(ns.JournalEntryStr),
 		"MakeEnemy":            reflect.ValueOf(ns.MakeEnemy),
 		"MakeFriendly":         reflect.ValueOf(ns.MakeFriendly),
+		"MapEntry":             reflect.ValueOf(ns.MapEntry),
+		"MapExit":              reflect.ValueOf(ns.MapExit),
+		"MapInitialize":        reflect.ValueOf(ns.MapInitialize),
+		"MapShutdown":          reflect.ValueOf(ns.MapShutdown),
 		"Music":                reflect.ValueOf(ns.Music),
 		"MusicEvent":           reflect.ValueOf(ns.MusicEvent),
 		"MusicPopEvent":        reflect.ValueOf(ns.MusicPopEvent),
@@ -115,6 +121,7 @@ func init() {
 		"NewTrapAdv":           reflect.ValueOf(ns.NewTrapAdv),
 		"NewWaypoint":          reflect.ValueOf(ns.NewWaypoint),
 		"NoWallSound":          reflect.ValueOf(ns.NoWallSound),
+		"Now":                  reflect.ValueOf(ns.Now),
 		"NowWithSource":        reflect.ValueOf(ns.NowWithSource),
 		"Object":               reflect.ValueOf(ns.Object),
 		"ObjectGroup":          reflect.ValueOf(ns.ObjectGroup),
@@ -125,6 +132,9 @@ func init() {
 		"OblivionOrb":          reflect.ValueOf(ns.OblivionOrb),
 		"OblivionWierdling":    reflect.ValueOf(ns.OblivionWierdling),
 		"OnChat":               reflect.ValueOf(ns.OnChat),
+		"OnEachFrame":          reflect.ValueOf(ns.OnEachFrame),
+		"OnFrame":              reflect.ValueOf(ns.OnFrame),
+		"OnMapEvent":           reflect.ValueOf(ns.OnMapEvent),
 		"Players":              reflect.ValueOf(ns.Players),
 		"Print":                reflect.ValueOf(ns.Print),
 		"PrintStr":             reflect.ValueOf(ns.PrintStr),
@@ -187,6 +197,7 @@ func init() {
 		"Duration":            reflect.ValueOf((*ns.Duration)(nil)),
 		"EntryType":           reflect.ValueOf((*ns.EntryType)(nil)),
 		"EqualClass":          reflect.ValueOf((*ns.EqualClass)(nil)),
+		"FrameFunc":           reflect.ValueOf((*ns.FrameFunc)(nil)),
 		"Func":                reflect.ValueOf((*ns.Func)(nil)),
 		"Game":                reflect.ValueOf((*ns.Game)(nil)),
 		"HalberdLevel":        reflect.ValueOf((*ns.HalberdLevel)(nil)),
@@ -201,6 +212,8 @@ func init() {
 		"Implementation":      reflect.ValueOf((*ns.Implementation)(nil)),
 		"InCirclef":           reflect.ValueOf((*ns.InCirclef)(nil)),
 		"InRectf":             reflect.ValueOf((*ns.InRectf)(nil)),
+		"MapEvent":            reflect.ValueOf((*ns.MapEvent)(nil)),
+		"MapEventFunc":        reflect.ValueOf((*ns.MapEventFunc)(nil)),
 		"NOT":                 reflect.ValueOf((*ns.NOT)(nil)),
 		"OR":                  reflect.ValueOf((*ns.OR)(nil)),
 		"Obj":                 reflect.ValueOf((*ns.Obj)(nil)),
@@ -303,6 +316,8 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WEffect                func(effect effect.Effect, p1 ns.Positioner, p2 ns.Positioner)
 	WEndGame               func(class player.Class)
 	WFindObjects           func(fnc func(it ns.Obj) bool, conditions ...ns.ObjCond) int
+	WFrame                 func() int
+	WFrameRate             func() int
 	WGetAnswer             func(obj ns.Obj) ns.DialogAnswer
 	WGetCaller             func() ns.Obj
 	WGetCharacterData      func(field int) int
@@ -342,6 +357,8 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WObjectType            func(name string) ns.ObjType
 	WObjectTypeByInd       func(ind int) ns.ObjType
 	WOnChat                func(fnc ns.ChatFunc)
+	WOnFrame               func(fnc ns.FrameFunc)
+	WOnMapEvent            func(typ ns.MapEvent, fnc ns.MapEventFunc)
 	WPlayers               func() []ns.Player
 	WPrint                 func(message string)
 	WPrintStr              func(message string)
@@ -363,6 +380,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WTeams                 func() []ns.Team
 	WTellStory             func(audio audio.Name, story string)
 	WTellStoryStr          func(audio audio.Name, story string)
+	WTime                  func() time.Duration
 	WTimerByHandle         func(h ns.TimerHandle) ns.Timer
 	WUnBlind               func()
 	WUnknownb8             func(id int) bool
@@ -435,6 +453,12 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) EndGame(class p
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) FindObjects(fnc func(it ns.Obj) bool, conditions ...ns.ObjCond) int {
 	return W.WFindObjects(fnc, conditions...)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Frame() int {
+	return W.WFrame()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) FrameRate() int {
+	return W.WFrameRate()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) GetAnswer(obj ns.Obj) ns.DialogAnswer {
 	return W.WGetAnswer(obj)
@@ -553,6 +577,12 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) ObjectTypeByInd
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnChat(fnc ns.ChatFunc) {
 	W.WOnChat(fnc)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnFrame(fnc ns.FrameFunc) {
+	W.WOnFrame(fnc)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnMapEvent(typ ns.MapEvent, fnc ns.MapEventFunc) {
+	W.WOnMapEvent(typ, fnc)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Players() []ns.Player {
 	return W.WPlayers()
 }
@@ -615,6 +645,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TellStory(audio
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TellStoryStr(audio audio.Name, story string) {
 	W.WTellStoryStr(audio, story)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Time() time.Duration {
+	return W.WTime()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) TimerByHandle(h ns.TimerHandle) ns.Timer {
 	return W.WTimerByHandle(h)
