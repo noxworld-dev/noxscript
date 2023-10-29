@@ -2,6 +2,7 @@ package ns
 
 import (
 	"image/color"
+	"time"
 
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
@@ -290,6 +291,22 @@ type Obj interface {
 
 	// SetMaxMana sets maximum object mana. Only works on players.
 	SetMaxMana(v int)
+
+	// SetHealthRegenToMaxDur sets "classical" health regen for an object.
+	// It will restore a percent of the health each frame, so that full health can be restored in a given time interval.
+	//
+	// Setting it to -1 restores the default.
+	//
+	// To disable regeneration completely, see SetHealthRegenPerFrame.
+	SetHealthRegenToMaxDur(t time.Duration)
+
+	// SetHealthRegenPerFrame sets per-frame health regen for an object.
+	// Each frame a given amount of health will be restored.
+	//
+	// To use "classic" health regen, set it to 0.
+	//
+	// To disable health regen, set it to -1.
+	SetHealthRegenPerFrame(v float32)
 
 	// Mass of the object.
 	Mass() float32
