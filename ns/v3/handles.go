@@ -2,6 +2,8 @@ package ns
 
 import ns4 "github.com/noxworld-dev/noxscript/ns/v4"
 
+type Handle = ns4.Handle
+
 func asTimer(obj ns4.Timer) TimerID {
 	if obj == nil {
 		return 0

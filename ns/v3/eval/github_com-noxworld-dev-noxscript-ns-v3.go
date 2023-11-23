@@ -1552,6 +1552,7 @@ func init() {
 		"EnchantID":       reflect.ValueOf((*ns.EnchantID)(nil)),
 		"EntryType":       reflect.ValueOf((*ns.EntryType)(nil)),
 		"Func":            reflect.ValueOf((*ns.Func)(nil)),
+		"Handle":          reflect.ValueOf((*ns.Handle)(nil)),
 		"ObjEvent":        reflect.ValueOf((*ns.ObjEvent)(nil)),
 		"ObjectGroupID":   reflect.ValueOf((*ns.ObjectGroupID)(nil)),
 		"ObjectID":        reflect.ValueOf((*ns.ObjectID)(nil)),
@@ -1564,11 +1565,22 @@ func init() {
 		"WaypointID":      reflect.ValueOf((*ns.WaypointID)(nil)),
 
 		// interface wrapper definitions
-		"_Func": reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v3_Func)(nil)),
+		"_Func":   reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v3_Func)(nil)),
+		"_Handle": reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v3_Handle)(nil)),
 	}
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v3_Func is an interface wrapper for Func type
 type _github_com_noxworld_dev_noxscript_ns_v3_Func struct {
 	IValue interface{}
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v3_Handle is an interface wrapper for Handle type
+type _github_com_noxworld_dev_noxscript_ns_v3_Handle struct {
+	IValue    interface{}
+	WScriptID func() int
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v3_Handle) ScriptID() int {
+	return W.WScriptID()
 }
