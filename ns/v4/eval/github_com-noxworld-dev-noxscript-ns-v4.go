@@ -3,6 +3,7 @@
 package eval
 
 import (
+	"image"
 	"image/color"
 	"reflect"
 	"time"
@@ -18,6 +19,7 @@ import (
 	"github.com/noxworld-dev/opennox-lib/object"
 	"github.com/noxworld-dev/opennox-lib/player"
 	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/noxworld-dev/opennox-lib/wall"
 )
 
 func init() {
@@ -71,11 +73,18 @@ func init() {
 		"EventRetreat":         reflect.ValueOf(ns.EventRetreat),
 		"FindAllObjects":       reflect.ValueOf(ns.FindAllObjects),
 		"FindAllObjectsIn":     reflect.ValueOf(ns.FindAllObjectsIn),
+		"FindAllWalls":         reflect.ValueOf(ns.FindAllWalls),
+		"FindAllWallsIn":       reflect.ValueOf(ns.FindAllWallsIn),
 		"FindClosestObject":    reflect.ValueOf(ns.FindClosestObject),
 		"FindClosestObjectIn":  reflect.ValueOf(ns.FindClosestObjectIn),
+		"FindClosestWall":      reflect.ValueOf(ns.FindClosestWall),
+		"FindClosestWallIn":    reflect.ValueOf(ns.FindClosestWallIn),
 		"FindObject":           reflect.ValueOf(ns.FindObject),
 		"FindObjectIn":         reflect.ValueOf(ns.FindObjectIn),
 		"FindObjects":          reflect.ValueOf(ns.FindObjects),
+		"FindWall":             reflect.ValueOf(ns.FindWall),
+		"FindWallIn":           reflect.ValueOf(ns.FindWallIn),
+		"FindWalls":            reflect.ValueOf(ns.FindWalls),
 		"Frame":                reflect.ValueOf(ns.Frame),
 		"FrameRate":            reflect.ValueOf(ns.FrameRate),
 		"Frames":               reflect.ValueOf(ns.Frames),
@@ -140,6 +149,7 @@ func init() {
 		"PrintStr":             reflect.ValueOf(ns.PrintStr),
 		"PrintStrToAll":        reflect.ValueOf(ns.PrintStrToAll),
 		"PrintToAll":           reflect.ValueOf(ns.PrintToAll),
+		"Pt":                   reflect.ValueOf(ns.Pt),
 		"Ptf":                  reflect.ValueOf(ns.Ptf),
 		"Random":               reflect.ValueOf(ns.Random),
 		"RandomFloat":          reflect.ValueOf(ns.RandomFloat),
@@ -209,6 +219,7 @@ func init() {
 		"HasTeam":             reflect.ValueOf((*ns.HasTeam)(nil)),
 		"HasType":             reflect.ValueOf((*ns.HasType)(nil)),
 		"HasTypeName":         reflect.ValueOf((*ns.HasTypeName)(nil)),
+		"HasWallFlags":        reflect.ValueOf((*ns.HasWallFlags)(nil)),
 		"Implementation":      reflect.ValueOf((*ns.Implementation)(nil)),
 		"InCirclef":           reflect.ValueOf((*ns.InCirclef)(nil)),
 		"InRectf":             reflect.ValueOf((*ns.InRectf)(nil)),
@@ -227,6 +238,7 @@ func init() {
 		"ObjectEvent":         reflect.ValueOf((*ns.ObjectEvent)(nil)),
 		"Objects":             reflect.ValueOf((*ns.Objects)(nil)),
 		"Player":              reflect.ValueOf((*ns.Player)(nil)),
+		"Point":               reflect.ValueOf((*ns.Point)(nil)),
 		"Pointf":              reflect.ValueOf((*ns.Pointf)(nil)),
 		"Positioner":          reflect.ValueOf((*ns.Positioner)(nil)),
 		"StringID":            reflect.ValueOf((*ns.StringID)(nil)),
@@ -235,10 +247,12 @@ func init() {
 		"Timer":               reflect.ValueOf((*ns.Timer)(nil)),
 		"TimerHandle":         reflect.ValueOf((*ns.TimerHandle)(nil)),
 		"TrapSpell":           reflect.ValueOf((*ns.TrapSpell)(nil)),
+		"WallCond":            reflect.ValueOf((*ns.WallCond)(nil)),
 		"WallGroupHandle":     reflect.ValueOf((*ns.WallGroupHandle)(nil)),
 		"WallGroupObj":        reflect.ValueOf((*ns.WallGroupObj)(nil)),
 		"WallHandle":          reflect.ValueOf((*ns.WallHandle)(nil)),
 		"WallObj":             reflect.ValueOf((*ns.WallObj)(nil)),
+		"WallSearcher":        reflect.ValueOf((*ns.WallSearcher)(nil)),
 		"WaypointGroupHandle": reflect.ValueOf((*ns.WaypointGroupHandle)(nil)),
 		"WaypointGroupObj":    reflect.ValueOf((*ns.WaypointGroupObj)(nil)),
 		"WaypointHandle":      reflect.ValueOf((*ns.WaypointHandle)(nil)),
@@ -262,10 +276,12 @@ func init() {
 		"_TimeSource":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimeSource)(nil)),
 		"_Timer":               reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Timer)(nil)),
 		"_TimerHandle":         reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimerHandle)(nil)),
+		"_WallCond":            reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallCond)(nil)),
 		"_WallGroupHandle":     reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle)(nil)),
 		"_WallGroupObj":        reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallGroupObj)(nil)),
 		"_WallHandle":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallHandle)(nil)),
 		"_WallObj":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallObj)(nil)),
+		"_WallSearcher":        reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WallSearcher)(nil)),
 		"_WaypointGroupHandle": reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupHandle)(nil)),
 		"_WaypointGroupObj":    reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupObj)(nil)),
 		"_WaypointHandle":      reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WaypointHandle)(nil)),
@@ -316,6 +332,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WEffect                func(effect effect.Effect, p1 ns.Positioner, p2 ns.Positioner)
 	WEndGame               func(class player.Class)
 	WFindObjects           func(fnc func(it ns.Obj) bool, conditions ...ns.ObjCond) int
+	WFindWalls             func(fnc func(it ns.WallObj) bool, conditions ...ns.WallCond) int
 	WFrame                 func() int
 	WFrameRate             func() int
 	WGetAnswer             func(obj ns.Obj) ns.DialogAnswer
@@ -453,6 +470,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) EndGame(class p
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) FindObjects(fnc func(it ns.Obj) bool, conditions ...ns.ObjCond) int {
 	return W.WFindObjects(fnc, conditions...)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) FindWalls(fnc func(it ns.WallObj) bool, conditions ...ns.WallCond) int {
+	return W.WFindWalls(fnc, conditions...)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Frame() int {
 	return W.WFrame()
@@ -730,121 +750,123 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) WideScreen(enab
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Obj is an interface wrapper for Obj type
 type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
-	IValue                interface{}
-	WAggressionLevel      func(level float32)
-	WApplyForce           func(force types.Pointf)
-	WAttack               func(target ns.Positioner)
-	WAwardSpell           func(spell spell.Spell) bool
-	WBaseSpeed            func() float32
-	WCanSee               func(obj ns.Obj) bool
-	WChangeGold           func(delta int)
-	WChangeScore          func(score int)
-	WChat                 func(message string)
-	WChatStr              func(message string)
-	WChatStrTimer         func(message string, dt ns.Duration)
-	WChatTimer            func(message string, dt ns.Duration)
-	WClass                func() object.Class
-	WCreateMover          func(wp ns.WaypointObj, speed float32) ns.Obj
-	WCurrentHealth        func() int
-	WCurrentMana          func() int
-	WCurrentSpeed         func() float32
-	WDamage               func(source ns.Obj, amount int, typ damage.Type)
-	WDelete               func()
-	WDeleteAfter          func(dt ns.Duration)
-	WDestroyChat          func()
-	WDirection            func() int
-	WDrop                 func(item ns.Obj) bool
-	WEnable               func(enable bool)
-	WEnchant              func(enchant enchant.Enchant, dt ns.Duration)
-	WEnchantOff           func(enchant enchant.Enchant)
-	WEquip                func(item ns.Obj) bool
-	WEquipment            func(conditions ...ns.ObjCond) []ns.Obj
-	WFindItems            func(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int
-	WFlags                func() object.Flags
-	WFlagsDisable         func(v object.Flags)
-	WFlagsEnable          func(v object.Flags)
-	WFlee                 func(target ns.Positioner, dt ns.Duration)
-	WFollow               func(target ns.Positioner)
-	WFreeze               func(freeze bool)
-	WGetClass             func() player.Class
-	WGetElevatorStatus    func() int
-	WGetGold              func() int
-	WGetHolder            func() ns.Obj
-	WGetLastItem          func() ns.Obj
-	WGetLevel             func() int
-	WGetPreviousItem      func() ns.Obj
-	WGetScore             func() int
-	WGiveXp               func(xp float32)
-	WGuard                func(p1 types.Pointf, p2 types.Pointf, distance float32)
-	WHasClass             func(class class.Class) bool
-	WHasEnchant           func(enchant enchant.Enchant) bool
-	WHasEquipment         func(item ns.Obj) bool
-	WHasItem              func(item ns.Obj) bool
-	WHasOwner             func(owner ns.Obj) bool
-	WHasOwnerIn           func(owners ns.ObjGroup) bool
-	WHasSubclass          func(subclass subclass.SubClass) bool
-	WHasTeam              func(t ns.Team) bool
-	WHitMelee             func(p types.Pointf)
-	WHitRanged            func(p types.Pointf)
-	WHunt                 func()
-	WIdle                 func()
-	WInEquipment          func() ns.ObjSearcher
-	WInItems              func() ns.ObjSearcher
-	WIsAttackedBy         func(by ns.Obj) bool
-	WIsEnabled            func() bool
-	WIsLocked             func() bool
-	WItems                func(conditions ...ns.ObjCond) []ns.Obj
-	WLock                 func(lock bool)
-	WLookAtDirection      func(dir int)
-	WLookAtObject         func(target ns.Positioner)
-	WLookWithAngle        func(angle int)
-	WMass                 func() float32
-	WMaxHealth            func() int
-	WMaxMana              func() int
-	WMonsterStatus        func() object.MonsterStatus
-	WMonsterStatusDisable func(v object.MonsterStatus)
-	WMonsterStatusEnable  func(v object.MonsterStatus)
-	WMove                 func(wp ns.WaypointObj)
-	WObjScriptID          func() int
-	WOnEvent              func(event ns.ObjectEvent, fnc any)
-	WPause                func(dt ns.Duration)
-	WPickup               func(item ns.Obj) bool
-	WPlayer               func() ns.Player
-	WPos                  func() types.Pointf
-	WPushTo               func(pos ns.Positioner, force float32)
-	WRaiseZombie          func()
-	WRestoreHealth        func(amount int)
-	WResumeLevel          func(percent float32)
-	WRetreatLevel         func(percent float32)
-	WReturn               func()
-	WScriptID             func() int
-	WSetBaseSpeed         func(v float32)
-	WSetColor             func(ind int, cl color.Color)
-	WSetFlags             func(v object.Flags)
-	WSetHealth            func(v int)
-	WSetMana              func(v int)
-	WSetMass              func(v float32)
-	WSetMaxHealth         func(v int)
-	WSetMaxMana           func(v int)
-	WSetMonsterStatus     func(v object.MonsterStatus)
-	WSetOwner             func(owner ns.Obj)
-	WSetOwners            func(owners ns.ObjGroup)
-	WSetPos               func(p types.Pointf)
-	WSetRoamFlag          func(flags int)
-	WSetStrength          func(v int)
-	WSetTeam              func(t ns.Team)
-	WSetZ                 func(z float32)
-	WStrength             func() int
-	WTeam                 func() ns.Team
-	WToggle               func() bool
-	WTrapSpells           func(spells ...spell.Spell)
-	WTrapSpellsAdv        func(spells []ns.TrapSpell)
-	WType                 func() ns.ObjType
-	WUnequip              func(item ns.Obj) bool
-	WWalkTo               func(p types.Pointf)
-	WWander               func()
-	WZ                    func() float32
-	WZombieStayDown       func()
+	IValue                  interface{}
+	WAggressionLevel        func(level float32)
+	WApplyForce             func(force types.Pointf)
+	WAttack                 func(target ns.Positioner)
+	WAwardSpell             func(spell spell.Spell) bool
+	WBaseSpeed              func() float32
+	WCanSee                 func(obj ns.Obj) bool
+	WChangeGold             func(delta int)
+	WChangeScore            func(score int)
+	WChat                   func(message string)
+	WChatStr                func(message string)
+	WChatStrTimer           func(message string, dt ns.Duration)
+	WChatTimer              func(message string, dt ns.Duration)
+	WClass                  func() object.Class
+	WCreateMover            func(wp ns.WaypointObj, speed float32) ns.Obj
+	WCurrentHealth          func() int
+	WCurrentMana            func() int
+	WCurrentSpeed           func() float32
+	WDamage                 func(source ns.Obj, amount int, typ damage.Type)
+	WDelete                 func()
+	WDeleteAfter            func(dt ns.Duration)
+	WDestroyChat            func()
+	WDirection              func() int
+	WDrop                   func(item ns.Obj) bool
+	WEnable                 func(enable bool)
+	WEnchant                func(enchant enchant.Enchant, dt ns.Duration)
+	WEnchantOff             func(enchant enchant.Enchant)
+	WEquip                  func(item ns.Obj) bool
+	WEquipment              func(conditions ...ns.ObjCond) []ns.Obj
+	WFindItems              func(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int
+	WFlags                  func() object.Flags
+	WFlagsDisable           func(v object.Flags)
+	WFlagsEnable            func(v object.Flags)
+	WFlee                   func(target ns.Positioner, dt ns.Duration)
+	WFollow                 func(target ns.Positioner)
+	WFreeze                 func(freeze bool)
+	WGetClass               func() player.Class
+	WGetElevatorStatus      func() int
+	WGetGold                func() int
+	WGetHolder              func() ns.Obj
+	WGetLastItem            func() ns.Obj
+	WGetLevel               func() int
+	WGetPreviousItem        func() ns.Obj
+	WGetScore               func() int
+	WGiveXp                 func(xp float32)
+	WGuard                  func(p1 types.Pointf, p2 types.Pointf, distance float32)
+	WHasClass               func(class class.Class) bool
+	WHasEnchant             func(enchant enchant.Enchant) bool
+	WHasEquipment           func(item ns.Obj) bool
+	WHasItem                func(item ns.Obj) bool
+	WHasOwner               func(owner ns.Obj) bool
+	WHasOwnerIn             func(owners ns.ObjGroup) bool
+	WHasSubclass            func(subclass subclass.SubClass) bool
+	WHasTeam                func(t ns.Team) bool
+	WHitMelee               func(p types.Pointf)
+	WHitRanged              func(p types.Pointf)
+	WHunt                   func()
+	WIdle                   func()
+	WInEquipment            func() ns.ObjSearcher
+	WInItems                func() ns.ObjSearcher
+	WIsAttackedBy           func(by ns.Obj) bool
+	WIsEnabled              func() bool
+	WIsLocked               func() bool
+	WItems                  func(conditions ...ns.ObjCond) []ns.Obj
+	WLock                   func(lock bool)
+	WLookAtDirection        func(dir int)
+	WLookAtObject           func(target ns.Positioner)
+	WLookWithAngle          func(angle int)
+	WMass                   func() float32
+	WMaxHealth              func() int
+	WMaxMana                func() int
+	WMonsterStatus          func() object.MonsterStatus
+	WMonsterStatusDisable   func(v object.MonsterStatus)
+	WMonsterStatusEnable    func(v object.MonsterStatus)
+	WMove                   func(wp ns.WaypointObj)
+	WObjScriptID            func() int
+	WOnEvent                func(event ns.ObjectEvent, fnc any)
+	WPause                  func(dt ns.Duration)
+	WPickup                 func(item ns.Obj) bool
+	WPlayer                 func() ns.Player
+	WPos                    func() types.Pointf
+	WPushTo                 func(pos ns.Positioner, force float32)
+	WRaiseZombie            func()
+	WRestoreHealth          func(amount int)
+	WResumeLevel            func(percent float32)
+	WRetreatLevel           func(percent float32)
+	WReturn                 func()
+	WScriptID               func() int
+	WSetBaseSpeed           func(v float32)
+	WSetColor               func(ind int, cl color.Color)
+	WSetFlags               func(v object.Flags)
+	WSetHealth              func(v int)
+	WSetHealthRegenPerFrame func(v float32)
+	WSetHealthRegenToMaxDur func(t time.Duration)
+	WSetMana                func(v int)
+	WSetMass                func(v float32)
+	WSetMaxHealth           func(v int)
+	WSetMaxMana             func(v int)
+	WSetMonsterStatus       func(v object.MonsterStatus)
+	WSetOwner               func(owner ns.Obj)
+	WSetOwners              func(owners ns.ObjGroup)
+	WSetPos                 func(p types.Pointf)
+	WSetRoamFlag            func(flags int)
+	WSetStrength            func(v int)
+	WSetTeam                func(t ns.Team)
+	WSetZ                   func(z float32)
+	WStrength               func() int
+	WTeam                   func() ns.Team
+	WToggle                 func() bool
+	WTrapSpells             func(spells ...spell.Spell)
+	WTrapSpellsAdv          func(spells []ns.TrapSpell)
+	WType                   func() ns.ObjType
+	WUnequip                func(item ns.Obj) bool
+	WWalkTo                 func(p types.Pointf)
+	WWander                 func()
+	WZ                      func() float32
+	WZombieStayDown         func()
 }
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) AggressionLevel(level float32) {
@@ -1119,6 +1141,12 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetFlags(v object.Flags) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealth(v int) {
 	W.WSetHealth(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealthRegenPerFrame(v float32) {
+	W.WSetHealthRegenPerFrame(v)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetHealthRegenToMaxDur(t time.Duration) {
+	W.WSetHealthRegenToMaxDur(t)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetMana(v int) {
 	W.WSetMana(v)
@@ -1546,6 +1574,16 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_TimerHandle) TimerScriptID() in
 	return W.WTimerScriptID()
 }
 
+// _github_com_noxworld_dev_noxscript_ns_v4_WallCond is an interface wrapper for WallCond type
+type _github_com_noxworld_dev_noxscript_ns_v4_WallCond struct {
+	IValue       interface{}
+	WWallMatches func(obj ns.WallObj) bool
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallCond) WallMatches(obj ns.WallObj) bool {
+	return W.WWallMatches(obj)
+}
+
 // _github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle is an interface wrapper for WallGroupHandle type
 type _github_com_noxworld_dev_noxscript_ns_v4_WallGroupHandle struct {
 	IValue             interface{}
@@ -1613,7 +1651,10 @@ type _github_com_noxworld_dev_noxscript_ns_v4_WallObj struct {
 	IValue        interface{}
 	WDestroy      func()
 	WEnable       func(enable bool)
+	WFlags        func() wall.Flags
+	WGridPos      func() image.Point
 	WIsEnabled    func() bool
+	WPos          func() types.Pointf
 	WScriptID     func() int
 	WToggle       func() bool
 	WWallScriptID func() int
@@ -1625,8 +1666,17 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Destroy() {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Enable(enable bool) {
 	W.WEnable(enable)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Flags() wall.Flags {
+	return W.WFlags()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) GridPos() image.Point {
+	return W.WGridPos()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) IsEnabled() bool {
 	return W.WIsEnabled()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Pos() types.Pointf {
+	return W.WPos()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) ScriptID() int {
 	return W.WScriptID()
@@ -1636,6 +1686,16 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) Toggle() bool {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_WallObj) WallScriptID() int {
 	return W.WWallScriptID()
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_WallSearcher is an interface wrapper for WallSearcher type
+type _github_com_noxworld_dev_noxscript_ns_v4_WallSearcher struct {
+	IValue     interface{}
+	WFindWalls func(fnc func(it ns.WallObj) bool, conditions ...ns.WallCond) int
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_WallSearcher) FindWalls(fnc func(it ns.WallObj) bool, conditions ...ns.WallCond) int {
+	return W.WFindWalls(fnc, conditions...)
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_WaypointGroupHandle is an interface wrapper for WaypointGroupHandle type

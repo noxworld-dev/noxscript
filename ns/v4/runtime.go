@@ -141,6 +141,7 @@ type Implementation interface {
 	Wall(x int, y int) WallObj
 	WallGroupByHandle(h WallGroupHandle) WallGroupObj
 	WallGroup(name string) WallGroupObj
+	FindWalls(fnc func(it WallObj) bool, conditions ...WallCond) int
 
 	OnFrame(fnc FrameFunc)
 	OnMapEvent(typ MapEvent, fnc MapEventFunc)

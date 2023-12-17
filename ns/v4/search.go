@@ -150,3 +150,150 @@ func FindAllObjectsIn(s ObjSearcher, conditions ...ObjCond) []Obj {
 	}, conditions...)
 	return out
 }
+
+// WallSearcher is an interface for iterating and filtering over walls.
+type WallSearcher interface {
+	// FindWalls calls fnc for all walls in a set matching all the conditions.
+	// It returns a number of walls matched. If fnc returns false, the function stops the search.
+	// If fnc is nil, the function only counts a number of walls matching a condition.
+	//
+	// Example:
+	//
+	//	// Find and disable walls with a window in a 100px circle around obj.
+	//	g.FindWalls(
+	//		func(it ns.WallObj) bool {
+	//			it.Enable(false)
+	//			return true
+	//		},
+	//		ns.InCirclef{Center: obj, R: 100},
+	//		ns.HasWallFlags(ns.WallFlagWindow),
+	//	)
+	FindWalls(fnc func(it WallObj) bool, conditions ...WallCond) int
+}
+
+// FindWall searches the map for any wall that matches all conditions.
+// If wall is not found it returns nil.
+//
+// Example:
+//
+//	// Find window on the map.
+//	found := ns.FindWall(ns.HasWallFlags(ns.WallFlagWindow))
+func FindWall(conditions ...WallCond) WallObj {
+	return FindWallIn(nil, conditions...)
+}
+
+// FindWallIn searches the set for any walls that matches all conditions.
+// If wall is not found it returns nil.
+//
+// Example:
+//
+//	// Find window on the map.
+//	found := ns.FindWall(ns.HasWallFlags(ns.WallFlagWindow))
+func FindWallIn(s WallSearcher, conditions ...WallCond) WallObj {
+	var found WallObj
+	findWallsIn(s, func(it WallObj) bool {
+		found = it
+		return false
+	}, conditions...)
+	return found
+}
+
+// FindClosestWall searches the map for closest wall that matches all conditions.
+// If no walls are found, it returns nil.
+//
+// Example:
+//
+//	// Find window closest to obj.
+//	found := ns.FindClosestWall(obj, ns.HasWallFlags(ns.WallFlagWindow))
+func FindClosestWall(from Positioner, conditions ...WallCond) WallObj {
+	return FindClosestWallIn(from, nil, conditions...)
+}
+
+// FindClosestWallIn searches the set for closest wall that matches all conditions.
+// If no walls are found, it returns nil.
+//
+// Example:
+//
+//	// Find window closest to obj.
+//	found := ns.FindClosestWall(obj, ns.HasWallFlags(ns.WallFlagWindow))
+func FindClosestWallIn(from Positioner, s WallSearcher, conditions ...WallCond) WallObj {
+	if from == nil {
+		return nil
+	}
+	fromWall, _ := from.(WallObj)
+	var (
+		found WallObj
+		min   float64 = math.MaxFloat64
+	)
+	pos := from.Pos()
+	findWallsIn(s, func(it WallObj) bool {
+		if it == fromWall {
+			return true // skip
+		}
+		dist := it.Pos().Sub(pos).Len()
+		if dist < min {
+			min = dist
+			found = it
+		}
+		return true
+	}, conditions...)
+	return found
+}
+
+// FindWalls calls fnc for all map walls matching all the conditions.
+// It returns a number of walls matched. If fnc returns false, the function stops the search.
+// If fnc is nil, the function only counts a number of walls matching a condition.
+//
+// Example:
+//
+//	// Find and disable walls with a window in a 100px circle around obj.
+//	g.FindWalls(
+//		func(it ns.WallObj) bool {
+//			it.Enable(false)
+//			return true
+//		},
+//		ns.InCirclef{Center: obj, R: 100},
+//		ns.HasWallFlags(ns.WallFlagWindow),
+//	)
+func FindWalls(fnc func(it WallObj) bool, conditions ...WallCond) int {
+	return findWallsIn(nil, fnc, conditions...)
+}
+
+func findWallsIn(s WallSearcher, fnc func(it WallObj) bool, conditions ...WallCond) int {
+	if s == nil {
+		s = impl
+	}
+	if s == nil {
+		return 0
+	}
+	return s.FindWalls(fnc, conditions...)
+}
+
+// FindAllWalls is similar to FindWalls, but returns all walls as an array/slice.
+//
+// Example:
+//
+//	// Find and return all walls in a 50px circle around obj.
+//	arr := ns.FindAllWalls(
+//		ns.InCirclef{Center: obj, R: 50},
+//	)
+func FindAllWalls(conditions ...WallCond) []WallObj {
+	return FindAllWallsIn(nil, conditions...)
+}
+
+// FindAllWallsIn iterates over walls, and returns all matched walls as an array/slice.
+//
+// Example:
+//
+//	// Find and return missiles in a 50px circle around obj.
+//	arr := ns.FindAllWalls(
+//		ns.InCirclef{Center: obj, R: 50},
+//	)
+func FindAllWallsIn(s WallSearcher, conditions ...WallCond) []WallObj {
+	var out []WallObj
+	findWallsIn(s, func(it WallObj) bool {
+		out = append(out, it)
+		return true
+	}, conditions...)
+	return out
+}

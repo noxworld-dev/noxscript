@@ -1,6 +1,7 @@
 package ns
 
 import (
+	"image"
 	"image/color"
 	"time"
 
@@ -15,8 +16,12 @@ import (
 	"github.com/noxworld-dev/noxscript/ns/v4/subclass"
 )
 
+type Point = image.Point
 type Pointf = types.Pointf
 
+func Pt(x, y int) Point {
+	return image.Pt(x, y)
+}
 func Ptf(x, y float32) Pointf {
 	return types.Ptf(x, y)
 }

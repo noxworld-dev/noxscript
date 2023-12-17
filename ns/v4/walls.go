@@ -1,5 +1,7 @@
 package ns
 
+import "github.com/noxworld-dev/opennox-lib/wall"
+
 // NoWallSound enables or disables wall sounds.
 func NoWallSound(noWallSound bool) {
 	if impl == nil {
@@ -18,6 +20,13 @@ type WallObj interface {
 	// Toggle the object's enabled state.
 	// It returns the new state after toggling the object.
 	Toggle() bool
+	// Flags returns wall flags.
+	Flags() wall.Flags
+
+	// Pos returns position of the wall in object coordinates.
+	Pos() Pointf
+	// GridPos returns wall grid position.
+	GridPos() Point
 
 	// Destroy breaks a wall.
 	Destroy()

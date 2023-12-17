@@ -1,12 +1,22 @@
 package ns
 
-import "github.com/noxworld-dev/opennox-lib/object"
+import (
+	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/noxworld-dev/opennox-lib/wall"
+)
 
 // ObjCond checks if object matches a certain condition.
 type ObjCond interface {
-	// Matches returns true if objects matches a condition.
+	// Matches returns true if object matches a condition.
 	// It must not modify the object.
 	Matches(obj Obj) bool
+}
+
+// WallCond checks if wall matches a certain condition.
+type WallCond interface {
+	// WallMatches returns true if wall matches a condition.
+	// It must not modify the wall.
+	WallMatches(obj WallObj) bool
 }
 
 // ObjCondFunc is a function that implements ObjCond.
@@ -55,7 +65,10 @@ func (c NOT) Matches(obj Obj) bool {
 	return !c.Cond.Matches(obj)
 }
 
-var _ ObjCond = InRectf{}
+var (
+	_ ObjCond  = InRectf{}
+	_ WallCond = InRectf{}
+)
 
 // InRectf filters objects that are inside a given map rectangle.
 type InRectf struct {
@@ -74,7 +87,22 @@ func (c InRectf) Matches(obj Obj) bool {
 		pos.Y >= c.Min.Y && pos.Y <= c.Max.Y
 }
 
-var _ ObjCond = InCirclef{}
+func (c InRectf) WallMatches(wl WallObj) bool {
+	if c.Min.X > c.Max.X {
+		c.Min.X, c.Max.X = c.Max.X, c.Min.X
+	}
+	if c.Min.Y > c.Max.Y {
+		c.Min.Y, c.Max.Y = c.Max.Y, c.Min.Y
+	}
+	pos := wl.Pos()
+	return pos.X >= c.Min.X && pos.X <= c.Max.X &&
+		pos.Y >= c.Min.Y && pos.Y <= c.Max.Y
+}
+
+var (
+	_ ObjCond  = InCirclef{}
+	_ WallCond = InCirclef{}
+)
 
 // InCirclef filters objects that are inside a circle on the map.
 type InCirclef struct {
@@ -87,6 +115,13 @@ func (c InCirclef) Matches(obj Obj) bool {
 		return false
 	}
 	return obj.Pos().Sub(c.Center.Pos()).Len() <= c.R
+}
+
+func (c InCirclef) WallMatches(wl WallObj) bool {
+	if c.Center == nil {
+		return false
+	}
+	return wl.Pos().Sub(c.Center.Pos()).Len() <= c.R
 }
 
 var _ ObjCond = EqualClass(0)
@@ -179,6 +214,16 @@ func (arr HasTeam) Matches(obj Obj) bool {
 		}
 	}
 	return false
+}
+
+var _ WallCond = HasWallFlags(0)
+
+// HasWallFlags checks that wall's flags match any of provided flags.
+type HasWallFlags wall.Flags
+
+func (c HasWallFlags) WallMatches(obj WallObj) bool {
+	c2 := wall.Flags(c)
+	return obj.Flags()&c2 != 0
 }
 
 // TODO: InPolygon, need to support polygons in the library
