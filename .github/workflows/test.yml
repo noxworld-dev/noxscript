@@ -17,6 +17,7 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.21'
+        cache-dependency-path: ns/go.sum
     - name: Test
       run: cd ns && go test -v ./...
 
@@ -29,6 +30,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
+          cache-dependency-path: ns/v3/go.sum
       - name: Test
         run: cd ns/v3 && go test -v ./...
 
@@ -41,6 +43,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
+          cache-dependency-path: ns/v4/go.sum
       - name: Test
         run: cd ns/v4 && go test -v ./...
 
@@ -53,6 +56,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
+          cache-dependency-path: examples/go.sum
       - name: Test
         run: cd examples && go test -v ./...
 
@@ -65,5 +69,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
+          cache-dependency-path: eud/v171/go.sum
       - name: Test
         run: cd eud/v171 && go test -v ./...
