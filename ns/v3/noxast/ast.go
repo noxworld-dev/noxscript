@@ -36,6 +36,7 @@ func importPathFor(v any) string {
 }
 
 type Config struct {
+	Package       string
 	DoNotOptimize bool
 	DoNotFold     bool
 }
@@ -44,11 +45,15 @@ func Translate(s *asm.Script, c *Config) *ast.File {
 	if c == nil {
 		c = &Config{}
 	}
+	pkgName := c.Package
+	if pkgName == "" {
+		pkgName = "script"
+	}
 	t := &translator{
 		s: s,
 		c: c,
 		f: &ast.File{
-			Name: ast.NewIdent("script"),
+			Name: ast.NewIdent(pkgName),
 		},
 		strings: s.Strings,
 	}
