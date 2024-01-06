@@ -57,7 +57,7 @@ func TestTranslateMaps(t *testing.T) {
 			s, err := asm.ReadScript(bytes.NewReader(ss.Data))
 			require.NoError(t, err)
 
-			af := noxast.Translate(s)
+			af := noxast.Translate(s, nil)
 			var buf bytes.Buffer
 			format.Node(&buf, token.NewFileSet(), af)
 			t.Logf("\n%s", &buf)
