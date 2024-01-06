@@ -18,5 +18,17 @@ jobs:
       with:
         go-version: '1.21'
 
-    - name: Test
-      run: go test -v ./...
+    - name: Test NS tools
+      run: go test -v ./ns/...
+
+    - name: Test NS3
+      run: go test -v ./ns/v3/...
+
+    - name: Test NS4
+      run: go test -v ./ns/v4/...
+
+    - name: Test Examples
+      run: go test -v ./examples/...
+
+    - name: Test EUD
+      run: go test -v ./eud/v171/...
