@@ -8,27 +8,62 @@ on:
 
 jobs:
 
-  test:
+  test-tools:
+    name: Test NS tools
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.21'
-
-    - name: Test NS tools
+    - name: Test
       run: cd ns && go test -v ./...
 
-    - name: Test NS3
-      run: cd ns/v3 && go test -v ./...
+  test-ns3:
+    name: Test NS3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Test
+        run: cd ns/v3 && go test -v ./...
 
-    - name: Test NS4
-      run: cd ns/v4 && go test -v ./...
+  test-ns4:
+    name: Test NS4
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Test
+        run: cd ns/v4 && go test -v ./...
 
-    - name: Test Examples
-      run: cd examples && go test -v ./...
+  test-examples:
+    name: Test Examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Test
+        run: cd examples && go test -v ./...
 
-    - name: Test EUD
-      run: cd eud/v171 && go test -v ./...
+  test-eud:
+    name: Test EUD
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Test
+        run: cd eud/v171 && go test -v ./...
