@@ -2,7 +2,7 @@ module github.com/noxworld-dev/noxscript/examples
 
 go 1.21
 
-require github.com/noxworld-dev/noxscript/ns/v3 v3.4.0
+require github.com/noxworld-dev/noxscript/ns/v3 v3.4.2
 
 require (
 	github.com/noxworld-dev/noxscript/ns/v4 v4.15.0 // indirect

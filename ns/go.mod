@@ -1,6 +1,6 @@
 module github.com/noxworld-dev/noxscript/ns
 
-go 1.20
+go 1.21
 
 require github.com/shoenig/test v1.7.0
 

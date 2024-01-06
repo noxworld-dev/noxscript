@@ -1,14 +1,16 @@
 module github.com/noxworld-dev/noxscript/eud/v171
 
-go 1.20
+go 1.21
+
+toolchain go1.21.5
 
 require (
-	github.com/noxworld-dev/noxscript/ns/v3 v3.1.5
-	github.com/noxworld-dev/noxscript/ns/v4 v4.6.0
-	github.com/noxworld-dev/opennox-lib v0.0.0-20230415171557-ba7d800e25c8
+	github.com/noxworld-dev/noxscript/ns/v3 v3.4.2
+	github.com/noxworld-dev/noxscript/ns/v4 v4.14.0
+	github.com/noxworld-dev/opennox-lib v0.0.0-20240106132033-e8abe68bd8d5
 )
 
 require (
-	golang.org/x/exp v0.0.0-20221031165847-c99f073a8326 // indirect
+	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
