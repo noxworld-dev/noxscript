@@ -426,7 +426,7 @@ type Obj interface {
 	PushTo(pos Positioner, force float32)
 
 	// Damage the target with a given source object, amount, and damage type.
-	Damage(source Obj, amount int, typ damage.Type)
+	Damage(source Obj, amount int, typ damage.Type) bool
 
 	// Delete an object.
 	Delete()
