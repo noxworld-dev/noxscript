@@ -768,7 +768,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WCurrentHealth          func() int
 	WCurrentMana            func() int
 	WCurrentSpeed           func() float32
-	WDamage                 func(source ns.Obj, amount int, typ damage.Type)
+	WDamage                 func(source ns.Obj, amount int, typ damage.Type) bool
 	WDelete                 func()
 	WDeleteAfter            func(dt ns.Duration)
 	WDestroyChat            func()
@@ -920,8 +920,8 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentMana() int {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentSpeed() float32 {
 	return W.WCurrentSpeed()
 }
-func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Damage(source ns.Obj, amount int, typ damage.Type) {
-	W.WDamage(source, amount, typ)
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Damage(source ns.Obj, amount int, typ damage.Type) bool {
+	return W.WDamage(source, amount, typ)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Delete() {
 	W.WDelete()
