@@ -1,5 +1,7 @@
 # Script examples
 
+See [Examples](https://noxworld-dev.github.io/opennox-docs/noxscript/examples/index.html) in documentation.
+
 ## Campaign
 
-- [con01a](./con01a)
+Moved [here](https://github.com/noxworld-dev/legacy-maps).
