@@ -169,6 +169,7 @@ func init() {
 		"StartDialog":          reflect.ValueOf(ns.StartDialog),
 		"StartupScreen":        reflect.ValueOf(ns.StartupScreen),
 		"StopScript":           reflect.ValueOf(ns.StopScript),
+		"Store":                reflect.ValueOf(ns.Store),
 		"StoryPic":             reflect.ValueOf(ns.StoryPic),
 		"Teams":                reflect.ValueOf(ns.Teams),
 		"TellStory":            reflect.ValueOf(ns.TellStory),
@@ -237,10 +238,17 @@ func init() {
 		"ObjType":             reflect.ValueOf((*ns.ObjType)(nil)),
 		"ObjectEvent":         reflect.ValueOf((*ns.ObjectEvent)(nil)),
 		"Objects":             reflect.ValueOf((*ns.Objects)(nil)),
+		"Persistent":          reflect.ValueOf((*ns.Persistent)(nil)),
 		"Player":              reflect.ValueOf((*ns.Player)(nil)),
+		"PlayerDeathFunc":     reflect.ValueOf((*ns.PlayerDeathFunc)(nil)),
+		"PlayerJoinFunc":      reflect.ValueOf((*ns.PlayerJoinFunc)(nil)),
+		"PlayerLeaveFunc":     reflect.ValueOf((*ns.PlayerLeaveFunc)(nil)),
 		"Point":               reflect.ValueOf((*ns.Point)(nil)),
 		"Pointf":              reflect.ValueOf((*ns.Pointf)(nil)),
 		"Positioner":          reflect.ValueOf((*ns.Positioner)(nil)),
+		"Session":             reflect.ValueOf((*ns.Session)(nil)),
+		"Storage":             reflect.ValueOf((*ns.Storage)(nil)),
+		"StorageType":         reflect.ValueOf((*ns.StorageType)(nil)),
 		"StringID":            reflect.ValueOf((*ns.StringID)(nil)),
 		"Team":                reflect.ValueOf((*ns.Team)(nil)),
 		"TimeSource":          reflect.ValueOf((*ns.TimeSource)(nil)),
@@ -272,6 +280,8 @@ func init() {
 		"_ObjType":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_ObjType)(nil)),
 		"_Player":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Player)(nil)),
 		"_Positioner":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Positioner)(nil)),
+		"_Storage":             reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Storage)(nil)),
+		"_StorageType":         reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_StorageType)(nil)),
 		"_Team":                reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Team)(nil)),
 		"_TimeSource":          reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_TimeSource)(nil)),
 		"_Timer":               reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Timer)(nil)),
@@ -376,6 +386,9 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WOnChat                func(fnc ns.ChatFunc)
 	WOnFrame               func(fnc ns.FrameFunc)
 	WOnMapEvent            func(typ ns.MapEvent, fnc ns.MapEventFunc)
+	WOnPlayerDeath         func(fnc ns.PlayerDeathFunc)
+	WOnPlayerJoin          func(fnc ns.PlayerJoinFunc)
+	WOnPlayerLeave         func(fnc ns.PlayerLeaveFunc)
 	WPlayers               func() []ns.Player
 	WPrint                 func(message string)
 	WPrintStr              func(message string)
@@ -393,6 +406,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WStartDialog           func(obj ns.Obj, other ns.Obj)
 	WStartupScreen         func(which int)
 	WStopScript            func(value any)
+	WStore                 func(typ ns.StorageType) ns.Storage
 	WStoryPic              func(obj ns.Obj, name string)
 	WTeams                 func() []ns.Team
 	WTellStory             func(audio audio.Name, story string)
@@ -603,6 +617,15 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnFrame(fnc ns.
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnMapEvent(typ ns.MapEvent, fnc ns.MapEventFunc) {
 	W.WOnMapEvent(typ, fnc)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnPlayerDeath(fnc ns.PlayerDeathFunc) {
+	W.WOnPlayerDeath(fnc)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnPlayerJoin(fnc ns.PlayerJoinFunc) {
+	W.WOnPlayerJoin(fnc)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) OnPlayerLeave(fnc ns.PlayerLeaveFunc) {
+	W.WOnPlayerLeave(fnc)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Players() []ns.Player {
 	return W.WPlayers()
 }
@@ -653,6 +676,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StartupScreen(w
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StopScript(value any) {
 	W.WStopScript(value)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) Store(typ ns.StorageType) ns.Storage {
+	return W.WStore(typ)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) StoryPic(obj ns.Obj, name string) {
 	W.WStoryPic(obj, name)
@@ -768,6 +794,8 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WCurrentHealth          func() int
 	WCurrentMana            func() int
 	WCurrentSpeed           func() float32
+	WCursorObj              func() ns.Obj
+	WCursorPos              func() types.Pointf
 	WDamage                 func(source ns.Obj, amount int, typ damage.Type) bool
 	WDelete                 func()
 	WDeleteAfter            func(dt ns.Duration)
@@ -863,6 +891,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WTrapSpellsAdv          func(spells []ns.TrapSpell)
 	WType                   func() ns.ObjType
 	WUnequip                func(item ns.Obj) bool
+	WVel                    func() types.Pointf
 	WWalkTo                 func(p types.Pointf)
 	WWander                 func()
 	WZ                      func() float32
@@ -919,6 +948,12 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentMana() int {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CurrentSpeed() float32 {
 	return W.WCurrentSpeed()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CursorObj() ns.Obj {
+	return W.WCursorObj()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) CursorPos() types.Pointf {
+	return W.WCursorPos()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Damage(source ns.Obj, amount int, typ damage.Type) bool {
 	return W.WDamage(source, amount, typ)
@@ -1205,6 +1240,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Type() ns.ObjType {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Unequip(item ns.Obj) bool {
 	return W.WUnequip(item)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Vel() types.Pointf {
+	return W.WVel()
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) WalkTo(p types.Pointf) {
 	W.WWalkTo(p)
 }
@@ -1455,11 +1493,13 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Player struct {
 	IValue       interface{}
 	WBlind       func(blind bool)
 	WChangeScore func(score int)
+	WCursorPos   func() types.Pointf
 	WGetScore    func() int
 	WHasTeam     func(t ns.Team) bool
 	WName        func() string
 	WPrint       func(message string)
 	WPrintStr    func(message string)
+	WStore       func(typ ns.StorageType) ns.Storage
 	WTeam        func() ns.Team
 	WUnit        func() ns.Obj
 }
@@ -1469,6 +1509,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Blind(blind bool) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) ChangeScore(score int) {
 	W.WChangeScore(score)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) CursorPos() types.Pointf {
+	return W.WCursorPos()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) GetScore() int {
 	return W.WGetScore()
@@ -1485,6 +1528,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Print(message string) {
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) PrintStr(message string) {
 	W.WPrintStr(message)
 }
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Store(typ ns.StorageType) ns.Storage {
+	return W.WStore(typ)
+}
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Player) Team() ns.Team {
 	return W.WTeam()
 }
@@ -1500,6 +1546,25 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Positioner struct {
 
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Positioner) Pos() types.Pointf {
 	return W.WPos()
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_Storage is an interface wrapper for Storage type
+type _github_com_noxworld_dev_noxscript_ns_v4_Storage struct {
+	IValue interface{}
+	WGet   func(key string, obj any) error
+	WSet   func(key string, obj any) error
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Storage) Get(key string, obj any) error {
+	return W.WGet(key, obj)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Storage) Set(key string, obj any) error {
+	return W.WSet(key, obj)
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_StorageType is an interface wrapper for StorageType type
+type _github_com_noxworld_dev_noxscript_ns_v4_StorageType struct {
+	IValue interface{}
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Team is an interface wrapper for Team type

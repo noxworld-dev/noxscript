@@ -42,6 +42,7 @@ type Game interface {
 type Implementation interface {
 	TimeSource
 	FrameRate() int
+	Store(typ StorageType) Storage
 
 	TimerByHandle(h TimerHandle) Timer
 	NewTimer(dt Duration, fnc Func, args ...any) Timer
@@ -146,6 +147,9 @@ type Implementation interface {
 	OnFrame(fnc FrameFunc)
 	OnMapEvent(typ MapEvent, fnc MapEventFunc)
 	OnChat(fnc ChatFunc)
+	OnPlayerJoin(fnc PlayerJoinFunc)
+	OnPlayerLeave(fnc PlayerLeaveFunc)
+	OnPlayerDeath(fnc PlayerDeathFunc)
 
 	Unused1f(id int)
 	Unused20(id int)

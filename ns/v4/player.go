@@ -1,6 +1,13 @@
 package ns
 
-import "github.com/noxworld-dev/opennox-lib/player"
+import (
+	"github.com/noxworld-dev/opennox-lib/player"
+	"github.com/noxworld-dev/opennox-lib/types"
+)
+
+type PlayerDeathFunc func(p Player, killer Obj)
+type PlayerJoinFunc func(p Player) bool
+type PlayerLeaveFunc func(p Player)
 
 type Player interface {
 	// Name returns player's name.
@@ -23,6 +30,10 @@ type Player interface {
 	HasTeam(t Team) bool
 	// Team returns current team of a player, if any.
 	Team() Team
+	// CursorPos returns aim cursor position for the player.
+	CursorPos() types.Pointf
+	// Store returns a player storage with a given type.
+	Store(typ StorageType) Storage
 }
 
 // GetHost gets host's player object.

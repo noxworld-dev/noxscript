@@ -200,6 +200,8 @@ type Obj interface {
 	Z() float32
 	// SetZ sets Z offset for the object.
 	SetZ(z float32)
+	// Vel returns current velocity of the object.
+	Vel() Pointf
 	// IsEnabled checks if object is currently enabled.
 	IsEnabled() bool
 	// Enable or disable the object.
@@ -269,6 +271,12 @@ type Obj interface {
 	//
 	// See LookWithAngle.
 	Direction() Direction
+
+	// CursorPos returns aim cursor position for the object. Only valid for players.
+	CursorPos() types.Pointf
+
+	// CursorObj returns target under the aim cursor for the object. Only valid for players.
+	CursorObj() Obj
 
 	// CurrentHealth gets object's health.
 	CurrentHealth() int
