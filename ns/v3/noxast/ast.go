@@ -36,9 +36,10 @@ func importPathFor(v any) string {
 }
 
 type Config struct {
-	Package       string
-	DoNotOptimize bool
-	DoNotFold     bool
+	Package        string
+	DoNotOptimize  bool
+	DoNotFold      bool
+	InlineSwitches bool
 }
 
 func Translate(s *asm.Script, c *Config) *ast.File {
@@ -829,7 +830,7 @@ func (t *translator) translateCode(d *ast.BlockStmt, ret bool, vars []ast.Expr, 
 		}
 	}
 	d.List = append(d.List, work...)
-	t.simplifyCode(d, ret)
+	t.simplifyCode(d, !ret)
 	if debug {
 		var buf bytes.Buffer
 		buf.WriteString("/*\n")
@@ -847,14 +848,14 @@ func isLogicalOp(op token.Token) bool {
 	return false
 }
 
-func (t *translator) simplifyCode(d *ast.BlockStmt, ret bool) {
+func (t *translator) simplifyCode(d *ast.BlockStmt, removeRet bool) {
 	if !t.c.DoNotOptimize {
 		t.removeSingleDefines(d)
 	}
 	if !t.c.DoNotFold {
 		t.makeSwitches(d)
 		t.makeLoops(d)
-		if !ret {
+		if removeRet {
 			t.removeLastReturn(d)
 		}
 	}
@@ -862,6 +863,9 @@ func (t *translator) simplifyCode(d *ast.BlockStmt, ret bool) {
 		t.removeUnusedDefines(d)
 		t.removeUnusedLabels(d)
 		t.fixUnusedVars(d)
+		if removeRet {
+			t.removeLastReturn(d)
+		}
 	}
 }
 
@@ -919,10 +923,13 @@ func (t *translator) removeSingleDefines(d *ast.BlockStmt) {
 		i -= 2 // check previous again
 	}
 }
-func (t *translator) makeSwitches(d *ast.BlockStmt) {
-	if true {
-		return
+func unwrapLabel(st ast.Stmt) ast.Stmt {
+	if l, ok := st.(*ast.LabeledStmt); ok {
+		return unwrapLabel(l.Stmt)
 	}
+	return st
+}
+func (t *translator) makeSwitches(d *ast.BlockStmt) {
 	for i := 0; i < len(d.List); i++ {
 		// It usually starts with a temporary var assignment, which will be used in switch.
 		var label *ast.Ident
@@ -935,7 +942,7 @@ func (t *translator) makeSwitches(d *ast.BlockStmt) {
 			label = l.Label
 			init, ok = l.Stmt.(*ast.AssignStmt)
 		}
-		if !ok || init.Tok != token.ASSIGN {
+		if !ok || (init.Tok != token.ASSIGN && init.Tok != token.DEFINE) {
 			continue
 		}
 
@@ -989,52 +996,76 @@ func (t *translator) makeSwitches(d *ast.BlockStmt) {
 		}
 		d.List[i] = st
 		d.List = append(d.List[:i+1], d.List[i+1+len(cases)+1:]...)
-		//continue
+		if !t.c.InlineSwitches {
+			continue
+		}
 
-		// Now try to find switch case bodies and move them inside.
-		off := 1
-	casesLoop:
-		for j := 0; j < len(cases)+1 && i+off < len(d.List); j++ {
-			l, ok := d.List[i+off].(*ast.LabeledStmt)
+		// Each switch case body (including default) will end with another goto.
+		// This goto will be the same for all switches. We need to find its label first.
+	endLabelLoop:
+		for j := len(d.List) - 1; j > i; j-- {
+			end, ok := d.List[j].(*ast.LabeledStmt)
 			if !ok {
-				break
-			}
-			if cntUsages(&ast.BlockStmt{List: d.List[:i]}, l.Label)+
-				cntUsages(&ast.BlockStmt{List: d.List[i+1 : i+off]}, l.Label)+
-				cntUsages(&ast.BlockStmt{List: d.List[i+off+1:]}, l.Label) != 0 {
-				break
-			}
-			off++
-			var body []ast.Stmt
-			body = append(body, l.Stmt)
-			if st, ok := l.Stmt.(*ast.BranchStmt); ok && st.Tok == token.GOTO {
-				sw.Body.List[j].(*ast.CaseClause).Body = body
 				continue
 			}
-			for i+off < len(d.List) {
-				st := d.List[i+off]
-				off++
-				body = append(body, st)
-				if st, ok := st.(*ast.BranchStmt); ok && st.Tok == token.GOTO {
-					sw.Body.List[j].(*ast.CaseClause).Body = body
-					continue casesLoop
+			// Now, check that it's indeed the end of each case branch.
+			bodies := make([][]ast.Stmt, len(cases)+1)
+			k := i + 1
+		casesLoop:
+			for c := 0; c < len(cases)+1; c++ {
+				// Starts with a label defined in the switch.
+				var targ *ast.Ident
+				isDef := c == len(cases)
+				if isDef { // default
+					targ = def.Label
+				} else {
+					targ = targets[c]
 				}
-			}
-		}
-		if off > 1 {
-			d.List = append(d.List[:i+1], d.List[i+off:]...)
-		}
-
-		// If we find label right after the switch and corresponding goto in cases, we can remove gotos.
-		if i+1 < len(d.List) {
-			if l, ok := d.List[i+1].(*ast.LabeledStmt); ok {
-				for j := range sw.Body.List {
-					c := sw.Body.List[j].(*ast.CaseClause)
-					n := len(c.Body)
-					if gt, ok := c.Body[n-1].(*ast.BranchStmt); ok && gt.Tok == token.GOTO && gt.Label == l.Label {
-						c.Body = c.Body[:n-1]
+				l, ok := d.List[k].(*ast.LabeledStmt)
+				if !ok || l.Label.Name != targ.Name {
+					continue endLabelLoop
+				}
+				if isDef {
+					if l, ok := d.List[k].(*ast.LabeledStmt); ok && l.Label.Name == end.Label.Name {
+						bodies[c] = nil // empty body for default
+						// do not advance k further - we are already at the end
+						break
 					}
 				}
+				// Body follows. Ends with a goto end statement.
+				var body []ast.Stmt
+				if g, ok := l.Stmt.(*ast.BranchStmt); ok && g.Tok == token.GOTO && g.Label.Name == end.Label.Name {
+					bodies[c] = body // empty body (contains goto end only)
+					k++
+					continue
+				}
+				body = append(body, l.Stmt)
+				k++
+				for k < j {
+					if g, ok := unwrapLabel(d.List[k]).(*ast.BranchStmt); ok && g.Tok == token.GOTO && g.Label.Name == end.Label.Name {
+						if lb, ok := d.List[k].(*ast.LabeledStmt); ok {
+							body = append(body, &ast.LabeledStmt{Label: lb.Label, Stmt: &ast.EmptyStmt{Implicit: true}})
+						}
+						bodies[c] = body
+						k++
+						continue casesLoop
+					}
+					body = append(body, d.List[k])
+					k++
+				}
+				continue endLabelLoop // didn't find a goto end statement
+			}
+			// All bodies collected, now we only need to check that there's nothing else between
+			// the last body end and the end label.
+			if j == k {
+				for c, body := range bodies {
+					cl := sw.Body.List[c].(*ast.CaseClause)
+					b := &ast.BlockStmt{List: body}
+					t.simplifyCode(b, false)
+					cl.Body = b.List
+				}
+				d.List = append(d.List[:i+1], d.List[j:]...)
+				break
 			}
 		}
 
@@ -1061,6 +1092,7 @@ loops:
 				d.List[i] = &ast.LabeledStmt{Label: l.Label, Stmt: fr}
 				d.List = append(d.List[:i+1], d.List[j+1:]...)
 				i--
+				t.simplifyCode(fr.Body, false)
 				continue loops
 			}
 		}
@@ -1076,6 +1108,15 @@ func (t *translator) removeLastReturn(d *ast.BlockStmt) {
 func (t *translator) removeUnusedDefines(d *ast.BlockStmt) {
 	for i := 0; i < len(d.List); i++ {
 		df, ok := d.List[i].(*ast.AssignStmt)
+		var label *ast.Ident
+		if !ok {
+			l, ok2 := d.List[i].(*ast.LabeledStmt)
+			if !ok2 {
+				continue
+			}
+			label = l.Label
+			df, ok = l.Stmt.(*ast.AssignStmt)
+		}
 		if !ok || df.Tok != token.DEFINE {
 			continue
 		}
@@ -1092,7 +1133,11 @@ func (t *translator) removeUnusedDefines(d *ast.BlockStmt) {
 			used = used || cntUsages(d.List[j], id) > 0
 		}
 		if !used {
-			d.List[i] = &ast.ExprStmt{X: df.Rhs[0]}
+			var st ast.Stmt = &ast.ExprStmt{X: df.Rhs[0]}
+			if label != nil {
+				st = &ast.LabeledStmt{Label: label, Stmt: st}
+			}
+			d.List[i] = st
 		}
 	}
 }
@@ -1264,7 +1309,8 @@ func (t *translator) fixBoolAndNil() {
 							X: x.X, Op: token.EQL, Y: t.types.nil,
 						}
 					} else if rt == nil {
-						if _, ok := x.X.(*ast.Ident); ok {
+						switch x.X.(type) {
+						case *ast.Ident, *ast.BasicLit:
 							n.Cond = &ast.BinaryExpr{
 								X: x.X, Op: token.EQL, Y: intLit(0),
 							}
@@ -1278,7 +1324,8 @@ func (t *translator) fixBoolAndNil() {
 						X: n.Cond, Op: token.NEQ, Y: t.types.nil,
 					}
 				} else if rt == nil {
-					if _, ok := n.Cond.(*ast.Ident); ok {
+					switch n.Cond.(type) {
+					case *ast.Ident, *ast.BasicLit:
 						n.Cond = &ast.BinaryExpr{
 							X: n.Cond, Op: token.NEQ, Y: intLit(0),
 						}
