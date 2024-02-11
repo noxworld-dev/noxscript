@@ -2,6 +2,7 @@ package nstest
 
 import (
 	"image/color"
+	"slices"
 	"sync/atomic"
 	"time"
 
@@ -16,6 +17,28 @@ import (
 	"github.com/noxworld-dev/noxscript/ns/v4/spell"
 	"github.com/noxworld-dev/noxscript/ns/v4/subclass"
 )
+
+func objMapKeysToList[V any](m map[*Object]V) []*Object {
+	list := make([]*Object, 0, len(m))
+	for k := range m {
+		list = append(list, k)
+	}
+	sortObjects(list)
+	return list
+}
+func objMapValsToList[K comparable](m map[K]*Object) []*Object {
+	list := make([]*Object, 0, len(m))
+	for _, v := range m {
+		list = append(list, v)
+	}
+	sortObjects(list)
+	return list
+}
+func sortObjects(list []*Object) {
+	slices.SortFunc(list, func(a, b *Object) int {
+		return int(a.id) - int(b.id)
+	})
+}
 
 type Objects struct {
 	last   uint32
@@ -59,15 +82,16 @@ func (r *Runtime) CreateObject(typ string, pos ns.Positioner) ns.Obj {
 	return t.Create(pos)
 }
 
-func (s *Objects) New(r *Runtime, typ *ObjectType, name string) *Object {
+func (s *Objects) New(r *Runtime, typ *ObjectType, name string, pos types.Pointf) *Object {
 	id := atomic.AddUint32(&s.last, 1)
 	obj := &Object{
-		r:     r,
-		id:    id,
-		name:  name,
-		typ:   typ,
-		class: typ.class,
-		flags: object.FlagEnabled,
+		r:      r,
+		id:     id,
+		name:   name,
+		typ:    typ,
+		class:  typ.class,
+		flags:  object.FlagEnabled,
+		PosVec: pos,
 	}
 	if s.ByID == nil {
 		s.ByID = make(map[uint32]*Object)
@@ -82,8 +106,21 @@ func (s *Objects) New(r *Runtime, typ *ObjectType, name string) *Object {
 	return obj
 }
 
-func (r *Runtime) NewObject(typ *ObjectType, name string) *Object {
-	return r.Objects.New(r, typ, name)
+func (r *Runtime) NewObject(typ *ObjectType, name string, pos types.Pointf) *Object {
+	return r.Objects.New(r, typ, name, pos)
+}
+
+func (s *Objects) Update() {
+	for _, obj := range objMapValsToList(s.ByID) {
+		obj.Update()
+	}
+}
+
+func toObj(v ns.Obj) *Object {
+	if v == nil {
+		return nil
+	}
+	return v.(*Object)
 }
 
 type Object struct {
@@ -93,6 +130,13 @@ type Object struct {
 	typ       *ObjectType
 	class     object.Class
 	flags     object.Flags
+	frozen    bool
+	holder    *Object
+	inventory map[*Object]struct{}
+	equipment map[*Object]struct{}
+	targetPos *types.Pointf
+	targetObj *Object
+	collide   []func()
 	PosVec    types.Pointf
 	VelVec    types.Pointf
 	ZVal      float32
@@ -387,7 +431,7 @@ func (obj *Object) SetOwners(owners ns.ObjGroup) {
 }
 
 func (obj *Object) Freeze(freeze bool) {
-	//TODO implement me
+	obj.frozen = freeze
 }
 
 func (obj *Object) Pause(dt ns.Duration) {
@@ -399,22 +443,22 @@ func (obj *Object) Move(wp ns.WaypointObj) {
 }
 
 func (obj *Object) WalkTo(p ns.Pointf) {
-	//TODO implement me
+	if obj.frozen {
+		return
+	}
+	obj.targetPos = &p
 }
 
 func (obj *Object) LookAtDirection(dir ns.Direction) {
 	//TODO implement me
-	panic("implement me")
 }
 
 func (obj *Object) LookWithAngle(angle int) {
 	//TODO implement me
-	panic("implement me")
 }
 
 func (obj *Object) LookAtObject(target ns.Positioner) {
 	//TODO implement me
-	panic("implement me")
 }
 
 func (obj *Object) CanSee(obj2 ns.Obj) bool {
@@ -423,7 +467,9 @@ func (obj *Object) CanSee(obj2 ns.Obj) bool {
 }
 
 func (obj *Object) ApplyForce(force ns.Pointf) {
-	//TODO implement me
+	if obj.frozen {
+		return
+	}
 	obj.VelVec = obj.VelVec.Add(force)
 }
 
@@ -455,7 +501,8 @@ func (obj *Object) DeleteAfter(dt ns.Duration) {
 }
 
 func (obj *Object) Idle() {
-	//TODO implement me
+	obj.targetPos = nil
+	obj.targetObj = nil
 }
 
 func (obj *Object) Wander() {
@@ -475,7 +522,14 @@ func (obj *Object) Follow(target ns.Positioner) {
 }
 
 func (obj *Object) Guard(p1, p2 ns.Pointf, distance float32) {
+	if obj.frozen {
+		return
+	}
+	obj.Idle()
 	//TODO implement me
+	if p1 == p2 {
+		obj.targetPos = &p1
+	}
 }
 
 func (obj *Object) Attack(target ns.Positioner) {
@@ -488,7 +542,12 @@ func (obj *Object) IsAttackedBy(by ns.Obj) bool {
 }
 
 func (obj *Object) HitMelee(p ns.Pointf) {
+	if obj.frozen {
+		return
+	}
+	obj.Idle()
 	//TODO implement me
+	obj.targetPos = &p
 }
 
 func (obj *Object) HitRanged(p ns.Pointf) {
@@ -500,23 +559,33 @@ func (obj *Object) Flee(target ns.Positioner, dt ns.Duration) {
 }
 
 func (obj *Object) HasItem(item ns.Obj) bool {
-	//TODO implement me
-	panic("implement me")
+	it := toObj(item)
+	if it == nil {
+		return false
+	}
+	_, ok := obj.inventory[it]
+	return ok
 }
 
 func (obj *Object) HasEquipment(item ns.Obj) bool {
-	//TODO implement me
-	panic("implement me")
+	it := toObj(item)
+	if it == nil {
+		return false
+	}
+	_, ok := obj.equipment[it]
+	return ok
 }
 
 func (obj *Object) FindItems(fnc func(obj ns.Obj) bool, conditions ...ns.ObjCond) int {
-	//TODO implement me
-	panic("implement me")
+	return ns.Objects(obj.Items()).FindObjects(fnc, conditions...)
 }
 
 func (obj *Object) GetLastItem() ns.Obj {
-	//TODO implement me
-	panic("implement me")
+	list := objMapKeysToList(obj.inventory)
+	if len(list) == 0 {
+		return nil
+	}
+	return list[len(list)-1]
 }
 
 func (obj *Object) GetPreviousItem() ns.Obj {
@@ -525,48 +594,103 @@ func (obj *Object) GetPreviousItem() ns.Obj {
 }
 
 func (obj *Object) Items(conditions ...ns.ObjCond) []ns.Obj {
-	//TODO implement me
-	panic("implement me")
+	list := objMapKeysToList(obj.inventory)
+	filter := ns.AND(conditions)
+	out := make([]ns.Obj, 0, len(list))
+	for _, it := range list {
+		if filter.Matches(it) {
+			out = append(out, it)
+		}
+	}
+	return out
 }
 
 func (obj *Object) Equipment(conditions ...ns.ObjCond) []ns.Obj {
-	//TODO implement me
-	panic("implement me")
+	list := objMapKeysToList(obj.equipment)
+	filter := ns.AND(conditions)
+	out := make([]ns.Obj, 0, len(list))
+	for _, it := range list {
+		if filter.Matches(it) {
+			out = append(out, it)
+		}
+	}
+	return out
 }
 
 func (obj *Object) InItems() ns.ObjSearcher {
-	//TODO implement me
-	panic("implement me")
+	return ns.Objects(obj.Items())
 }
 
 func (obj *Object) InEquipment() ns.ObjSearcher {
-	//TODO implement me
-	panic("implement me")
+	return ns.Objects(obj.Equipment())
 }
 
 func (obj *Object) GetHolder() ns.Obj {
-	//TODO implement me
-	panic("implement me")
+	return obj.holder.asObj()
 }
 
 func (obj *Object) Pickup(item ns.Obj) bool {
-	//TODO implement me
-	panic("implement me")
+	it := toObj(item)
+	if it.holder == obj {
+		return true
+	}
+	if it.holder != nil {
+		it.holder.Drop(it)
+	}
+	it.holder = obj
+	if obj.inventory == nil {
+		obj.inventory = make(map[*Object]struct{})
+	}
+	obj.inventory[it] = struct{}{}
+	return true
 }
 
 func (obj *Object) Drop(item ns.Obj) bool {
-	//TODO implement me
-	panic("implement me")
+	it := toObj(item)
+	if it.holder != obj {
+		return false
+	}
+	if _, ok := obj.inventory[it]; !ok {
+		return false
+	}
+	delete(obj.inventory, it)
+	delete(obj.equipment, it)
+	it.holder = nil
+	it.PosVec = obj.PosVec
+	return true
 }
 
 func (obj *Object) Equip(item ns.Obj) bool {
-	//TODO implement me
-	panic("implement me")
+	it := toObj(item)
+	if it.holder != obj {
+		if !obj.Pickup(it) {
+			return false
+		}
+	}
+	if it.Class().HasAny(object.ClassWeapon) {
+		for it2 := range obj.equipment {
+			if it != it2 && it2.Class().Has(object.ClassWeapon) {
+				obj.Unequip(it2)
+			}
+		}
+	}
+	if obj.equipment == nil {
+		obj.equipment = make(map[*Object]struct{})
+	}
+	obj.equipment[it] = struct{}{}
+	return true
 }
 
 func (obj *Object) Unequip(item ns.Obj) bool {
-	//TODO implement me
-	panic("implement me")
+	it := toObj(item)
+	if it.holder != obj {
+		return false
+	}
+	if _, ok := obj.equipment[it]; !ok {
+		return false
+	}
+	delete(obj.equipment, it)
+	return true
 }
 
 func (obj *Object) ZombieStayDown() {
@@ -645,5 +769,55 @@ func (obj *Object) TrapSpellsAdv(spells []ns.TrapSpell) {
 }
 
 func (obj *Object) OnEvent(event ns.ObjectEvent, fnc ns.Func) {
+	switch event {
+	case ns.EventCollision:
+		obj.collide = append(obj.collide, fnc.(func()))
+	}
 	//TODO implement me
+}
+
+func (obj *Object) callCollide(with *Object) {
+	for _, fnc := range obj.collide {
+		func() {
+			defer obj.r.WithArgs(with, obj)()
+			fnc()
+		}()
+	}
+}
+
+func (obj *Object) Update() {
+	prevPos := obj.PosVec
+	if !obj.frozen {
+		obj.PosVec = obj.PosVec.Add(obj.VelVec)
+	}
+	obj.VelVec = types.Pointf{}
+	moved := obj.PosVec != prevPos
+	if targ := obj.targetPos; targ != nil && !obj.frozen {
+		const speed = 1
+		dp := targ.Sub(obj.PosVec)
+		if dist := dp.Len(); dist < speed*1.01 {
+			obj.PosVec = *targ
+			moved = true
+			// TODO: target is reached callback
+			if obj.targetObj != nil {
+				obj.callCollide(obj.targetObj)
+				obj.targetObj.callCollide(obj)
+			}
+			for _, obj2 := range obj.r.Objects.ByID {
+				if obj2 != obj.targetObj && obj.PosVec.Sub(obj2.PosVec).Len() < 1 {
+					obj.callCollide(obj2)
+					obj2.callCollide(obj)
+				}
+			}
+			obj.targetPos = nil
+			obj.targetObj = nil
+		} else {
+			obj.VelVec = dp.Normalize().Mul(speed)
+		}
+	}
+	if moved {
+		obj.FlagsDisable(object.FlagStill)
+	} else {
+		obj.FlagsEnable(object.FlagStill)
+	}
 }

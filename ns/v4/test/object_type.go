@@ -14,6 +14,9 @@ type ObjectTypes struct {
 	last   uint32
 	ByID   map[uint32]*ObjectType
 	ByName map[string]*ObjectType
+
+	Player *ObjectType
+	NPC    *ObjectType
 }
 
 func (s *ObjectTypes) New(r *Runtime, cl object.Class, name string) *ObjectType {
@@ -77,9 +80,7 @@ func (t *ObjectType) Create(pos ns.Positioner) ns.Obj {
 	if pos == nil {
 		return nil
 	}
-	obj := t.r.NewObject(t, "")
-	obj.PosVec = pos.Pos()
-	return obj
+	return t.r.NewObject(t, "", pos.Pos())
 }
 
 func (r *Runtime) ObjectType(name string) ns.ObjType {

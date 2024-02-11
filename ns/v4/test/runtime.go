@@ -19,11 +19,17 @@ func init() {
 	ns.SetRuntime(NewRuntime())
 }
 
+const (
+	FrameRate = 30
+	FrameTime = time.Second/FrameRate + 1
+)
+
 func NewRuntime() *Runtime {
 	r := &Runtime{}
+	r.Types.Player = r.NewObjectType(object.ClassPlayer, "NewPlayer")
+	r.Types.NPC = r.NewObjectType(object.ClassMonster, "NPC")
 
-	playerType := r.NewObjectType(object.ClassPlayer, "NewPlayer")
-	u := r.NewObject(playerType, "")
+	u := r.NewObject(r.Types.Player, "", ns.Ptf(1000, 1000))
 	pl := r.NewPlayer("Jack")
 
 	u.PlayerPtr, pl.UnitPtr = pl, u
@@ -32,8 +38,13 @@ func NewRuntime() *Runtime {
 	return r
 }
 
+func GetRuntime() *Runtime {
+	return ns.Runtime().(*Runtime)
+}
+
 type Runtime struct {
-	frame int
+	frame    int
+	initDone bool
 
 	Timers      Timers
 	Storage     Storage
@@ -47,16 +58,38 @@ type Runtime struct {
 	onInit  []ns.MapEventFunc
 }
 
+func (r *Runtime) WithArgs(caller, trigger *Object) func() {
+	r.Caller, r.Trigger = caller, trigger
+	return func() {
+		r.Caller, r.Trigger = nil, nil
+	}
+}
+
 func (r *Runtime) Update() {
-	if r.frame == 0 {
+	if r.frame == 0 && !r.initDone {
+		r.initDone = true
 		for _, fnc := range r.onInit {
 			fnc()
 		}
 	}
 	r.frame++
 	r.Timers.Update()
+	r.Objects.Update()
 	for _, fnc := range r.onFrame {
 		fnc()
+	}
+}
+
+func (r *Runtime) UpdateN(frames int) {
+	for i := 0; i < frames; i++ {
+		r.Update()
+	}
+}
+
+func (r *Runtime) UpdateFor(dt time.Duration) {
+	t0 := r.Time()
+	for r.Time()-t0 < dt {
+		r.Update()
 	}
 }
 
@@ -65,12 +98,16 @@ func (r *Runtime) Frame() int {
 }
 
 func (r *Runtime) Time() time.Duration {
-	secs := float64(r.Frame()) / float64(r.FrameRate())
+	secs := float64(r.Frame()) / FrameRate
 	return time.Duration(float64(time.Second) * secs)
 }
 
 func (r *Runtime) FrameRate() int {
-	return 30
+	return FrameRate
+}
+
+func (r *Runtime) ResetFrame() {
+	r.frame = 0
 }
 
 func (r *Runtime) Store(typ ns.StorageType) ns.Storage {
@@ -109,11 +146,10 @@ func (r *Runtime) NewTimer(dt ns.Duration, fnc ns.Func, args ...any) ns.Timer {
 		panic(fmt.Errorf("unsupported func type: %T", fnc))
 	}
 	if v, ok := dt.Frames(); ok {
-		return r.Timers.NewTimer(uint32(v), call)
+		return r.Timers.New(uint32(v), call)
 	}
 	if t, ok := dt.Time(); ok {
-		secs := float64(t) / float64(time.Second)
-		return r.Timers.NewTimer(uint32(secs*float64(r.FrameRate())), call)
+		return r.Timers.NewDur(t, call)
 	}
 	panic("invalid interval")
 }

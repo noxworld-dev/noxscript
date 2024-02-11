@@ -1,13 +1,18 @@
 package nstest
 
-import "sync/atomic"
+import (
+	"sync/atomic"
+	"time"
+
+	"golang.org/x/exp/maps"
+)
 
 type Timers struct {
 	last uint32
 	byID map[uint32]*Timer
 }
 
-func (s *Timers) NewTimer(frames uint32, fnc func()) *Timer {
+func (s *Timers) New(frames uint32, fnc func()) *Timer {
 	id := atomic.AddUint32(&s.last, 1)
 	t := &Timer{s: s, id: id, left: frames, fnc: fnc}
 	if s.byID == nil {
@@ -17,8 +22,12 @@ func (s *Timers) NewTimer(frames uint32, fnc func()) *Timer {
 	return t
 }
 
+func (s *Timers) NewDur(t time.Duration, fnc func()) *Timer {
+	return s.New(uint32(t*FrameRate/time.Second), fnc)
+}
+
 func (s *Timers) Update() {
-	for _, t := range s.byID {
+	for _, t := range maps.Values(s.byID) {
 		t.Update()
 	}
 }
