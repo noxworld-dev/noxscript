@@ -5,9 +5,38 @@ import (
 	"github.com/noxworld-dev/opennox-lib/types"
 )
 
-type PlayerDeathFunc func(p Player, killer Obj)
+// PlayerJoinFunc is a callback type for OnPlayerJoin.
 type PlayerJoinFunc func(p Player) bool
+
+// PlayerLeaveFunc is a callback type for OnPlayerLeave.
 type PlayerLeaveFunc func(p Player)
+
+// PlayerDeathFunc is a callback type for OnPlayerDeath.
+type PlayerDeathFunc func(p Player, killer Obj)
+
+// OnPlayerJoin registers a callback function that will be called when player joins the server.
+func OnPlayerJoin(fnc PlayerJoinFunc) {
+	if impl == nil {
+		return
+	}
+	impl.OnPlayerJoin(fnc)
+}
+
+// OnPlayerLeave registers a callback function that will be called when player leaves the server.
+func OnPlayerLeave(fnc PlayerLeaveFunc) {
+	if impl == nil {
+		return
+	}
+	impl.OnPlayerLeave(fnc)
+}
+
+// OnPlayerDeath registers a callback function that will be called when player dies.
+func OnPlayerDeath(fnc PlayerDeathFunc) {
+	if impl == nil {
+		return
+	}
+	impl.OnPlayerDeath(fnc)
+}
 
 type Player interface {
 	// Name returns player's name.
