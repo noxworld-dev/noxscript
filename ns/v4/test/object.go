@@ -1,7 +1,6 @@
 package nstest
 
 import (
-	"image/color"
 	"slices"
 	"sync/atomic"
 	"time"
@@ -141,6 +140,7 @@ type Object struct {
 	VelVec    types.Pointf
 	ZVal      float32
 	PlayerPtr *Player
+	label     string
 }
 
 func (obj *Object) asObj() ns.Obj {
@@ -371,8 +371,16 @@ func (obj *Object) SetStrength(v int) {
 	//TODO implement me
 }
 
-func (obj *Object) SetColor(ind int, cl color.Color) {
+func (obj *Object) SetColor(ind int, cl ns.Color) {
 	//TODO implement me
+}
+
+func (obj *Object) DisplayName() string {
+	return obj.label
+}
+
+func (obj *Object) SetDisplayName(name string, cl ns.Color) {
+	obj.label = name
 }
 
 func (obj *Object) GetGold() int {

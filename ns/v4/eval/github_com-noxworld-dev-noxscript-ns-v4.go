@@ -154,6 +154,8 @@ func init() {
 		"PrintToAll":           reflect.ValueOf(ns.PrintToAll),
 		"Pt":                   reflect.ValueOf(ns.Pt),
 		"Ptf":                  reflect.ValueOf(ns.Ptf),
+		"RGB":                  reflect.ValueOf(ns.RGB),
+		"RGBA":                 reflect.ValueOf(ns.RGBA),
 		"Random":               reflect.ValueOf(ns.Random),
 		"RandomFloat":          reflect.ValueOf(ns.RandomFloat),
 		"ResetQuestStatus":     reflect.ValueOf(ns.ResetQuestStatus),
@@ -205,6 +207,7 @@ func init() {
 		// type definitions
 		"AND":                 reflect.ValueOf((*ns.AND)(nil)),
 		"ChatFunc":            reflect.ValueOf((*ns.ChatFunc)(nil)),
+		"Color":               reflect.ValueOf((*ns.Color)(nil)),
 		"DialogAnswer":        reflect.ValueOf((*ns.DialogAnswer)(nil)),
 		"DialogType":          reflect.ValueOf((*ns.DialogType)(nil)),
 		"Direction":           reflect.ValueOf((*ns.Direction)(nil)),
@@ -270,6 +273,7 @@ func init() {
 		"WaypointObj":         reflect.ValueOf((*ns.WaypointObj)(nil)),
 
 		// interface wrapper definitions
+		"_Color":               reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Color)(nil)),
 		"_Func":                reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Func)(nil)),
 		"_Game":                reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Game)(nil)),
 		"_Handle":              reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_Handle)(nil)),
@@ -300,6 +304,16 @@ func init() {
 		"_WaypointHandle":      reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WaypointHandle)(nil)),
 		"_WaypointObj":         reflect.ValueOf((*_github_com_noxworld_dev_noxscript_ns_v4_WaypointObj)(nil)),
 	}
+}
+
+// _github_com_noxworld_dev_noxscript_ns_v4_Color is an interface wrapper for Color type
+type _github_com_noxworld_dev_noxscript_ns_v4_Color struct {
+	IValue interface{}
+	WRGBA  func() (r uint32, g uint32, b uint32, a uint32)
+}
+
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Color) RGBA() (r uint32, g uint32, b uint32, a uint32) {
+	return W.WRGBA()
 }
 
 // _github_com_noxworld_dev_noxscript_ns_v4_Func is an interface wrapper for Func type
@@ -804,6 +818,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WDeleteAfter            func(dt ns.Duration)
 	WDestroyChat            func()
 	WDirection              func() int
+	WDisplayName            func() string
 	WDrop                   func(item ns.Obj) bool
 	WEnable                 func(enable bool)
 	WEnchant                func(enchant enchant.Enchant, dt ns.Duration)
@@ -871,6 +886,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WScriptID               func() int
 	WSetBaseSpeed           func(v float32)
 	WSetColor               func(ind int, cl color.Color)
+	WSetDisplayName         func(name string, cl color.Color)
 	WSetFlags               func(v object.Flags)
 	WSetHealth              func(v int)
 	WSetHealthRegenPerFrame func(v float32)
@@ -972,6 +988,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) DestroyChat() {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Direction() int {
 	return W.WDirection()
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) DisplayName() string {
+	return W.WDisplayName()
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) Drop(item ns.Obj) bool {
 	return W.WDrop(item)
@@ -1173,6 +1192,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetBaseSpeed(v float32) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetColor(ind int, cl color.Color) {
 	W.WSetColor(ind, cl)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetDisplayName(name string, cl color.Color) {
+	W.WSetDisplayName(name, cl)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetFlags(v object.Flags) {
 	W.WSetFlags(v)

@@ -1,7 +1,5 @@
 package ns
 
-import "image/color"
-
 // Team is an interface for game teams.
 type Team interface {
 	// Name of the team.
@@ -13,7 +11,7 @@ type Team interface {
 	// ChangeScore adds or removes team's score(s).
 	ChangeScore(score int)
 	// Color returns team color.
-	Color() color.Color
+	Color() Color
 }
 
 // Teams return current teams.

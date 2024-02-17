@@ -2,7 +2,6 @@ package ns
 
 import (
 	"image"
-	"image/color"
 	"time"
 
 	"github.com/noxworld-dev/opennox-lib/object"
@@ -247,6 +246,13 @@ type Obj interface {
 	// SetTeam sets team of an object.
 	SetTeam(t Team)
 
+	// DisplayName returns current display name for an object (if any).
+	DisplayName() string
+
+	// SetDisplayName sets a display name for an object, with an optional color.
+	// Passing nil color resets it to a default value.
+	SetDisplayName(name string, cl Color)
+
 	// MonsterStatus returns monster/NPC status flags.
 	// It returns 0 if object's class is not a monster/NPC.
 	MonsterStatus() object.MonsterStatus
@@ -346,8 +352,8 @@ type Obj interface {
 	//
 	// Example:
 	//
-	// 		obj.SetColor(0, color.NRGBA{R:80, A: 255}) // dark red, 100% opacity
-	SetColor(ind int, cl color.Color)
+	// 		obj.SetColor(0, ns.RGB(80, 0, 0)) // dark red
+	SetColor(ind int, cl Color)
 
 	// GetGold gets amount of gold for player object.
 	GetGold() int
@@ -511,6 +517,8 @@ type Obj interface {
 	//
 	// This is used with GetPreviousItem to iterate through an object's inventory.
 	//
+	// Deprecated: Use Items instead.
+	//
 	// Example:
 	//
 	//		for it := obj.GetLastItem(); it != nil; it = it.GetPreviousItem() {
@@ -522,6 +530,8 @@ type Obj interface {
 	// If the specified object is not in an inventory, or there are no more items in the inventory, it returns nil.
 	//
 	// This is used with GetLastItem to iterate through an object's inventory.
+	//
+	// Deprecated: Use Items instead.
 	GetPreviousItem() Obj
 
 	// Items returns all items in the object's inventory.
