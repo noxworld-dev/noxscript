@@ -316,15 +316,15 @@ type Obj interface {
 	//
 	// Setting it to -1 restores the default.
 	//
-	// To disable regeneration completely, see SetHealthRegenPerFrame.
+	// To disable regeneration completely, use SetHealthRegenPerFrame(0).
 	SetHealthRegenToMaxDur(t time.Duration)
 
 	// SetHealthRegenPerFrame sets per-frame health regen for an object.
 	// Each frame a given amount of health will be restored.
 	//
-	// To use "classic" health regen, set it to 0.
+	// To disable health regen, set it to 0.
 	//
-	// To disable health regen, set it to -1.
+	// To use "classic" health regen, set it to -1.
 	SetHealthRegenPerFrame(v float32)
 
 	// Mass of the object.
