@@ -76,3 +76,26 @@ func DeathScreen(which int) {
 	}
 	impl.DeathScreen(which)
 }
+
+// LoadMapOptions is a set of options for LoadMap.
+type LoadMapOptions struct {
+	// IgnoreMapType allows bypassing regular map loading rules.
+	// Setting this allows loading maps with a different game mode, switching to/from solo maps, etc.
+	IgnoreMapType bool
+	// HideScores hides scores screen when switching from Quest or other similar map.
+	HideScores bool
+	// HideTitleScreen hides boot/title screen of the map when loading it.
+	HideTitleScreen bool
+}
+
+// LoadMap loads a map with a given name and options.
+// Name should not contain .map suffix or any other path elements.
+func LoadMap(name string, opts *LoadMapOptions) {
+	if impl == nil {
+		return
+	}
+	if opts == nil {
+		opts = new(LoadMapOptions)
+	}
+	impl.LoadMap(name, opts)
+}

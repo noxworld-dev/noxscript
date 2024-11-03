@@ -144,6 +144,8 @@ type Implementation interface {
 	WallGroup(name string) WallGroupObj
 	FindWalls(fnc func(it WallObj) bool, conditions ...WallCond) int
 
+	LoadMap(name string, opts *LoadMapOptions)
+
 	OnFrame(fnc FrameFunc)
 	OnMapEvent(typ MapEvent, fnc MapEventFunc)
 	OnChat(fnc ChatFunc)

@@ -518,3 +518,8 @@ func (r *Runtime) OnMapEvent(typ ns.MapEvent, fnc ns.MapEventFunc) {
 func (r *Runtime) OnChat(fnc ns.ChatFunc) {
 	//TODO implement me
 }
+
+func (r *Runtime) LoadMap(name string, opts *ns.LoadMapOptions) {
+	//TODO implement me
+	panic("implement me")
+}

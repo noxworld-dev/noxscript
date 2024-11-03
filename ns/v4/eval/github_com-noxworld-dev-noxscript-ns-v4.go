@@ -112,6 +112,7 @@ func init() {
 		"JournalEditStr":       reflect.ValueOf(ns.JournalEditStr),
 		"JournalEntry":         reflect.ValueOf(ns.JournalEntry),
 		"JournalEntryStr":      reflect.ValueOf(ns.JournalEntryStr),
+		"LoadMap":              reflect.ValueOf(ns.LoadMap),
 		"MakeEnemy":            reflect.ValueOf(ns.MakeEnemy),
 		"MakeFriendly":         reflect.ValueOf(ns.MakeFriendly),
 		"MapEntry":             reflect.ValueOf(ns.MapEntry),
@@ -230,6 +231,7 @@ func init() {
 		"Implementation":      reflect.ValueOf((*ns.Implementation)(nil)),
 		"InCirclef":           reflect.ValueOf((*ns.InCirclef)(nil)),
 		"InRectf":             reflect.ValueOf((*ns.InRectf)(nil)),
+		"LoadMapOptions":      reflect.ValueOf((*ns.LoadMapOptions)(nil)),
 		"MapEvent":            reflect.ValueOf((*ns.MapEvent)(nil)),
 		"MapEventFunc":        reflect.ValueOf((*ns.MapEventFunc)(nil)),
 		"NOT":                 reflect.ValueOf((*ns.NOT)(nil)),
@@ -384,6 +386,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Implementation struct {
 	WJournalEditStr        func(obj ns.Obj, message string, typ ns.EntryType)
 	WJournalEntry          func(obj ns.Obj, message string, typ ns.EntryType)
 	WJournalEntryStr       func(obj ns.Obj, message string, typ ns.EntryType)
+	WLoadMap               func(name string, opts *ns.LoadMapOptions)
 	WMakeEnemy             func(obj ns.Obj)
 	WMakeFriendly          func(obj ns.Obj)
 	WMusic                 func(music int, volume int)
@@ -576,6 +579,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalEntry(ob
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) JournalEntryStr(obj ns.Obj, message string, typ ns.EntryType) {
 	W.WJournalEntryStr(obj, message, typ)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) LoadMap(name string, opts *ns.LoadMapOptions) {
+	W.WLoadMap(name, opts)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Implementation) MakeEnemy(obj ns.Obj) {
 	W.WMakeEnemy(obj)
