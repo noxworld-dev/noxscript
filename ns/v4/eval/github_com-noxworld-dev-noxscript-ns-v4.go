@@ -906,6 +906,7 @@ type _github_com_noxworld_dev_noxscript_ns_v4_Obj struct {
 	WSetOwners              func(owners ns.ObjGroup)
 	WSetPos                 func(p types.Pointf)
 	WSetRoamFlag            func(flags int)
+	WSetSightRange          func(val float32)
 	WSetStrength            func(v int)
 	WSetTeam                func(t ns.Team)
 	WSetZ                   func(z float32)
@@ -1240,6 +1241,9 @@ func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetPos(p types.Pointf) {
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetRoamFlag(flags int) {
 	W.WSetRoamFlag(flags)
+}
+func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetSightRange(val float32) {
+	W.WSetSightRange(val)
 }
 func (W _github_com_noxworld_dev_noxscript_ns_v4_Obj) SetStrength(v int) {
 	W.WSetStrength(v)

@@ -739,6 +739,10 @@ func (obj *Object) GetElevatorStatus() int {
 	panic("implement me")
 }
 
+func (obj *Object) SetSightRange(val float32) {
+	//TODO implement me
+}
+
 func (obj *Object) AggressionLevel(level float32) {
 	//TODO implement me
 }

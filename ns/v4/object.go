@@ -654,6 +654,9 @@ type Obj interface {
 	// GetElevatorStatus gets elevator status.
 	GetElevatorStatus() int
 
+	// SetSightRange sets a creature's sight level. Default value for NPCs is 150.
+	SetSightRange(val float32)
+
 	// AggressionLevel sets a creature's aggression level. The most commonly used value is 0.83.
 	AggressionLevel(level float32)
 
